@@ -1,5 +1,4 @@
 package com.nexo.nexoeducativo.models.dto.request;
-//package com.nexo.nexoeducativo.models.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -15,13 +14,11 @@ public class UsuarioDTO implements Serializable {
     @Size(min = 2, max = 50, message = "El apellido debe tener entre 2 y 50 caracteres")
     private String apellido;
         
-    
     private int dni;
-    
     
     private String eMail;
     
-       
+    private boolean activo;  // Agregamos el campo activo
 
     // Getters y setters
     public String getNombre() {
@@ -40,7 +37,6 @@ public class UsuarioDTO implements Serializable {
         this.apellido = apellido;
     }
 
-
     public int getDni() {
         return dni;
     }
@@ -57,6 +53,11 @@ public class UsuarioDTO implements Serializable {
         this.eMail = eMail;
     }
 
-    
-}
+    public boolean getActivo() {
+        return activo;
+    }
 
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+}

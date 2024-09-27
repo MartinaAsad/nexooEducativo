@@ -13,15 +13,15 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuariorepository;
     
-    public void crearJefeColegio(UsuarioDTO uDTO){
-        
+    public void crearUsuario(UsuarioDTO uDTO){
         Usuario u = new Usuario();
         u.setNombre(uDTO.getNombre());
         u.setApellido(uDTO.getApellido());
         u.setEMail(uDTO.geteMail());
         u.setDni(uDTO.getDni());
-        u.setActivo((short)1);
+        u.setActivo((uDTO.getActivo())? (short)1 : (short)0);  // Asegurarse de guardar el estado "activo"
         
         this.usuariorepository.save(u);
     }
 }
+

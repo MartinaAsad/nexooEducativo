@@ -37,9 +37,9 @@ public class LoginController {
 //    @PostMapping("/postUsuario")
     @PostMapping
     public ResponseEntity<?> prueba2(@Valid @RequestBody UsuarioDTO request ){
-        uService.crearJefeColegio(request);
-        
-        return new ResponseEntity<>(request.toString() , HttpStatus.OK);
+//            uService.crearJefeColegio(request);
+          uService.crearUsuario(request);           
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     
     
