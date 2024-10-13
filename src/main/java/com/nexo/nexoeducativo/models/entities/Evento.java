@@ -20,18 +20,19 @@ import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
- * @author Sebastian
+ * @author Martina
  */
 @Entity
-@Table(name = "evento", catalog = "nexoeducativo", schema = "")
+@Table(name = "evento")
 @NamedQueries({
-    @NamedQuery(name = "Evento.findAll", query = "SELECT e FROM Evento e"),
-    @NamedQuery(name = "Evento.findByIdEvento", query = "SELECT e FROM Evento e WHERE e.idEvento = :idEvento"),
-    @NamedQuery(name = "Evento.findByDescripcion", query = "SELECT e FROM Evento e WHERE e.descripcion = :descripcion"),
-    @NamedQuery(name = "Evento.findByFecha", query = "SELECT e FROM Evento e WHERE e.fecha = :fecha")})
+    @NamedQuery(name = "Evento.findAll", query = "SELECT e FROM Evento e")})
+@Data
+@NoArgsConstructor
 public class Evento implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,75 +50,5 @@ public class Evento implements Serializable {
     private Date fecha;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "eventoIdEvento")
     private List<CursoUsuarioEvento> cursoUsuarioEventoList;
-
-    public Evento() {
-    }
-
-    public Evento(Integer idEvento) {
-        this.idEvento = idEvento;
-    }
-
-    public Evento(Integer idEvento, String descripcion, Date fecha) {
-        this.idEvento = idEvento;
-        this.descripcion = descripcion;
-        this.fecha = fecha;
-    }
-
-    public Integer getIdEvento() {
-        return idEvento;
-    }
-
-    public void setIdEvento(Integer idEvento) {
-        this.idEvento = idEvento;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
-    public List<CursoUsuarioEvento> getCursoUsuarioEventoList() {
-        return cursoUsuarioEventoList;
-    }
-
-    public void setCursoUsuarioEventoList(List<CursoUsuarioEvento> cursoUsuarioEventoList) {
-        this.cursoUsuarioEventoList = cursoUsuarioEventoList;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idEvento != null ? idEvento.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Evento)) {
-            return false;
-        }
-        Evento other = (Evento) object;
-        if ((this.idEvento == null && other.idEvento != null) || (this.idEvento != null && !this.idEvento.equals(other.idEvento))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.davinci.nexoeducativo.model.entities.Evento[ idEvento=" + idEvento + " ]";
-    }
     
 }

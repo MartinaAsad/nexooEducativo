@@ -16,16 +16,19 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
- * @author Sebastian
+ * @author Martina
  */
 @Entity
-@Table(name = "curso_asistencia", catalog = "nexoeducativo", schema = "")
+@Table(name = "curso_asistencia")
 @NamedQueries({
-    @NamedQuery(name = "CursoAsistencia.findAll", query = "SELECT c FROM CursoAsistencia c"),
-    @NamedQuery(name = "CursoAsistencia.findByIdCursoAsistencia", query = "SELECT c FROM CursoAsistencia c WHERE c.idCursoAsistencia = :idCursoAsistencia")})
+    @NamedQuery(name = "CursoAsistencia.findAll", query = "SELECT c FROM CursoAsistencia c")})
+@Data
+@NoArgsConstructor
 public class CursoAsistencia implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -41,60 +44,6 @@ public class CursoAsistencia implements Serializable {
     @ManyToOne(optional = false)
     private Curso cursoIdCurso;
 
-    public CursoAsistencia() {
-    }
-
-    public CursoAsistencia(Integer idCursoAsistencia) {
-        this.idCursoAsistencia = idCursoAsistencia;
-    }
-
-    public Integer getIdCursoAsistencia() {
-        return idCursoAsistencia;
-    }
-
-    public void setIdCursoAsistencia(Integer idCursoAsistencia) {
-        this.idCursoAsistencia = idCursoAsistencia;
-    }
-
-    public Asistencia getAsistenciaIdAsistencia() {
-        return asistenciaIdAsistencia;
-    }
-
-    public void setAsistenciaIdAsistencia(Asistencia asistenciaIdAsistencia) {
-        this.asistenciaIdAsistencia = asistenciaIdAsistencia;
-    }
-
-    public Curso getCursoIdCurso() {
-        return cursoIdCurso;
-    }
-
-    public void setCursoIdCurso(Curso cursoIdCurso) {
-        this.cursoIdCurso = cursoIdCurso;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idCursoAsistencia != null ? idCursoAsistencia.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CursoAsistencia)) {
-            return false;
-        }
-        CursoAsistencia other = (CursoAsistencia) object;
-        if ((this.idCursoAsistencia == null && other.idCursoAsistencia != null) || (this.idCursoAsistencia != null && !this.idCursoAsistencia.equals(other.idCursoAsistencia))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.davinci.nexoeducativo.model.entities.CursoAsistencia[ idCursoAsistencia=" + idCursoAsistencia + " ]";
-    }
+   
     
 }

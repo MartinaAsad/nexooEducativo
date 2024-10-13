@@ -16,16 +16,19 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
- * @author Sebastian
+ * @author Martina
  */
 @Entity
-@Table(name = "usuario_tarea", catalog = "nexoeducativo", schema = "")
+@Table(name = "usuario_tarea")
 @NamedQueries({
-    @NamedQuery(name = "UsuarioTarea.findAll", query = "SELECT u FROM UsuarioTarea u"),
-    @NamedQuery(name = "UsuarioTarea.findByIdUsuarioTarea", query = "SELECT u FROM UsuarioTarea u WHERE u.idUsuarioTarea = :idUsuarioTarea")})
+    @NamedQuery(name = "UsuarioTarea.findAll", query = "SELECT u FROM UsuarioTarea u")})
+@Data
+@NoArgsConstructor
 public class UsuarioTarea implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,62 +42,5 @@ public class UsuarioTarea implements Serializable {
     private Tarea tareaIdTarea;
     @JoinColumn(name = "usuario_id_usuario", referencedColumnName = "id_usuario")
     @ManyToOne(optional = false)
-    private Usuario usuarioIdUsuario;
-
-    public UsuarioTarea() {
-    }
-
-    public UsuarioTarea(Integer idUsuarioTarea) {
-        this.idUsuarioTarea = idUsuarioTarea;
-    }
-
-    public Integer getIdUsuarioTarea() {
-        return idUsuarioTarea;
-    }
-
-    public void setIdUsuarioTarea(Integer idUsuarioTarea) {
-        this.idUsuarioTarea = idUsuarioTarea;
-    }
-
-    public Tarea getTareaIdTarea() {
-        return tareaIdTarea;
-    }
-
-    public void setTareaIdTarea(Tarea tareaIdTarea) {
-        this.tareaIdTarea = tareaIdTarea;
-    }
-
-    public Usuario getUsuarioIdUsuario() {
-        return usuarioIdUsuario;
-    }
-
-    public void setUsuarioIdUsuario(Usuario usuarioIdUsuario) {
-        this.usuarioIdUsuario = usuarioIdUsuario;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idUsuarioTarea != null ? idUsuarioTarea.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UsuarioTarea)) {
-            return false;
-        }
-        UsuarioTarea other = (UsuarioTarea) object;
-        if ((this.idUsuarioTarea == null && other.idUsuarioTarea != null) || (this.idUsuarioTarea != null && !this.idUsuarioTarea.equals(other.idUsuarioTarea))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.davinci.nexoeducativo.model.entities.UsuarioTarea[ idUsuarioTarea=" + idUsuarioTarea + " ]";
-    }
-    
+    private Usuario usuarioIdUsuario;    
 }

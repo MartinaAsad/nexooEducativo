@@ -20,18 +20,19 @@ import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
- * @author Sebastian
+ * @author Martina
  */
 @Entity
-@Table(name = "calificacion", catalog = "nexoeducativo", schema = "")
+@Table(name = "calificacion")
 @NamedQueries({
-    @NamedQuery(name = "Calificacion.findAll", query = "SELECT c FROM Calificacion c"),
-    @NamedQuery(name = "Calificacion.findByIdCalificacion", query = "SELECT c FROM Calificacion c WHERE c.idCalificacion = :idCalificacion"),
-    @NamedQuery(name = "Calificacion.findByNota", query = "SELECT c FROM Calificacion c WHERE c.nota = :nota"),
-    @NamedQuery(name = "Calificacion.findByFecha", query = "SELECT c FROM Calificacion c WHERE c.fecha = :fecha")})
+    @NamedQuery(name = "Calificacion.findAll", query = "SELECT c FROM Calificacion c")})
+@Data
+@NoArgsConstructor
 public class Calificacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,75 +50,4 @@ public class Calificacion implements Serializable {
     private Date fecha;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "calificacionIdCalificacion")
     private List<Tarea> tareaList;
-
-    public Calificacion() {
-    }
-
-    public Calificacion(Integer idCalificacion) {
-        this.idCalificacion = idCalificacion;
-    }
-
-    public Calificacion(Integer idCalificacion, String nota, Date fecha) {
-        this.idCalificacion = idCalificacion;
-        this.nota = nota;
-        this.fecha = fecha;
-    }
-
-    public Integer getIdCalificacion() {
-        return idCalificacion;
-    }
-
-    public void setIdCalificacion(Integer idCalificacion) {
-        this.idCalificacion = idCalificacion;
-    }
-
-    public String getNota() {
-        return nota;
-    }
-
-    public void setNota(String nota) {
-        this.nota = nota;
-    }
-
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
-    public List<Tarea> getTareaList() {
-        return tareaList;
-    }
-
-    public void setTareaList(List<Tarea> tareaList) {
-        this.tareaList = tareaList;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idCalificacion != null ? idCalificacion.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Calificacion)) {
-            return false;
-        }
-        Calificacion other = (Calificacion) object;
-        if ((this.idCalificacion == null && other.idCalificacion != null) || (this.idCalificacion != null && !this.idCalificacion.equals(other.idCalificacion))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.davinci.nexoeducativo.model.entities.Calificacion[ idCalificacion=" + idCalificacion + " ]";
-    }
-    
 }

@@ -19,19 +19,19 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
- * @author Sebastian
+ * @author Martina
  */
 @Entity
-@Table(name = "escuela", catalog = "nexoeducativo", schema = "")
+@Table(name = "escuela")
 @NamedQueries({
-    @NamedQuery(name = "Escuela.findAll", query = "SELECT e FROM Escuela e"),
-    @NamedQuery(name = "Escuela.findByIdEscuela", query = "SELECT e FROM Escuela e WHERE e.idEscuela = :idEscuela"),
-    @NamedQuery(name = "Escuela.findByNombre", query = "SELECT e FROM Escuela e WHERE e.nombre = :nombre"),
-    @NamedQuery(name = "Escuela.findByDireccion", query = "SELECT e FROM Escuela e WHERE e.direccion = :direccion"),
-    @NamedQuery(name = "Escuela.findByActivo", query = "SELECT e FROM Escuela e WHERE e.activo = :activo")})
+    @NamedQuery(name = "Escuela.findAll", query = "SELECT e FROM Escuela e")})
+@Data
+@NoArgsConstructor
 public class Escuela implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -60,116 +60,5 @@ public class Escuela implements Serializable {
     private List<CursoEscuela> cursoEscuelaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "escuelaIdEscuela")
     private List<EscuelaUsuario> escuelaUsuarioList;
-
-    public Escuela() {
-    }
-
-    public Escuela(Integer idEscuela) {
-        this.idEscuela = idEscuela;
-    }
-
-    public Escuela(Integer idEscuela, String nombre, String direccion, short activo) {
-        this.idEscuela = idEscuela;
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.activo = activo;
-    }
-
-    public Integer getIdEscuela() {
-        return idEscuela;
-    }
-
-    public void setIdEscuela(Integer idEscuela) {
-        this.idEscuela = idEscuela;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
-    public short getActivo() {
-        return activo;
-    }
-
-    public void setActivo(short activo) {
-        this.activo = activo;
-    }
-
-    public Plan getPlanIdPlan() {
-        return planIdPlan;
-    }
-
-    public void setPlanIdPlan(Plan planIdPlan) {
-        this.planIdPlan = planIdPlan;
-    }
-
-    public List<EscuelaComprobantePago> getEscuelaComprobantePagoList() {
-        return escuelaComprobantePagoList;
-    }
-
-    public void setEscuelaComprobantePagoList(List<EscuelaComprobantePago> escuelaComprobantePagoList) {
-        this.escuelaComprobantePagoList = escuelaComprobantePagoList;
-    }
-
-    public List<MateriaEscuela> getMateriaEscuelaList() {
-        return materiaEscuelaList;
-    }
-
-    public void setMateriaEscuelaList(List<MateriaEscuela> materiaEscuelaList) {
-        this.materiaEscuelaList = materiaEscuelaList;
-    }
-
-    public List<CursoEscuela> getCursoEscuelaList() {
-        return cursoEscuelaList;
-    }
-
-    public void setCursoEscuelaList(List<CursoEscuela> cursoEscuelaList) {
-        this.cursoEscuelaList = cursoEscuelaList;
-    }
-
-    public List<EscuelaUsuario> getEscuelaUsuarioList() {
-        return escuelaUsuarioList;
-    }
-
-    public void setEscuelaUsuarioList(List<EscuelaUsuario> escuelaUsuarioList) {
-        this.escuelaUsuarioList = escuelaUsuarioList;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idEscuela != null ? idEscuela.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Escuela)) {
-            return false;
-        }
-        Escuela other = (Escuela) object;
-        if ((this.idEscuela == null && other.idEscuela != null) || (this.idEscuela != null && !this.idEscuela.equals(other.idEscuela))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.davinci.nexoeducativo.model.entities.Escuela[ idEscuela=" + idEscuela + " ]";
-    }
     
 }

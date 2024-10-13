@@ -22,19 +22,19 @@ import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
- * @author Sebastian
+ * @author Martina
  */
 @Entity
-@Table(name = "materia_curso", catalog = "nexoeducativo", schema = "")
+@Table(name = "materia_curso")
 @NamedQueries({
-    @NamedQuery(name = "MateriaCurso.findAll", query = "SELECT m FROM MateriaCurso m"),
-    @NamedQuery(name = "MateriaCurso.findByIdMateriaCurso", query = "SELECT m FROM MateriaCurso m WHERE m.idMateriaCurso = :idMateriaCurso"),
-    @NamedQuery(name = "MateriaCurso.findByDia", query = "SELECT m FROM MateriaCurso m WHERE m.dia = :dia"),
-    @NamedQuery(name = "MateriaCurso.findByHoraInicio", query = "SELECT m FROM MateriaCurso m WHERE m.horaInicio = :horaInicio"),
-    @NamedQuery(name = "MateriaCurso.findByHoraFin", query = "SELECT m FROM MateriaCurso m WHERE m.horaFin = :horaFin")})
+    @NamedQuery(name = "MateriaCurso.findAll", query = "SELECT m FROM MateriaCurso m")})
+@Data
+@NoArgsConstructor
 public class MateriaCurso implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -59,93 +59,5 @@ public class MateriaCurso implements Serializable {
     private Materia materiaIdMateria;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "materiaCursoIdMateriaCurso")
     private List<MateriaCursoMaterial> materiaCursoMaterialList;
-
-    public MateriaCurso() {
-    }
-
-    public MateriaCurso(Integer idMateriaCurso) {
-        this.idMateriaCurso = idMateriaCurso;
-    }
-
-    public Integer getIdMateriaCurso() {
-        return idMateriaCurso;
-    }
-
-    public void setIdMateriaCurso(Integer idMateriaCurso) {
-        this.idMateriaCurso = idMateriaCurso;
-    }
-
-    public String getDia() {
-        return dia;
-    }
-
-    public void setDia(String dia) {
-        this.dia = dia;
-    }
-
-    public Date getHoraInicio() {
-        return horaInicio;
-    }
-
-    public void setHoraInicio(Date horaInicio) {
-        this.horaInicio = horaInicio;
-    }
-
-    public Date getHoraFin() {
-        return horaFin;
-    }
-
-    public void setHoraFin(Date horaFin) {
-        this.horaFin = horaFin;
-    }
-
-    public Curso getCursoIdCurso() {
-        return cursoIdCurso;
-    }
-
-    public void setCursoIdCurso(Curso cursoIdCurso) {
-        this.cursoIdCurso = cursoIdCurso;
-    }
-
-    public Materia getMateriaIdMateria() {
-        return materiaIdMateria;
-    }
-
-    public void setMateriaIdMateria(Materia materiaIdMateria) {
-        this.materiaIdMateria = materiaIdMateria;
-    }
-
-    public List<MateriaCursoMaterial> getMateriaCursoMaterialList() {
-        return materiaCursoMaterialList;
-    }
-
-    public void setMateriaCursoMaterialList(List<MateriaCursoMaterial> materiaCursoMaterialList) {
-        this.materiaCursoMaterialList = materiaCursoMaterialList;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idMateriaCurso != null ? idMateriaCurso.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof MateriaCurso)) {
-            return false;
-        }
-        MateriaCurso other = (MateriaCurso) object;
-        if ((this.idMateriaCurso == null && other.idMateriaCurso != null) || (this.idMateriaCurso != null && !this.idMateriaCurso.equals(other.idMateriaCurso))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.davinci.nexoeducativo.model.entities.MateriaCurso[ idMateriaCurso=" + idMateriaCurso + " ]";
-    }
     
 }

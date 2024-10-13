@@ -16,16 +16,19 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
- * @author Sebastian
+ * @author Martina
  */
 @Entity
-@Table(name = "usuario_comprobante_pago", catalog = "nexoeducativo", schema = "")
+@Table(name = "usuario_comprobante_pago")
 @NamedQueries({
-    @NamedQuery(name = "UsuarioComprobantePago.findAll", query = "SELECT u FROM UsuarioComprobantePago u"),
-    @NamedQuery(name = "UsuarioComprobantePago.findByIdUsuarioComprobantePago", query = "SELECT u FROM UsuarioComprobantePago u WHERE u.idUsuarioComprobantePago = :idUsuarioComprobantePago")})
+    @NamedQuery(name = "UsuarioComprobantePago.findAll", query = "SELECT u FROM UsuarioComprobantePago u")})
+@Data
+@NoArgsConstructor
 public class UsuarioComprobantePago implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,61 +43,5 @@ public class UsuarioComprobantePago implements Serializable {
     @JoinColumn(name = "usuario_id_usuario", referencedColumnName = "id_usuario")
     @ManyToOne(optional = false)
     private Usuario usuarioIdUsuario;
-
-    public UsuarioComprobantePago() {
-    }
-
-    public UsuarioComprobantePago(Integer idUsuarioComprobantePago) {
-        this.idUsuarioComprobantePago = idUsuarioComprobantePago;
-    }
-
-    public Integer getIdUsuarioComprobantePago() {
-        return idUsuarioComprobantePago;
-    }
-
-    public void setIdUsuarioComprobantePago(Integer idUsuarioComprobantePago) {
-        this.idUsuarioComprobantePago = idUsuarioComprobantePago;
-    }
-
-    public ComprobantePago getComprobantePagoIdComprobantePago() {
-        return comprobantePagoIdComprobantePago;
-    }
-
-    public void setComprobantePagoIdComprobantePago(ComprobantePago comprobantePagoIdComprobantePago) {
-        this.comprobantePagoIdComprobantePago = comprobantePagoIdComprobantePago;
-    }
-
-    public Usuario getUsuarioIdUsuario() {
-        return usuarioIdUsuario;
-    }
-
-    public void setUsuarioIdUsuario(Usuario usuarioIdUsuario) {
-        this.usuarioIdUsuario = usuarioIdUsuario;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idUsuarioComprobantePago != null ? idUsuarioComprobantePago.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UsuarioComprobantePago)) {
-            return false;
-        }
-        UsuarioComprobantePago other = (UsuarioComprobantePago) object;
-        if ((this.idUsuarioComprobantePago == null && other.idUsuarioComprobantePago != null) || (this.idUsuarioComprobantePago != null && !this.idUsuarioComprobantePago.equals(other.idUsuarioComprobantePago))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.davinci.nexoeducativo.model.entities.UsuarioComprobantePago[ idUsuarioComprobantePago=" + idUsuarioComprobantePago + " ]";
-    }
     
 }

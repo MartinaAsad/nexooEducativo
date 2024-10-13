@@ -20,18 +20,19 @@ import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
- * @author Sebastian
+ * @author Martina
  */
 @Entity
-@Table(name = "comprobante_pago", catalog = "nexoeducativo", schema = "")
+@Table(name = "comprobante_pago")
 @NamedQueries({
-    @NamedQuery(name = "ComprobantePago.findAll", query = "SELECT c FROM ComprobantePago c"),
-    @NamedQuery(name = "ComprobantePago.findByIdComprobantePago", query = "SELECT c FROM ComprobantePago c WHERE c.idComprobantePago = :idComprobantePago"),
-    @NamedQuery(name = "ComprobantePago.findByFecha", query = "SELECT c FROM ComprobantePago c WHERE c.fecha = :fecha"),
-    @NamedQuery(name = "ComprobantePago.findByImporte", query = "SELECT c FROM ComprobantePago c WHERE c.importe = :importe")})
+    @NamedQuery(name = "ComprobantePago.findAll", query = "SELECT c FROM ComprobantePago c")})
+@Data
+@NoArgsConstructor
 public class ComprobantePago implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,83 +52,5 @@ public class ComprobantePago implements Serializable {
     private List<EscuelaComprobantePago> escuelaComprobantePagoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "comprobantePagoIdComprobantePago")
     private List<UsuarioComprobantePago> usuarioComprobantePagoList;
-
-    public ComprobantePago() {
-    }
-
-    public ComprobantePago(Integer idComprobantePago) {
-        this.idComprobantePago = idComprobantePago;
-    }
-
-    public ComprobantePago(Integer idComprobantePago, Date fecha, long importe) {
-        this.idComprobantePago = idComprobantePago;
-        this.fecha = fecha;
-        this.importe = importe;
-    }
-
-    public Integer getIdComprobantePago() {
-        return idComprobantePago;
-    }
-
-    public void setIdComprobantePago(Integer idComprobantePago) {
-        this.idComprobantePago = idComprobantePago;
-    }
-
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
-    public long getImporte() {
-        return importe;
-    }
-
-    public void setImporte(long importe) {
-        this.importe = importe;
-    }
-
-    public List<EscuelaComprobantePago> getEscuelaComprobantePagoList() {
-        return escuelaComprobantePagoList;
-    }
-
-    public void setEscuelaComprobantePagoList(List<EscuelaComprobantePago> escuelaComprobantePagoList) {
-        this.escuelaComprobantePagoList = escuelaComprobantePagoList;
-    }
-
-    public List<UsuarioComprobantePago> getUsuarioComprobantePagoList() {
-        return usuarioComprobantePagoList;
-    }
-
-    public void setUsuarioComprobantePagoList(List<UsuarioComprobantePago> usuarioComprobantePagoList) {
-        this.usuarioComprobantePagoList = usuarioComprobantePagoList;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idComprobantePago != null ? idComprobantePago.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ComprobantePago)) {
-            return false;
-        }
-        ComprobantePago other = (ComprobantePago) object;
-        if ((this.idComprobantePago == null && other.idComprobantePago != null) || (this.idComprobantePago != null && !this.idComprobantePago.equals(other.idComprobantePago))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.davinci.nexoeducativo.model.entities.ComprobantePago[ idComprobantePago=" + idComprobantePago + " ]";
-    }
     
 }

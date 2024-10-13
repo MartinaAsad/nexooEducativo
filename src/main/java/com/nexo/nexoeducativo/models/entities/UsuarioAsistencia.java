@@ -16,16 +16,19 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
- * @author Sebastian
+ * @author Martina
  */
 @Entity
-@Table(name = "usuario_asistencia", catalog = "nexoeducativo", schema = "")
+@Table(name = "usuario_asistencia")
 @NamedQueries({
-    @NamedQuery(name = "UsuarioAsistencia.findAll", query = "SELECT u FROM UsuarioAsistencia u"),
-    @NamedQuery(name = "UsuarioAsistencia.findByIdUsuarioAsistencia", query = "SELECT u FROM UsuarioAsistencia u WHERE u.idUsuarioAsistencia = :idUsuarioAsistencia")})
+    @NamedQuery(name = "UsuarioAsistencia.findAll", query = "SELECT u FROM UsuarioAsistencia u")})
+@Data
+@NoArgsConstructor
 public class UsuarioAsistencia implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,61 +43,4 @@ public class UsuarioAsistencia implements Serializable {
     @JoinColumn(name = "usuario_id_usuario", referencedColumnName = "id_usuario")
     @ManyToOne(optional = false)
     private Usuario usuarioIdUsuario;
-
-    public UsuarioAsistencia() {
-    }
-
-    public UsuarioAsistencia(Integer idUsuarioAsistencia) {
-        this.idUsuarioAsistencia = idUsuarioAsistencia;
-    }
-
-    public Integer getIdUsuarioAsistencia() {
-        return idUsuarioAsistencia;
-    }
-
-    public void setIdUsuarioAsistencia(Integer idUsuarioAsistencia) {
-        this.idUsuarioAsistencia = idUsuarioAsistencia;
-    }
-
-    public Asistencia getAsistenciaIdAsistencia() {
-        return asistenciaIdAsistencia;
-    }
-
-    public void setAsistenciaIdAsistencia(Asistencia asistenciaIdAsistencia) {
-        this.asistenciaIdAsistencia = asistenciaIdAsistencia;
-    }
-
-    public Usuario getUsuarioIdUsuario() {
-        return usuarioIdUsuario;
-    }
-
-    public void setUsuarioIdUsuario(Usuario usuarioIdUsuario) {
-        this.usuarioIdUsuario = usuarioIdUsuario;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idUsuarioAsistencia != null ? idUsuarioAsistencia.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof UsuarioAsistencia)) {
-            return false;
-        }
-        UsuarioAsistencia other = (UsuarioAsistencia) object;
-        if ((this.idUsuarioAsistencia == null && other.idUsuarioAsistencia != null) || (this.idUsuarioAsistencia != null && !this.idUsuarioAsistencia.equals(other.idUsuarioAsistencia))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.davinci.nexoeducativo.model.entities.UsuarioAsistencia[ idUsuarioAsistencia=" + idUsuarioAsistencia + " ]";
-    }
-    
 }

@@ -4,14 +4,14 @@
  */
 package com.nexo.nexoeducativo.repository;
 
-import com.nexo.nexoeducativo.models.entities.Rol;
+import com.nexo.nexoeducativo.models.entities.Plan;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
  * @author Martina
  */
-public interface RolRepository extends JpaRepository<Rol, Integer>{
+public interface PlanRepository extends JpaRepository<Plan, Integer> {
+    boolean existsByDescripcion (String descripcion);
     
-    boolean existsByNombre(String nombre);
 }

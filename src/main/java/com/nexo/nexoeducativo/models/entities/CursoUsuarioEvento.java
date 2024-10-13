@@ -16,16 +16,19 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import java.io.Serializable;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
- * @author Sebastian
+ * @author Martina
  */
 @Entity
-@Table(name = "curso_usuario_evento", catalog = "nexoeducativo", schema = "")
+@Table(name = "curso_usuario_evento")
 @NamedQueries({
-    @NamedQuery(name = "CursoUsuarioEvento.findAll", query = "SELECT c FROM CursoUsuarioEvento c"),
-    @NamedQuery(name = "CursoUsuarioEvento.findByIdCursoUsuarioEvento", query = "SELECT c FROM CursoUsuarioEvento c WHERE c.idCursoUsuarioEvento = :idCursoUsuarioEvento")})
+    @NamedQuery(name = "CursoUsuarioEvento.findAll", query = "SELECT c FROM CursoUsuarioEvento c")})
+@Data
+@NoArgsConstructor
 public class CursoUsuarioEvento implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,61 +43,5 @@ public class CursoUsuarioEvento implements Serializable {
     @JoinColumn(name = "evento_id_evento", referencedColumnName = "id_evento")
     @ManyToOne(optional = false)
     private Evento eventoIdEvento;
-
-    public CursoUsuarioEvento() {
-    }
-
-    public CursoUsuarioEvento(Integer idCursoUsuarioEvento) {
-        this.idCursoUsuarioEvento = idCursoUsuarioEvento;
-    }
-
-    public Integer getIdCursoUsuarioEvento() {
-        return idCursoUsuarioEvento;
-    }
-
-    public void setIdCursoUsuarioEvento(Integer idCursoUsuarioEvento) {
-        this.idCursoUsuarioEvento = idCursoUsuarioEvento;
-    }
-
-    public CursoUsuario getCursoUsuarioIdCursoUsuario() {
-        return cursoUsuarioIdCursoUsuario;
-    }
-
-    public void setCursoUsuarioIdCursoUsuario(CursoUsuario cursoUsuarioIdCursoUsuario) {
-        this.cursoUsuarioIdCursoUsuario = cursoUsuarioIdCursoUsuario;
-    }
-
-    public Evento getEventoIdEvento() {
-        return eventoIdEvento;
-    }
-
-    public void setEventoIdEvento(Evento eventoIdEvento) {
-        this.eventoIdEvento = eventoIdEvento;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (idCursoUsuarioEvento != null ? idCursoUsuarioEvento.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CursoUsuarioEvento)) {
-            return false;
-        }
-        CursoUsuarioEvento other = (CursoUsuarioEvento) object;
-        if ((this.idCursoUsuarioEvento == null && other.idCursoUsuarioEvento != null) || (this.idCursoUsuarioEvento != null && !this.idCursoUsuarioEvento.equals(other.idCursoUsuarioEvento))) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "com.davinci.nexoeducativo.model.entities.CursoUsuarioEvento[ idCursoUsuarioEvento=" + idCursoUsuarioEvento + " ]";
-    }
     
 }
