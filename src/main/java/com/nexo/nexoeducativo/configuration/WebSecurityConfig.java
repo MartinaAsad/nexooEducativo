@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 
 
@@ -17,13 +18,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  *
  * @author Martina
  */
-@Configuration
-@EnableWebSecurity
+/*@Configuration
+@EnableWebSecurity*/
 public class WebSecurityConfig {
     //en filterChain como se manjean las URL si tiene que estar logueado
     
     //userDetailsService cambiar a gusto
-     @Bean
+    /* @Bean
     public UserDetailsService userDetailsService(){
 
         UserDetails john = User.builder()
@@ -40,4 +41,8 @@ public class WebSecurityConfig {
 
         return new InMemoryUserDetailsManager(john,sam);
     }
+
+    private Object passwordEncoder() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }*/
 }
