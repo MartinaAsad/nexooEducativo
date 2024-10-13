@@ -10,14 +10,17 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import java.io.Serializable;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 /**
  *
  * @author Martina
  */
-@Data
+//@Data
+@Getter
+@Setter
 //probar el dto
 public class CursoDTO implements Serializable {
      @NotNull(message="campo numero de curso no puede estar vacio")
