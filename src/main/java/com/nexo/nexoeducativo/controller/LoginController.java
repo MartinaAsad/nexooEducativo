@@ -152,5 +152,16 @@ public class LoginController {
      ResponseEntity<?> prueba7(@Valid @RequestBody AlumnoDTO a){
          uService.crearAlumno(a);
           return new ResponseEntity<>("el alumno fue creado correctamente", HttpStatus.OK);
+         /*PONER ESTO EN POSTMAN:
+          {
+   "nombre": "alumno",
+   "apellido": "agua",
+   "dni":14852966,
+   "eMail":"alumnoprueba@gmail.com",
+   "telefono":43239965,
+   "activo":1,
+   "idCurso":3,
+   "idPadre":6
+}*/
      }
 }

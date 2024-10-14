@@ -4,6 +4,7 @@
  */
 package com.nexo.nexoeducativo.repository;
 
+import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,7 +14,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
     
-    boolean existsByDni (int dni);
+    boolean existsByDni(int dni);
+    boolean existsByRolidrolAndIdUsuario (Rol rolidrol, Integer idUsuario);
+    Rol findByRolidrol(Rol rolidrol);
    
     
 }

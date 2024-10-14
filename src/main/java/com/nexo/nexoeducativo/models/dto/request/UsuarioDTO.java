@@ -23,8 +23,7 @@ import org.hibernate.validator.constraints.Length;
  *
  * @author Martina
  */
-//@Data
-
+@Data
 public class UsuarioDTO implements Serializable{
     //atributos del usuario que van a ser recibidos desde afuera del sistema, sale desde el request
     //poner aca atributos comunes entre todos los tipos de usuario
@@ -61,66 +60,10 @@ public class UsuarioDTO implements Serializable{
     @Max(value = 1, message = "El valor debe ser 0 o 1")
     private short activo;
     
-    @NotNull(message="campo telefono invalido")
+   // @NotNull(message="campo rol invalido")
     @Min(value = 0, message = "Rol inexistente")
-    @Max(value = 6, message = "Rol inexistente")
+    @Max(value = 7, message = "Rol inexistente")
     private Integer rol;
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public int getDni() {
-        return dni;
-    }
-
-    public void setDni(int dni) {
-        this.dni = dni;
-    }
-
-    public String geteMail() {
-        return eMail;
-    }
-
-    public void seteMail(String eMail) {
-        this.eMail = eMail;
-    }
-
-    public Integer getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(Integer telefono) {
-        this.telefono = telefono;
-    }
-
-    public short getActivo() {
-        return activo;
-    }
-
-    public void setActivo(short activo) {
-        this.activo = activo;
-    }
-
-    public Integer getRol() {
-        return rol;
-    }
-
-    public void setRol(Integer rol) {
-        this.rol = rol;
-    }
 
     public UsuarioDTO(String nombre, String apellido, int dni, String eMail, Integer telefono, short activo, Integer rol) {
         this.nombre = nombre;
@@ -132,10 +75,15 @@ public class UsuarioDTO implements Serializable{
         this.rol = rol;
     }
     
-    
-
-    
-    
+     //constructor para dar de alta un alumno
+    public UsuarioDTO(String nombre, String apellido, int dni, String eMail, Integer telefono, short activo) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.dni = dni;
+        this.eMail = eMail;
+        this.telefono = telefono;
+        this.activo = activo;
+    }
     
     
 }

@@ -4,7 +4,9 @@
  */
 package com.nexo.nexoeducativo.repository;
 
+import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.CursoUsuario;
+import com.nexo.nexoeducativo.models.entities.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +18,6 @@ import org.springframework.stereotype.Repository;
 public interface CursoUsuarioRepository extends JpaRepository<CursoUsuario, Integer>{
     
     boolean existsByCursoIdCursoAndUsuarioIdUsuario(int cursoIdCurso, int usuarioIdUsuario);
+
+    public boolean existsByCursoIdCursoAndUsuarioIdUsuario(Curso curso, Usuario alumno);
 }

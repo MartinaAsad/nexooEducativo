@@ -8,13 +8,15 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
  * @author Martina
  */
-
+@Getter
+@Setter
 public class AlumnoDTO extends UsuarioDTO implements Serializable{
     @NotNull(message="campo curso invalido")
     @Min(value = 0, message = "Valor invalido")
@@ -27,27 +29,12 @@ public class AlumnoDTO extends UsuarioDTO implements Serializable{
     
     
     public AlumnoDTO(String nombre, String apellido, int dni, String eMail, 
-            Integer telefono, short activo, Integer rol, int idCurso,int idPadre ) {
-        super(nombre,apellido,dni,eMail, telefono, activo, rol);
+            Integer telefono, short activo, int idCurso,int idPadre ) {
+        super(nombre,apellido,dni,eMail, telefono, activo);
         this.idCurso=idCurso;
         this.idPadre=idPadre;
     }
 
-    public int getIdCurso() {
-        return idCurso;
-    }
-
-    public void setIdCurso(int idCurso) {
-        this.idCurso = idCurso;
-    }
-
-    public int getIdPadre() {
-        return idPadre;
-    }
-
-    public void setIdPadre(int idPadre) {
-        this.idPadre = idPadre;
-    }
     
     
 }

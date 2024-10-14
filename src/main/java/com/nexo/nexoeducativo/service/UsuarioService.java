@@ -13,7 +13,9 @@ import com.nexo.nexoeducativo.models.entities.CursoUsuario;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.models.entities.UsuarioUsuario;
+import com.nexo.nexoeducativo.repository.CursoRepository;
 import com.nexo.nexoeducativo.repository.CursoUsuarioRepository;
+import com.nexo.nexoeducativo.repository.RolRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import com.nexo.nexoeducativo.repository.UsuarioUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,12 @@ public class UsuarioService {
     
     @Autowired
     private CursoUsuarioRepository cursoUsuarioRepository;
+    
+    @Autowired
+    private CursoRepository cursoRepository;
+    
+    @Autowired
+    private RolRepository rolRepository;
  
    
     /*public void crearUsuario(UsuarioDTO u){
@@ -49,7 +57,7 @@ public class UsuarioService {
         Usuario u = new Usuario();
         u.setNombre(uDTO.getNombre());
         u.setApellido(uDTO.getApellido());
-        u.setEMail(uDTO.geteMail());
+        u.setEMail(uDTO.getEMail());
         u.setDni(uDTO.getDni());
         u.setTelefono(uDTO.getTelefono());
         u.setActivo(uDTO.getActivo());
@@ -62,51 +70,64 @@ public class UsuarioService {
              this.usuariorepository.save(u);
         }
     }
-     //CHEQUEAR
+     
      public void crearAlumno(AlumnoDTO a){
-         
-         Rol r=new Rol();
-         r.setIdRol(7);//nro de rol Alumno segun la bbdd
-         
-         Curso c=new Curso();
-         int idC=a.getIdCurso();
-         c.setIdCurso(idC);
-         
-         Usuario alumno = new Usuario();
-         alumno.setNombre(a.getNombre());
-         alumno.setApellido(a.getApellido());
-         alumno.setEMail(a.geteMail());
-         alumno.setDni(a.getDni());
-         alumno.setTelefono(a.getTelefono());
-         alumno.setActivo(a.getActivo());
-         alumno.setRolidrol(r);
-         
-         Usuario padre=new Usuario();
-         padre.setIdUsuario(a.getIdPadre());
-         
-         //tabla intermedia para asociar un alumno a un curso
-         CursoUsuario cu= new CursoUsuario();
-         cu.setCursoIdCurso(c);
-         cu.setUsuarioIdUsuario(alumno);
-         
-         //tabla intermedia para asociar un alumno con un padre
-         UsuarioUsuario u2=new UsuarioUsuario();
-         u2.setUsuarioIdUsuario(alumno);
-         u2.setUsuarioIdUsuario1(padre);
-         
-         //validar si ya el alumno ingresado pertenece a un curso
-         if(usuarioUsuarioRepo.existsByUsuarioIdUsuarioAndUsuarioIdUsuario1(alumno.getIdUsuario(), padre.getIdUsuario())){
-             throw new IllegalArgumentException("ese alumno ya tiene asociado a ese padre");
-         }
-         //validar si ya existe ese alumno en ese curso
-         else if(cursoUsuarioRepository.existsByCursoIdCursoAndUsuarioIdUsuario(idC, alumno.getIdUsuario())){
-             throw new IllegalArgumentException("ese alumno ya existe ene se curso");
-         }else{
-             this.usuariorepository.save(alumno);
-             this.usuariorepository.save(padre);
-             this.cursoUsuarioRepository.save(cu);
-             this.usuarioUsuarioRepo.save(u2);
-         }
+       Rol rolAlumno = rolRepository.findById(7)
+        .orElseThrow(() -> new IllegalArgumentException("El rol de Alumno no existe"));
+
+        Curso curso = cursoRepository.findById(a.getIdCurso())
+            .orElseThrow(() -> new IllegalArgumentException("El curso no existe"));
+
+        if (usuariorepository.existsByDni(a.getDni())) {
+            throw new IllegalArgumentException("El alumno ya existe");
+        }
+        Usuario alumno = new Usuario();
+        alumno.setNombre(a.getNombre());
+        alumno.setApellido(a.getApellido());
+        alumno.setEMail(a.getEMail());
+        alumno.setDni(a.getDni());
+        alumno.setTelefono(a.getTelefono());
+        alumno.setActivo(a.getActivo());
+        alumno.setRolidrol(rolAlumno);
+        alumno = this.usuariorepository.save(alumno);
+
+        if (cursoUsuarioRepository.existsByCursoIdCursoAndUsuarioIdUsuario(curso, alumno)) {
+            throw new IllegalArgumentException("El alumno ya está asignado a ese curso");
+        }
+        Usuario padre = usuariorepository.findById(a.getIdPadre())
+            .orElseThrow(() -> new IllegalArgumentException("El padre no existe"));
+
+        Rol rolPadre = rolRepository.findById(6)
+            .orElseThrow(() -> new IllegalArgumentException("El rol de Padre no existe"));
+
+        if (!verificarPermisos(rolPadre, 6)) {
+            throw new IllegalArgumentException("El rol asignado no es un rol de padre válido: " + rolPadre.getIdRol());
+        }
+
+        padre.setRolidrol(rolPadre);
+        padre = usuariorepository.save(padre);
+
+        if (usuarioUsuarioRepo.existsByUsuarioIdUsuarioAndUsuarioIdUsuario1(alumno, padre)) {
+            throw new IllegalArgumentException("Ese alumno ya tiene asociado a ese padre");
+        }
+
+        // Create the course-student relationship
+        CursoUsuario cursoUsuario = new CursoUsuario();
+        cursoUsuario.setCursoIdCurso(curso);
+        cursoUsuario.setUsuarioIdUsuario(alumno);
+        this.cursoUsuarioRepository.save(cursoUsuario);
+
+        // Create the student-parent relationship
+        UsuarioUsuario usuarioUsuario = new UsuarioUsuario();
+        usuarioUsuario.setUsuarioIdUsuario(alumno);
+        usuarioUsuario.setUsuarioIdUsuario1(padre);
+        this.usuarioUsuarioRepo.save(usuarioUsuario);
+    }
+
+    private boolean verificarPermisos(Rol rolVerificar, int nro) {
+         return rolVerificar != null && rolVerificar.getIdRol() == nro;
+    }
+     
         
-     }
+     
 }
