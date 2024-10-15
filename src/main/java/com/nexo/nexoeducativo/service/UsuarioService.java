@@ -57,7 +57,7 @@ public class UsuarioService {
         Usuario u = new Usuario();
         u.setNombre(uDTO.getNombre());
         u.setApellido(uDTO.getApellido());
-        u.setEMail(uDTO.getEMail());
+        u.setMail(uDTO.getEMail());
         u.setDni(uDTO.getDni());
         u.setTelefono(uDTO.getTelefono());
         u.setActivo(uDTO.getActivo());
@@ -84,7 +84,7 @@ public class UsuarioService {
         Usuario alumno = new Usuario();
         alumno.setNombre(a.getNombre());
         alumno.setApellido(a.getApellido());
-        alumno.setEMail(a.getEMail());
+        alumno.setMail(a.getEMail());
         alumno.setDni(a.getDni());
         alumno.setTelefono(a.getTelefono());
         alumno.setActivo(a.getActivo());

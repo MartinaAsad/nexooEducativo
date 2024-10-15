@@ -20,7 +20,9 @@ import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.util.List;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  *
@@ -32,6 +34,8 @@ import lombok.NoArgsConstructor;
     @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u")})
 @Data
 @NoArgsConstructor
+@Getter
+@Setter
 public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,7 +55,7 @@ public class Usuario implements Serializable {
     private int dni;
     @Basic(optional = false)
     @Column(name = "e_mail")
-    private String eMail;
+    private String mail;
     @Column(name = "telefono")
     private Integer telefono;
     @Basic(optional = false)

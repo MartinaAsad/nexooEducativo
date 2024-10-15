@@ -20,6 +20,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Martina
  */
 @RestController
-@RequestMapping("/usuario")
+@RequestMapping("/usuario") //reemplazarlo por api
 //EN TODOS LOS METODOS, SI HAY UN ERROR EN EL CASO DE QUE EXISTAN, 
 //NO SALTA EL MENSAJE EN POSTMAN SINO EN CONSOLA DE JAVA, ARREGLAR ESO
 public class LoginController {
@@ -57,6 +58,12 @@ public class LoginController {
     @Autowired
     private CursoEscuelaService cursoEscuelaService;
     
+    //aca especifica que roles de usuario estan autorizados a usar ese endpoint, lo de hasAuthority es segun lo escrito en la bbdd
+    //se usan operadores de base de datos
+    @PreAuthorize("hasAuthority('ROLE_BM_BACKOFFICE_ADMIN') "
+            + "or hasAuthority('ROLE_BM_BACKOFFICE_DACTILAR') "
+            + "or hasAuthority('ROLE_BM_BACKOFFICE_FACIAL') "
+            + "or hasAuthority('ROLE_BM_BACKOFFICE_FACIAL_SEGURIDAD')")
     @GetMapping("/getUsuario")
     public ResponseEntity<?> prueba(){
         return new ResponseEntity<>("prueba", HttpStatus.OK);
