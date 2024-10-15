@@ -50,6 +50,12 @@ public class UsuarioDTO implements Serializable{
     //@NotBlank(message = "campo email vacio")
     private String eMail;
     
+    //@Pattern(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "Formato de clave incorrecto")
+    @Email(message="formato de clave invalido")
+    @NotBlank(message="campo clave vacio")
+    //@NotBlank(message = "campo clave vacio")
+    private String clave;
+    
     @NotNull(message="campo telefono invalido")
     @Min(value = 0100000, message = "El telefono debe tener al menos 7 numeros")
     @Max(value = 999999999, message = "El telefono debe tener como maximo 9 numeros")
@@ -65,22 +71,24 @@ public class UsuarioDTO implements Serializable{
     @Max(value = 7, message = "Rol inexistente")
     private Integer rol;
 
-    public UsuarioDTO(String nombre, String apellido, int dni, String eMail, Integer telefono, short activo, Integer rol) {
+    public UsuarioDTO(String nombre, String apellido, int dni, String eMail, String clave,Integer telefono, short activo, Integer rol) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
         this.eMail = eMail;
+        this.clave = clave;
         this.telefono = telefono;
         this.activo = activo;
         this.rol = rol;
     }
     
      //constructor para dar de alta un alumno
-    public UsuarioDTO(String nombre, String apellido, int dni, String eMail, Integer telefono, short activo) {
+    public UsuarioDTO(String nombre, String apellido, int dni, String eMail, String clave, Integer telefono, short activo) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
         this.eMail = eMail;
+        this.clave = clave;
         this.telefono = telefono;
         this.activo = activo;
     }

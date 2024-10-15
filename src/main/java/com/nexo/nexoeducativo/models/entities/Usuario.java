@@ -54,8 +54,10 @@ public class Usuario implements Serializable {
     @Column(name = "dni")
     private int dni;
     @Basic(optional = false)
-    @Column(name = "e_mail")
+    @Column(name = "mail")
     private String mail;
+    @Column(name = "clave")
+    private String clave;
     @Column(name = "telefono")
     private Integer telefono;
     @Basic(optional = false)

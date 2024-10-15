@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.nexo.nexoeducativo.models.dto.request;
 
 import jakarta.validation.constraints.Max;
@@ -28,9 +25,9 @@ public class AlumnoDTO extends UsuarioDTO implements Serializable{
     private int idPadre;
     
     
-    public AlumnoDTO(String nombre, String apellido, int dni, String eMail, 
+    public AlumnoDTO(String nombre, String apellido, int dni, String eMail, String clave,
             Integer telefono, short activo, int idCurso,int idPadre ) {
-        super(nombre,apellido,dni,eMail, telefono, activo);
+        super(nombre,apellido,dni,eMail, clave, telefono, activo);
         this.idCurso=idCurso;
         this.idPadre=idPadre;
     }

@@ -18,6 +18,8 @@ import com.nexo.nexoeducativo.repository.CursoUsuarioRepository;
 import com.nexo.nexoeducativo.repository.RolRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import com.nexo.nexoeducativo.repository.UsuarioUsuarioRepository;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +51,22 @@ public class UsuarioService {
         //reglas de negocio, ejemplo campos obligatorios con validaciones
     }*/
     
+    public static final String convertirSHA256(String password) {
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            return null;
+        }
+        byte[] hash = md.digest(password.getBytes());
+        StringBuffer sb = new StringBuffer();
+        for (byte b : hash) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+    }    
+    
+    
      public void crearUsuario(UsuarioDTO uDTO){
          
          Rol r=new Rol();
@@ -58,6 +76,7 @@ public class UsuarioService {
         u.setNombre(uDTO.getNombre());
         u.setApellido(uDTO.getApellido());
         u.setMail(uDTO.getEMail());
+        //U.setClave(convertirSHA256(uDTO.getClave()); 
         u.setDni(uDTO.getDni());
         u.setTelefono(uDTO.getTelefono());
         u.setActivo(uDTO.getActivo());

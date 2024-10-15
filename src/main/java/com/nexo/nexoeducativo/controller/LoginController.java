@@ -80,6 +80,7 @@ public class LoginController {
    "apellido":"Perez",
    "dni":12345678,
    "eMail":"mail@gmail.com",
+   "clave":"123456",
    "telefono":42956630,
    "activo":1,
    "rol":2
