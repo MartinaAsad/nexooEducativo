@@ -76,7 +76,7 @@ public class UsuarioService {
         u.setNombre(uDTO.getNombre());
         u.setApellido(uDTO.getApellido());
         u.setMail(uDTO.getEMail());
-        //U.setClave(convertirSHA256(uDTO.getClave()); 
+        u.setClave(convertirSHA256(uDTO.getClave())); 
         u.setDni(uDTO.getDni());
         u.setTelefono(uDTO.getTelefono());
         u.setActivo(uDTO.getActivo());

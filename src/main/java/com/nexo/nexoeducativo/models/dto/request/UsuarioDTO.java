@@ -16,6 +16,7 @@ import jakarta.validation.constraints.Pattern;
 import java.io.Serializable;
 import lombok.Data;
 import jakarta.validation.constraints.Email;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 
@@ -24,6 +25,7 @@ import org.hibernate.validator.constraints.Length;
  * @author Martina
  */
 @Data
+@NoArgsConstructor //chequear que haya un constructor vacio sino salta error
 public class UsuarioDTO implements Serializable{
     //atributos del usuario que van a ser recibidos desde afuera del sistema, sale desde el request
     //poner aca atributos comunes entre todos los tipos de usuario
