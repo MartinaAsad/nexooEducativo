@@ -28,20 +28,23 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();//
-       /* Usuario usuario = usuarioRepository.findByEmail(email);//busca el usuario por mail
+        Usuario usuario = usuarioRepository.findByMail(email);//busca el usuario por mail
         if (usuario == null) {//si no lo encuentra
             throw new UsernameNotFoundException(email);//customizar la excepcion
         } else if (usuario.getActivo()==(short)1) {//chequea si el usuario que se loguea esta activo
             throw new UsernameNotFoundException(email + "  no habilitado.");
         } else {    //se hashea lo que viene desde el servidor
-            if (usuario.getPass().equals(convertirSHA256(password) )) {//aplicar la funcion hash al dar de alta un usuario
+            if (usuario.getClave().equals(convertirSHA256(password) )) {//aplicar la funcion hash al dar de alta un usuario
                 Collection<GrantedAuthority> authorities = new ArrayList<>();
-                for (Rol role : usuario.getRolidrol().getNombre()) {
-                    authorities.add(new SimpleGrantedAuthority( role.getNombre() ));
+                
+                Rol rol = usuario.getRolidrol();
+             if (rol != null) {
+               authorities.add(new SimpleGrantedAuthority(rol.getNombre()));
                 }
-                return new UsernamePasswordAuthenticationToken(usuario.getEMail(), usuario.getPass(), authorities);
+    
+                return new UsernamePasswordAuthenticationToken(usuario.getMail(), usuario.getClave(), authorities);
             }
-        }*/
+        }
         return null;
     }
 

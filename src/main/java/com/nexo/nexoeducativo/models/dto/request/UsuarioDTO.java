@@ -52,8 +52,10 @@ public class UsuarioDTO implements Serializable{
     //@NotBlank(message = "campo email vacio")
     private String eMail;
     
-    //@Pattern(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "Formato de clave incorrecto")
-    @Email(message="formato de clave invalido")
+    @Pattern(
+        regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,32}$",
+        message = "La clave debe tener entre 8 y 32 caracteres, al menos una letra mayúscula, una letra minúscula, un número y un carácter especial."
+    )
     @NotBlank(message="campo clave vacio")
     //@NotBlank(message = "campo clave vacio")
     private String clave;

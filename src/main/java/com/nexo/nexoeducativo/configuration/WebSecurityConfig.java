@@ -1,5 +1,7 @@
 package com.nexo.nexoeducativo.configuration;
 
+import com.nexo.nexoeducativo.models.entities.Usuario;
+import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,13 +13,18 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/*@Configuration
-@EnableWebSecurity*/
+@Configuration
+@EnableWebSecurity
 public class WebSecurityConfig {
 
     @Value("${cors.origins}")
@@ -30,17 +37,22 @@ public class WebSecurityConfig {
     private FailureHandler failureHandler;
     @Autowired
     private CustomAuthenticationProvider authenticationProvider;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
     
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/**").authenticated() //loguearse si o si
-                //.requestMatchers("/registro").permitAll() //entran todos
-                .requestMatchers("/api/recuperarClave").permitAll()
+                .requestMatchers("/login").permitAll() //entran todos
+                .requestMatchers("/auth/**").permitAll()
                 )
                 .cors(withDefaults()) // Habilitar CORS             //opcional de customizar                  //opcional de customizar
-                .formLogin(form -> form.loginProcessingUrl("/login").successHandler(this.successHandler).failureHandler(this.failureHandler).permitAll())
+                .formLogin(form -> form.loginProcessingUrl("/login")
+                        //.usernameParameter("mail")
+                        //.passwordParameter("clave")
+                        .successHandler(this.successHandler).failureHandler(this.failureHandler).permitAll())
                 .authenticationProvider(this.authenticationProvider)
                 .exceptionHandling(exception -> exception
                 .authenticationEntryPoint((request, response, authException) -> {
@@ -68,6 +80,39 @@ public class WebSecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager(); //configura pase de info a la sesion
     }
+    
+   /* @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return (request, response, authentication) -> {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"message\": \"Inicio de sesión exitoso\"}");
+        };
+    }
+
+    // And your failure handler
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return (request, response, exception) -> {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Credenciales incorrectas\"}");
+        };
+    }
+    
+    @Bean
+public UserDetailsService userDetailsService() {
+    return username -> {
+        Usuario usuario = usuarioRepository.findByMail(username)
+            .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+            
+        return User.builder()
+            .username(usuario.getMail())
+            .password(usuario.getClave())
+            .roles(usuario.getRolidrol().getNombre())
+            .build();
+    };
+}*/
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
