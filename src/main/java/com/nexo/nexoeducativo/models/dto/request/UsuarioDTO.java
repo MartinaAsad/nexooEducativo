@@ -95,5 +95,10 @@ public class UsuarioDTO implements Serializable{
         this.activo = activo;
     }
     
+    //constructor para el login
+    public UsuarioDTO(String eMail, String clave){
+        this.eMail = eMail;
+        this.clave = clave;
+    }
     
 }

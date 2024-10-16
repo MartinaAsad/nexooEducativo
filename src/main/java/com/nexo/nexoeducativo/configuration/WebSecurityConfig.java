@@ -36,8 +36,8 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/**").authenticated() //loguearse si o si
-                .requestMatchers("/registro").permitAll() //entran todos
-                .requestMatchers("/recuperarClave").permitAll()
+                //.requestMatchers("/registro").permitAll() //entran todos
+                .requestMatchers("/api/recuperarClave").permitAll()
                 )
                 .cors(withDefaults()) // Habilitar CORS             //opcional de customizar                  //opcional de customizar
                 .formLogin(form -> form.loginProcessingUrl("/login").successHandler(this.successHandler).failureHandler(this.failureHandler).permitAll())
