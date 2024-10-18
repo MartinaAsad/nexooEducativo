@@ -20,6 +20,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,6 +65,8 @@ public class UsuarioController {
         return new ResponseEntity<>("prueba", HttpStatus.OK);
     }
     
+    @PreAuthorize("hasAuthority('administrativo') "
+            + "or hasAuthority('jefe colegio') ")
     @PostMapping("/saveUsuario")
     public ResponseEntity<?> prueba2(@Valid @RequestBody UsuarioDTO u ){
         uService.crearUsuario(u);//buscar la manera de que en caso que no se haya creado, mostrar en el Postman un mensaje de error
@@ -93,7 +96,7 @@ public class UsuarioController {
 }
         */
     }
-    
+    @PreAuthorize("hasAuthority('super admin') ")
     @PostMapping("/saveEscuela")
      public ResponseEntity<?> prueba3(@Valid @RequestBody EscuelaDTO e ){
         /*if (u.getEMail().isEmpty()){
@@ -112,14 +115,15 @@ public class UsuarioController {
 }*/
         return new ResponseEntity<>("prueba", HttpStatus.OK);
     }
-     
+     @PreAuthorize("hasAuthority('super admin') ")
       @PostMapping("/saveRol")
      public ResponseEntity<?> prueba4(@Valid @RequestBody RolDTO r){
          
           rolService.crearRol(r);//buscar la manera de que en caso que no se haya creado, mostrar en el Postman un mensaje de error
           return new ResponseEntity<>("prueba rol", HttpStatus.OK);
      }
-     
+     @PreAuthorize("hasAuthority('administrativo') "
+            + "or hasAuthority('preceptor') ")
      @PostMapping("/saveCurso")
      public ResponseEntity<?> prueba5(@Valid @RequestBody CursoDTO r){
          
@@ -138,6 +142,7 @@ public class UsuarioController {
           
           
      }
+     @PreAuthorize("hasAuthority('super admin') ")
      @PostMapping("/savePlan")
      public ResponseEntity<?> prueba6(@Valid @RequestBody PlanDTO p){
          planService.crearPlan(p);
@@ -151,6 +156,7 @@ public class UsuarioController {
 }*/
      }
      //CHEQUEAR
+     @PreAuthorize("hasAuthority('administrativo') ")
      @PostMapping("/saveAlumno")
      ResponseEntity<?> prueba7(@Valid @RequestBody AlumnoDTO a){
          uService.crearAlumno(a);
