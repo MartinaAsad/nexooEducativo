@@ -67,7 +67,7 @@ public class UsuarioService {
     }    
     
     
-     public void crearUsuario(UsuarioDTO uDTO){
+     public void crearUsuario(UsuarioDTO uDTO) throws Exception{
          
          Rol r=new Rol();
          r.setIdRol(uDTO.getRol());//aca se inserta el id del rol segun la bbdd
@@ -85,8 +85,11 @@ public class UsuarioService {
         // Asegurarse de guardar el estado "activo"
         u.setRolidrol(r);
         
-        if(!usuariorepository.existsByDni(u.getDni())){
-             this.usuariorepository.save(u);
+        if(!usuariorepository.existsByDni(u.getDni())&&
+        !usuariorepository.existsByMail(u.getMail())){
+             this.usuariorepository.save(u);//solo lo guarda si el dni y mail ingresado NO existen
+        }else{
+            throw new Exception("dni o mail ya registrado previamente");
         }
     }
      
@@ -97,7 +100,8 @@ public class UsuarioService {
         Curso curso = cursoRepository.findById(a.getIdCurso())
             .orElseThrow(() -> new IllegalArgumentException("El curso no existe"));
 
-        if (usuariorepository.existsByDni(a.getDni())) {
+        if (usuariorepository.existsByDni(a.getDni())&&
+        !usuariorepository.existsByMail(a.getEMail())) {
             throw new IllegalArgumentException("El alumno ya existe");
         }
         Usuario alumno = new Usuario();

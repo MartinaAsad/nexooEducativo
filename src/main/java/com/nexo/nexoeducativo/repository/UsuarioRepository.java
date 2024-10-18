@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
     
     boolean existsByDni(int dni);
+     boolean existsByMail(String mail);
     boolean existsByRolidrolAndIdUsuario (Rol rolidrol, Integer idUsuario);
     Rol findByRolidrol(Rol rolidrol);
    //poner una query que traiga el mail segun el mail
