@@ -50,8 +50,8 @@ public class WebSecurityConfig {
                 )
                 .cors(withDefaults()) // Habilitar CORS             //opcional de customizar                  //opcional de customizar
                 .formLogin(form -> form.loginProcessingUrl("/login")
-                        //.usernameParameter("mail")
-                        //.passwordParameter("clave")
+                        .usernameParameter("mail")
+                        .passwordParameter("clave")
                         .successHandler(this.successHandler).failureHandler(this.failureHandler).permitAll())
                 .authenticationProvider(this.authenticationProvider)
                 .exceptionHandling(exception -> exception
