@@ -5,6 +5,7 @@
 package com.nexo.nexoeducativo.controller;
 
 import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
+import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
@@ -202,5 +203,25 @@ public class UsuarioController {
          //return new ResponseEntity<>( uService.nombreYApellido(idUsuario), HttpStatus.OK);
          
      }
+     
+     @PreAuthorize("hasAuthority('jefe colegio') ")//chequear
+     @PostMapping("/altaAdministrativo")
+      ResponseEntity<?> prueba9(@Valid @RequestBody AdministrativoDTO a){
+         uService.crearAdministrativo(a);
+          return new ResponseEntity<>("el administrativo fue creado correctamente", HttpStatus.OK);
+          /*PONER ESTO EN POSTMAN:
+          {
+   "nombre": "administrativo",
+   "apellido": "agua",
+   "dni":12358800,
+   "eMail":"adminsprueba@gmail.com",
+   "clave":"prueba",
+   "telefono":43239965,
+   "activo":1,
+   "idEscuela":4
+}*/
+     }
+     
+  }
     
-}
+

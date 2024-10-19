@@ -4,17 +4,23 @@
  */
 package com.nexo.nexoeducativo.service;
 
+
+import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.CursoEscuela;
 import com.nexo.nexoeducativo.models.entities.CursoUsuario;
+import com.nexo.nexoeducativo.models.entities.Escuela;
+import com.nexo.nexoeducativo.models.entities.EscuelaUsuario;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.models.entities.UsuarioUsuario;
 import com.nexo.nexoeducativo.repository.CursoRepository;
 import com.nexo.nexoeducativo.repository.CursoUsuarioRepository;
+import com.nexo.nexoeducativo.repository.EscuelaRepository;
+import com.nexo.nexoeducativo.repository.EscuelaUsuarioRepository;
 import com.nexo.nexoeducativo.repository.RolRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import com.nexo.nexoeducativo.repository.UsuarioUsuarioRepository;
@@ -47,6 +53,11 @@ public class UsuarioService {
     
     @Autowired
     private RolRepository rolRepository;
+     @Autowired
+    private EscuelaRepository escuelaRepository;
+    
+    @Autowired
+    private EscuelaUsuarioRepository escuelaUsuarioRepository;
  
    
     /*public void crearUsuario(UsuarioDTO u){
@@ -163,6 +174,31 @@ public class UsuarioService {
             usuariorepository.findById(idUsuario).toString();
            return usuariorepository.findById(idUsuario);
         }
+    }
+
+    public void crearAdministrativo(AdministrativoDTO a) {
+       Rol r=new Rol();
+         r.setIdRol(3);//id segun lo asignado en bbdd
+         
+            Usuario u = new Usuario();
+            u.setNombre(a.getNombre());
+            u.setApellido(a.getApellido());
+            u.setMail(a.getEMail());
+            u.setClave(convertirSHA256(a.getClave())); 
+            u.setDni(a.getDni());
+            u.setTelefono(a.getTelefono());
+            u.setActivo(a.getActivo());
+            u.setRolidrol(r);
+            
+            Escuela e=escuelaRepository.findById(a.getIdEscuela())
+            .orElseThrow(() -> new IllegalArgumentException("La escuela no existe"));
+            
+            EscuelaUsuario eu=new EscuelaUsuario();
+            eu.setUsuarioIdUsuario(u);
+            eu.setEscuelaIdEscuela(e);
+            
+            this.usuariorepository.save(u);
+            this.escuelaUsuarioRepository.save(eu);
     }
      
         
