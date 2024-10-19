@@ -20,6 +20,8 @@ import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import com.nexo.nexoeducativo.repository.UsuarioUsuarioRepository;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -149,6 +151,18 @@ public class UsuarioService {
 
     private boolean verificarPermisos(Rol rolVerificar, int nro) {
          return rolVerificar != null && rolVerificar.getIdRol() == nro;
+    }
+    
+     public Optional<Usuario> nombreYApellido(int idUsuario){
+       /* Usuario u=new Usuario();
+        u.setIdUsuario(idUsuario);//coloco el numero de id ingresado por parametro*/
+        if(usuariorepository.findById(idUsuario).isEmpty()){//en caso de que se haya ingresado un id invalido
+             throw new IllegalArgumentException("No existe ese usuario");
+        }else{//sino mostrar el nombre y apellido
+            
+            usuariorepository.findById(idUsuario).toString();
+           return usuariorepository.findById(idUsuario);
+        }
     }
      
         

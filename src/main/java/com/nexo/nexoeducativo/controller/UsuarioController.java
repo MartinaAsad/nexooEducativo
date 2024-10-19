@@ -7,9 +7,11 @@ package com.nexo.nexoeducativo.controller;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
+import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
 import com.nexo.nexoeducativo.models.dto.request.RolDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
+import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.service.CursoEscuelaService;
 import com.nexo.nexoeducativo.service.CursoService;
 import com.nexo.nexoeducativo.service.EscuelaService;
@@ -17,11 +19,14 @@ import com.nexo.nexoeducativo.service.PlanService;
 import com.nexo.nexoeducativo.service.RolService;
 import com.nexo.nexoeducativo.service.UsuarioService;
 import jakarta.validation.Valid;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -172,6 +177,23 @@ public class UsuarioController {
    "idCurso":3,
    "idPadre":6
 }*/
+     }
+     
+      @GetMapping(value="/getNombreCompleto/{idUsuario}")
+     ResponseEntity<?> prueba8(@PathVariable(value = "idUsuario") int idUsuario){
+         //uService.nombreYApellido(id);
+         Optional<Usuario> usuarioObtenido = uService.nombreYApellido(idUsuario);
+
+        if (usuarioObtenido.isPresent()) {
+            Usuario usuario = usuarioObtenido.get();
+            NombreCompletoDTO usuarioDTO = new NombreCompletoDTO(usuario.getNombre(), usuario.getApellido());
+
+            return ResponseEntity.ok(usuarioDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+        }
+         //return new ResponseEntity<>( uService.nombreYApellido(idUsuario), HttpStatus.OK);
+         
      }
     
 }
