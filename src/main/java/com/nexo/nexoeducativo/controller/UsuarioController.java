@@ -178,7 +178,14 @@ public class UsuarioController {
    "idPadre":6
 }*/
      }
-     
+     //chequear
+     @PreAuthorize("hasAuthority('super admin') "
+            + "or hasAuthority('jefe colegio') "
+            + "or hasAuthority('administrativo') "
+            + "or hasAuthority('preceptor')" 
+            + "or hasAuthority('padre')"
+            + "or hasAuthority('profesor')" 
+            + "or hasAuthority('alumno')" )
       @GetMapping(value="/getNombreCompleto/{idUsuario}")
      ResponseEntity<?> prueba8(@PathVariable(value = "idUsuario") int idUsuario){
          //uService.nombreYApellido(id);
