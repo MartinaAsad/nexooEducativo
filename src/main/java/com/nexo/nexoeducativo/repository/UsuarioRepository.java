@@ -24,8 +24,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
     boolean existsByRolidrolAndIdUsuario (Rol rolidrol, Integer idUsuario);
     Rol findByRolidrol(Rol rolidrol);
    //poner una query que traiga el mail segun el mail
-     @Query(value = "SELECT u.mail, u.clave FROM Usuario u WHERE mail = ?1", nativeQuery = true)
-       String findByMail (String mail);
+     @Query(value = "SELECT * FROM Usuario u WHERE u.mail = :mail and u.activo = 1", nativeQuery = true)
+       Usuario findByMail (String mail);
        
        @Query(value="SELECT NEW com.nexo.nexoeducativo.models.dto.request.UsuarioDTO(u.nombre, u.apellido) FROM Usuario u WHERE idUsuario = ?1", nativeQuery = true)
        List<UsuarioDTO>getFullName(int idUsuario);

@@ -1,6 +1,6 @@
 package com.nexo.nexoeducativo;
 
-import com.nexo.nexoeducativo.controller.LoginController;
+//import com.nexo.nexoeducativo.controller.LoginController;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.repository.RolRepository;

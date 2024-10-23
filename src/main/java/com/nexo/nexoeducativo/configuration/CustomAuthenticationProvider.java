@@ -37,8 +37,7 @@ private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticatio
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        Usuario usuario = new Usuario();
-        usuario.setMail(usuarioRepository.findByMail(email));
+        Usuario usuario = usuarioRepository.findByMail(email);
         
         logger.debug("email que llega"+email);
         logger.debug("password que llega"+password);
