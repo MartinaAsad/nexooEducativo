@@ -29,5 +29,4 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
        
        @Query(value="SELECT NEW com.nexo.nexoeducativo.models.dto.request.UsuarioDTO(u.nombre, u.apellido) FROM Usuario u WHERE idUsuario = ?1", nativeQuery = true)
        List<UsuarioDTO>getFullName(int idUsuario);
-    
 }

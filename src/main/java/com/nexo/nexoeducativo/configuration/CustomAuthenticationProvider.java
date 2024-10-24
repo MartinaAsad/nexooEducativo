@@ -25,7 +25,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-@Component
+/*@Component
 @Slf4j 
 public class CustomAuthenticationProvider implements AuthenticationProvider {
     
@@ -37,7 +37,8 @@ private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticatio
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        Usuario usuario = usuarioRepository.findByMail(email);
+        Usuario usuario = new Usuario();
+        //usuario.setMail(usuarioRepository.findByMail(email));
         
         logger.debug("email que llega"+email);
         logger.debug("password que llega"+password);
@@ -80,4 +81,4 @@ private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticatio
         }
         return sb.toString();
     }
-}
+}*/
