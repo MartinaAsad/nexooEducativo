@@ -89,7 +89,7 @@ public class UsuarioService {
         Usuario u = new Usuario();
         u.setNombre(uDTO.getNombre());
         u.setApellido(uDTO.getApellido());
-        u.setMail(uDTO.getEMail());
+        u.setMail(uDTO.getMail());
         u.setClave(convertirSHA256(uDTO.getClave())); 
         u.setDni(uDTO.getDni());
         u.setTelefono(uDTO.getTelefono());
@@ -115,13 +115,13 @@ public class UsuarioService {
             .orElseThrow(() -> new IllegalArgumentException("El curso no existe"));
 
         if (usuariorepository.existsByDni(a.getDni())&&
-        !usuariorepository.existsByMail(a.getEMail())) {
+        !usuariorepository.existsByMail(a.getMail())) {
             throw new IllegalArgumentException("El alumno ya existe");
         }
         Usuario alumno = new Usuario();
         alumno.setNombre(a.getNombre());
         alumno.setApellido(a.getApellido());
-        alumno.setMail(a.getEMail());
+        alumno.setMail(a.getMail());
         alumno.setDni(a.getDni());
         alumno.setTelefono(a.getTelefono());
         alumno.setActivo(a.getActivo());
@@ -184,7 +184,7 @@ public class UsuarioService {
             Usuario u = new Usuario();
             u.setNombre(a.getNombre());
             u.setApellido(a.getApellido());
-            u.setMail(a.getEMail());
+            u.setMail(a.getMail());
             u.setClave(convertirSHA256(a.getClave())); 
             u.setDni(a.getDni());
             u.setTelefono(a.getTelefono());

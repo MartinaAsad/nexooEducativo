@@ -50,7 +50,7 @@ public class UsuarioDTO implements Serializable{
     @Email(message="formato de email invalido")
     @NotBlank(message="campo email vacio")
     //@NotBlank(message = "campo email vacio")
-    private String eMail;
+    private String mail;
     
     @Pattern(
         regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,32}$",
@@ -79,7 +79,7 @@ public class UsuarioDTO implements Serializable{
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
-        this.eMail = eMail;
+        this.mail = eMail;
         this.clave = clave;
         this.telefono = telefono;
         this.activo = activo;
@@ -91,7 +91,7 @@ public class UsuarioDTO implements Serializable{
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
-        this.eMail = eMail;
+        this.mail = eMail;
         this.clave = clave;
         this.telefono = telefono;
         this.activo = activo;
@@ -99,7 +99,7 @@ public class UsuarioDTO implements Serializable{
     
     //constructor para el login
     public UsuarioDTO(String eMail, String clave){
-        this.eMail = eMail;
+        this.mail = eMail;
         this.clave = clave;
     }
     

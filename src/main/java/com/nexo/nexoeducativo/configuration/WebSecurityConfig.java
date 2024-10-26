@@ -8,17 +8,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import static org.springframework.security.config.Customizer.withDefaults;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -45,50 +42,45 @@ public class WebSecurityConfig {
     @Autowired
     private UsuarioRepository usuarioRepository;
     
-    @Bean
+     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-         http
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/**").authenticated()
+        http
+                .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/api/**").authenticated() //loguearse si o si
+                //.requestMatchers("/login").permitAll() //entran todos
                 .requestMatchers("/auth/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .formLogin(withDefaults())
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-            )
-            .httpBasic(withDefaults())
-            .csrf(csrf -> csrf.disable());
-            
+                )
+                .cors(withDefaults()) // Habilitar CORS             //opcional de customizar                  //opcional de customizar
+                .formLogin(form -> form.loginProcessingUrl("/login")
+                        .usernameParameter("mail")
+                        .passwordParameter("clave")
+                        .successHandler(this.successHandler).failureHandler(this.failureHandler).permitAll())
+                .authenticationProvider(this.authenticationProvider)
+                .exceptionHandling(exception -> exception
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"error\": \"No está autenticado o la sesión ha expirado.\"}");
+                })
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);//falta de permisos
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"error\": \"Acceso denegado.\"}");
+                })
+                )                                   //logout: invalida la sesion, borra las cookies de la sesion, mensaje de deslogueo exitoso (o no)
+                .logout(logout -> logout.logoutUrl("/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID").logoutSuccessHandler(this.logoutHundler))
+                .sessionManagement(session -> session.maximumSessions(1).maxSessionsPreventsLogin(false)) //solo 1 sesion por usuario
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))//la autenticacion es requerida SIEMPRE
+                .httpBasic(withDefaults()) // Habilitar autenticación HTTP básica
+                .csrf(csrf -> csrf.disable()); // Deshabilitar CSRF
+//                .addFilterBefore(this.segundoFactorAutenticacionFilter, UsernamePasswordAuthenticationFilter.class);  // Añadir filtro custom antes del filtro de autenticación
+
         return http.build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new MessageDigestPasswordEncoder("SHA-256");
-    }
-
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        String password = "password";
-        MessageDigestPasswordEncoder encoder = new MessageDigestPasswordEncoder("SHA-256");
-        String hashedPassword = encoder.encode(password);
-        
-        UserDetails user = User.builder()
-            .username("user")
-            .password(hashedPassword)
-            .roles("USER")
-            .passwordEncoder(pwd -> pwd) // Use the password as-is since it's already encoded
-            .build();
-            
-        return new InMemoryUserDetailsManager(user);
-    }
-
-    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+        return authenticationConfiguration.getAuthenticationManager(); //configura pase de info a la sesion
     }
     
    /* @Bean
