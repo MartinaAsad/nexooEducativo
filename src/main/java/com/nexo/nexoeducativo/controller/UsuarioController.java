@@ -99,6 +99,17 @@ public class UsuarioController {
    "activo":1,
    "rol":6
 }
+        
+        {
+    "nombre": "Nerea",
+    "apellido": "Soto",
+    "dni": 365896,
+    "eMail": "nereaa.soto@gmail.com",
+    "clave": "123456",
+    "telefono": 11472033,
+    "activo": 1,
+    "rol": 4
+}
         */
     }
     @PreAuthorize("hasAuthority('super admin') ")

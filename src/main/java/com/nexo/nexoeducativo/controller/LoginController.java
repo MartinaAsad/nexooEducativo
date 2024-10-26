@@ -44,9 +44,10 @@ public class LoginController {
             // The actual authentication is handled by Spring Security
             // This method will only be reached if authentication was successful
             //return ResponseEntity.ok(loginRequest.getMail());//LLEGA LA CLAVE PERO NO EL EMAIL
-           Usuario u = usuarioRepository.findByMail(loginRequest.getMail());//chequear lo que recibo del email y contraseña despues
+           Usuario u = usuarioRepository.findByMailAndClave(loginRequest.getMail(), loginRequest.getClave());//chequear lo que recibo del email y contraseña despues
            // chequear si esta en el repositoriodel body
            //desencriptar la clave llegada obtenida en el objeto u
+           u.getClave();
            String claveDesencriptada="";
             
             if (u != null) {
