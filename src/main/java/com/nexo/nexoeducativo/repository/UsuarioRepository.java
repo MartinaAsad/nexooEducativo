@@ -28,8 +28,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
     boolean existsByRolidrolAndIdUsuario (Rol rolidrol, Integer idUsuario);
     Rol findByRolidrol(Rol rolidrol);
    //EL PROBLEMA ES QUE EL MAIL NO ESTA LLEGANDO BIEN AL METODO, DESDE EL CONTROLADOR FUNCIONA BIEN PERO NO LLEGA ACA
-     @Query(value = "SELECT * FROM Usuario u WHERE u.mail=:mail and u.clave=:clave" , nativeQuery = true)
-       Usuario findByMailAndClave (String mail, String clave);
+     @Query(value = "SELECT * FROM Usuario u WHERE u.mail=:mail" , nativeQuery = true)
+       Usuario findByMail (String mail);
        
        
        @Query(value="SELECT NEW com.nexo.nexoeducativo.models.dto.request.UsuarioDTO(u.nombre, u.apellido) FROM Usuario u WHERE idUsuario = ?1", nativeQuery = true)
