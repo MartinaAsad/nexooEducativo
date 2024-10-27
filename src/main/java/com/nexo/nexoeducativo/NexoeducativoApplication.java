@@ -29,27 +29,6 @@ public class NexoeducativoApplication {
         private RolRepository rolRepository;
         
         
-       /* @PostConstruct
-        public void crearUsuario(){
-            Usuario u=new Usuario();
-            
-            u.setNombre("Martina");
-            u.setApellido("Asad");
-            u.setDni(45874477);
-            u.setEMail("mail@gmail.com");
-            u.setActivo((short)1);
-            
-            this.usuarioRepository.save(u);
-        }*/
-        
-       /*  @PostConstruct
-        public void crearRol(){
-            Rol r = new Rol();
-            
-            r.setNombre("Administrador");
-            this.rolRepository.save(r);
-        }*/
-        
         
         
 

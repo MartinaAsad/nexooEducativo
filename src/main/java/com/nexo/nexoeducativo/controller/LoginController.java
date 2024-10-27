@@ -1,7 +1,7 @@
 package com.nexo.nexoeducativo.controller;
 
 
-import com.nexo.nexoeducativo.configuration.CustomAuthenticationProvider;
+//import com.nexo.nexoeducativo.configuration.CustomAuthenticationProvider;
 import com.nexo.nexoeducativo.models.dto.request.AuthRequestDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
 import com.nexo.nexoeducativo.models.entities.Usuario;
@@ -61,7 +61,7 @@ public class LoginController {
         }
         return sb.toString();
     }   
-      
+
          @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequestDTO loginRequest) {
             // The actual authentication is handled by Spring Security
@@ -83,39 +83,4 @@ public class LoginController {
                  //return ResponseEntity.ok("todo bien");
 }
     
-    public static void desencriptar(String clave) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
-    byte[] enc = {(byte) 0x24, (byte) 0xE9, (byte) 0x25, (byte) 0x38,
-        (byte) 0x9B, (byte) 0xA1, (byte) 0x8E, (byte) 0x4B,
-        (byte) 0x7D, (byte) 0x80, (byte) 0x34, (byte) 0x55,
-        (byte) 0x4C, (byte) 0xB8, (byte) 0x7D, (byte) 0x47};
-
-    for (int i = 0; i < 10000; i++) {
-        //Genera de "0000" al "9999".
-        String proofString = String.format("%04d", i);
-
-        //Realizado del resumen con el String generado.
-        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-        messageDigest.update(proofString.getBytes());
-        byte[] proofBytes = messageDigest.digest();
-        
-        byte[] proofConvertByte = Arrays.copyOf(proofBytes, 192 / 8);
-
-        SecretKeySpec secretKeySpec = new SecretKeySpec(proofConvertByte, "AES");
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
-        
-        try {
-            byte[] proofDeCipher = cipher.doFinal(enc);
-            System.out.println("Posible clave= " + proofString + ", mensaje que descrifrada= " + new String(proofDeCipher));
-            //return proofDeCipher;
-        } catch (BadPaddingException e) {
-        }
-    }
-    
-    }
-
 }
-    
-    
-   
-

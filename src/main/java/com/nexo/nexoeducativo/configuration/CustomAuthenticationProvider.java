@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
-@Slf4j 
+@Slf4j
 public class CustomAuthenticationProvider implements AuthenticationProvider {
     
 private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticationProvider.class); 
@@ -34,19 +36,22 @@ private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticatio
     private UsuarioRepository usuarioRepository;
 
     @Override
+    //@Transactional //para que la sesion este abierta en todo el proceso
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
-        Usuario usuario = new Usuario();
-        //usuario.setMail(usuarioRepository.findByMail(email));
+        Usuario usuario =  new Usuario();
+        //usuarioRepository.findByMail(email);
         
-        logger.debug("email que llega"+email);
-        logger.debug("password que llega"+password);
+        //usuario.setMail(usuarioRepository.findByMail(email));
+        //Hibernate.initialize(usuario.getRolidrol());
+        //Hibernate.initialize(usuario.getCursoUsuarioList()); 
+        
         if (usuario == null) {
             throw new UsernameNotFoundException("Usuario no encontrado: " + email);
         }
         if (usuario.getActivo() != (short) 1) { // Verificar que el usuario esté activo
-            throw new UsernameNotFoundException(email + " no habilitado.");
+            throw new UsernameNotFoundException(email + " no habilitado."+usuario.getActivo()+usuario.getMail());
         }
         // Verificar si la contraseña es correcta
         if (!usuario.getClave().equals(convertirSHA256(password))) {

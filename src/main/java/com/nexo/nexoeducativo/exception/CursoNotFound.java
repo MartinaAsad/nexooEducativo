@@ -4,19 +4,12 @@
  */
 package com.nexo.nexoeducativo.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
-
 /**
  *
  * @author Martina
  */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-class ErrorMessage {
- 	private HttpStatus status;
-	private String message;   
+public class CursoNotFound extends RuntimeException{
+    public CursoNotFound(String message){
+        super(message);
+    }
 }

@@ -46,9 +46,9 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/**").authenticated() //loguearse si o si
-                //.requestMatchers("/login").permitAll() //entran todos
-                .requestMatchers("/auth/**").permitAll()
+                //.requestMatchers("/api/**").authenticated() //loguearse si o si
+                .requestMatchers("/api/usuario/**").permitAll() //entran todos
+                //.requestMatchers("/auth/**").permitAll()
                 )
                 .cors(withDefaults()) // Habilitar CORS             //opcional de customizar                  //opcional de customizar
                 .formLogin(form -> form.loginProcessingUrl("/login")

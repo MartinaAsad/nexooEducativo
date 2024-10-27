@@ -5,6 +5,10 @@
 package com.nexo.nexoeducativo.service;
 
 
+import com.nexo.nexoeducativo.exception.CursoNotFound;
+import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
+import com.nexo.nexoeducativo.exception.RolNotFound;
+import com.nexo.nexoeducativo.exception.UsuarioAssignedException;
 import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
@@ -14,6 +18,9 @@ import com.nexo.nexoeducativo.models.entities.CursoEscuela;
 import com.nexo.nexoeducativo.models.entities.CursoUsuario;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.EscuelaUsuario;
+import com.nexo.nexoeducativo.exception.UsuarioExistingException;
+import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
+import com.nexo.nexoeducativo.exception.UsuarioWithPadreException;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.models.entities.UsuarioUsuario;
@@ -29,6 +36,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -103,20 +111,20 @@ public class UsuarioService {
         !usuariorepository.existsByMail(u.getMail())){
              this.usuariorepository.save(u);//solo lo guarda si el dni y mail ingresado NO existen
         }else{
-            throw new Exception("dni o mail ya registrado previamente");
+            throw new UsuarioExistingException("dni o mail ya registrado previamente");
         }
     }
      
      public void crearAlumno(AlumnoDTO a){
        Rol rolAlumno = rolRepository.findById(7)
-        .orElseThrow(() -> new IllegalArgumentException("El rol de Alumno no existe"));
+        .orElseThrow(() -> new RolNotFound("El rol de Alumno no existe"));
 
         Curso curso = cursoRepository.findById(a.getIdCurso())
-            .orElseThrow(() -> new IllegalArgumentException("El curso no existe"));
+            .orElseThrow(() -> new CursoNotFound("El curso no existe"));
 
         if (usuariorepository.existsByDni(a.getDni())&&
         !usuariorepository.existsByMail(a.getMail())) {
-            throw new IllegalArgumentException("El alumno ya existe");
+            throw new UsuarioExistingException("El alumno ya existe");
         }
         Usuario alumno = new Usuario();
         alumno.setNombre(a.getNombre());
@@ -129,23 +137,23 @@ public class UsuarioService {
         alumno = this.usuariorepository.save(alumno);
 
         if (cursoUsuarioRepository.existsByCursoIdCursoAndUsuarioIdUsuario(curso, alumno)) {
-            throw new IllegalArgumentException("El alumno ya está asignado a ese curso");
+            throw new UsuarioAssignedException("El alumno ya está asignado a ese curso");
         }
         Usuario padre = usuariorepository.findById(a.getIdPadre())
-            .orElseThrow(() -> new IllegalArgumentException("El padre no existe"));
+            .orElseThrow(() -> new UsuarioExistingException("El padre no existe"));
 
         Rol rolPadre = rolRepository.findById(6)
-            .orElseThrow(() -> new IllegalArgumentException("El rol de Padre no existe"));
+            .orElseThrow(() -> new RolNotFound("El rol de Padre no existe"));
 
         if (!verificarPermisos(rolPadre, 6)) {
-            throw new IllegalArgumentException("El rol asignado no es un rol de padre válido: " + rolPadre.getIdRol());
+            throw new UsuarioNotAuthorizedException("El usuario no posee permisos como padre: ");
         }
 
         padre.setRolidrol(rolPadre);
         padre = usuariorepository.save(padre);
 
         if (usuarioUsuarioRepo.existsByUsuarioIdUsuarioAndUsuarioIdUsuario1(alumno, padre)) {
-            throw new IllegalArgumentException("Ese alumno ya tiene asociado a ese padre");
+            throw new UsuarioWithPadreException("Ese alumno ya tiene asociado a ese padre");
         }
 
         // Create the course-student relationship
@@ -169,7 +177,7 @@ public class UsuarioService {
        /* Usuario u=new Usuario();
         u.setIdUsuario(idUsuario);//coloco el numero de id ingresado por parametro*/
         if(usuariorepository.findById(idUsuario).isEmpty()){//en caso de que se haya ingresado un id invalido
-             throw new IllegalArgumentException("No existe ese usuario");
+             throw new UsuarioExistingException("No existe ese usuario");
         }else{//sino mostrar el nombre y apellido
             
             usuariorepository.findById(idUsuario).toString();
@@ -192,7 +200,7 @@ public class UsuarioService {
             u.setRolidrol(r);
             
             Escuela e=escuelaRepository.findById(a.getIdEscuela())
-            .orElseThrow(() -> new IllegalArgumentException("La escuela no existe"));
+            .orElseThrow(() -> new EscuelaNotFoundException("La escuela no existe"));
             
             EscuelaUsuario eu=new EscuelaUsuario();
             eu.setUsuarioIdUsuario(u);

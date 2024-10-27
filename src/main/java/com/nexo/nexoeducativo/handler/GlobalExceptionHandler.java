@@ -1,0 +1,67 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.nexo.nexoeducativo.handler;
+
+import com.nexo.nexoeducativo.exception.CursoNotFound;
+import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
+import com.nexo.nexoeducativo.exception.RolNotFound;
+import com.nexo.nexoeducativo.exception.UsuarioAssignedException;
+import com.nexo.nexoeducativo.exception.UsuarioExistingException;
+import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
+import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
+import com.nexo.nexoeducativo.exception.UsuarioWithPadreException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+/**
+ *
+ * @author Martina
+ */
+@ControllerAdvice
+public class GlobalExceptionHandler {
+   
+    @ExceptionHandler(UsuarioExistingException.class)
+    public ResponseEntity<String> handleUserExistingException(UsuarioExistingException ue){
+        return new ResponseEntity<>(ue.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(UsuarioNotFoundException.class)
+    public ResponseEntity<String>handleUserNotFoundException(UsuarioNotFoundException uf){
+         return new ResponseEntity<>(uf.getMessage(), HttpStatus.NOT_FOUND);
+    }
+    
+     @ExceptionHandler(RolNotFound.class)
+    public ResponseEntity<String>handleRolNotFound(RolNotFound uf){
+         return new ResponseEntity<>(uf.getMessage(), HttpStatus.NOT_FOUND);
+    }
+    
+     @ExceptionHandler(CursoNotFound.class)
+    public ResponseEntity<String>handleCursoNotFound(CursoNotFound uf){
+         return new ResponseEntity<>(uf.getMessage(), HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(UsuarioAssignedException.class)
+    public ResponseEntity<String>handleUsuarioAssignedException(UsuarioAssignedException uf){
+         return new ResponseEntity<>(uf.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(UsuarioNotAuthorizedException.class)
+    public ResponseEntity<String>handleUsuarioNotAuthorizedException(UsuarioNotAuthorizedException uf){
+         return new ResponseEntity<>(uf.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(UsuarioWithPadreException.class)
+    public ResponseEntity<String>handleUsuarioWithPadreException(UsuarioWithPadreException uf){
+         return new ResponseEntity<>(uf.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    
+     @ExceptionHandler(EscuelaNotFoundException.class)
+    public ResponseEntity<String>handleEscuelaNotFoundException(EscuelaNotFoundException uf){
+         return new ResponseEntity<>(uf.getMessage(), HttpStatus.NOT_FOUND);
+    }
+   
+}
