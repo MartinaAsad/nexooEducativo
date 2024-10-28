@@ -7,6 +7,7 @@ package com.nexo.nexoeducativo.service;
 import com.nexo.nexoeducativo.models.dto.request.RolDTO;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.repository.RolRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,10 @@ public class RolService {
             this.rolRepository.save(rol);
         }
         
+    }
+    
+    public List<String> obtenerNombreRoles(){
+        return rolRepository.getNombreRol();
     }
     
 }

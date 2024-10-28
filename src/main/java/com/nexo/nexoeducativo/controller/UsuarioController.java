@@ -244,10 +244,22 @@ public class UsuarioController {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		
-		return new ResponseEntity<>(nombreCompleto, HttpStatus.OK);
-         
-         
+		return new ResponseEntity<>(nombreCompleto, HttpStatus.OK);   
      }
+     
+      @PreAuthorize("hasAuthority('super admin') ")//chequear
+    @GetMapping(value = "/getNombreRoles")
+    ResponseEntity<?> prueba12() {
+        List<String> roles = new ArrayList<String>();
+        rolService.obtenerNombreRoles().forEach(roles::add);
+
+        if (roles.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(roles, HttpStatus.OK);
+
+    }
      
   }
     
