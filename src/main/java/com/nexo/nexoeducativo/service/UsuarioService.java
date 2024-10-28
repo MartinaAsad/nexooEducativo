@@ -210,6 +210,10 @@ public class UsuarioService {
             this.usuariorepository.save(u);
             this.escuelaUsuarioRepository.save(eu);
     }
+
+     public List<NombreCompletoDTO> jefeColegioSinAsignar(){
+       return usuariorepository.getJefeColegioWithoutSchool();
+        }
         
      
 }

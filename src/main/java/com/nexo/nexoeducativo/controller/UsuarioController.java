@@ -230,6 +230,24 @@ public class UsuarioController {
    "idEscuela":4
 }*/
      }
+      @PreAuthorize("hasAuthority('super admin') ")//chequear
+      @GetMapping(value="/getJefeColegioSinEscuela")
+     ResponseEntity<?> prueba11(){
+         List<NombreCompletoDTO> nombreCompleto = new ArrayList<NombreCompletoDTO>();
+		
+		/*if(nombreCompleto==null)
+			usuarioRepository.forEach(materias::add);
+		else*/
+			uService.jefeColegioSinAsignar().forEach(nombreCompleto::add);
+		
+		if(nombreCompleto.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		return new ResponseEntity<>(nombreCompleto, HttpStatus.OK);
+         
+         
+     }
      
   }
     
