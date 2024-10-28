@@ -4,6 +4,7 @@
  */
 package com.nexo.nexoeducativo.repository;
 
+import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
@@ -14,6 +15,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.repository.query.Param;
 
 /**
  *
@@ -30,10 +32,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
    //EL PROBLEMA ES QUE EL MAIL NO ESTA LLEGANDO BIEN AL METODO, DESDE EL CONTROLADOR FUNCIONA BIEN PERO NO LLEGA ACA
      @Query(value = "SELECT * FROM Usuario u WHERE u.mail=:mail" , nativeQuery = true)
        Usuario findByMail (String mail);
+       @Query(value="SELECT u.nombre, u.apellido FROM Usuario u WHERE id_usuario = :idUsuario", nativeQuery = true)
+       List<NombreCompletoDTO>getFullName(@Param("idUsuario")int idUsuario);
        
        
-       @Query(value="SELECT NEW com.nexo.nexoeducativo.models.dto.request.UsuarioDTO(u.nombre, u.apellido) FROM Usuario u WHERE idUsuario = ?1", nativeQuery = true)
-       List<UsuarioDTO>getFullName(int idUsuario);
        
        
 }

@@ -4,6 +4,7 @@
  */
 package com.nexo.nexoeducativo.service;
 
+import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.EscuelaUsuario;
@@ -44,7 +45,7 @@ public class EscuelaService {
      
          if(escuelaRepository.existsByDireccion(e.getDireccion())){
              //aca salta una excepcion evitando que se guarde la escuela, ver si esta bien el tipo de excepcion
-             throw new IllegalArgumentException("la escuela ya existe en la plataforma");
+             throw new EscuelaNotFoundException("la escuela ya existe en la plataforma");
          } else if (!planRepository.existsById(idPlanDto)) {//si se intenta guardar un id de un plan inexistente
              //aca salta una excepcion evitando que se guarde la escuela, ver si esta bien el tipo de excepcion
              throw new IllegalArgumentException("el plan seleccionado no existe");

@@ -21,6 +21,7 @@ import com.nexo.nexoeducativo.models.entities.EscuelaUsuario;
 import com.nexo.nexoeducativo.exception.UsuarioExistingException;
 import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
 import com.nexo.nexoeducativo.exception.UsuarioWithPadreException;
+import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.models.entities.UsuarioUsuario;
@@ -173,15 +174,15 @@ public class UsuarioService {
          return rolVerificar != null && rolVerificar.getIdRol() == nro;
     }
     
-     public Optional<Usuario> nombreYApellido(int idUsuario){
+       public  List<NombreCompletoDTO> nombreYApellido(int idUsuario){
        /* Usuario u=new Usuario();
         u.setIdUsuario(idUsuario);//coloco el numero de id ingresado por parametro*/
-        if(usuariorepository.findById(idUsuario).isEmpty()){//en caso de que se haya ingresado un id invalido
+        if(usuariorepository.getFullName(idUsuario).isEmpty()){//en caso de que se haya ingresado un id invalido
              throw new UsuarioExistingException("No existe ese usuario");
         }else{//sino mostrar el nombre y apellido
             
-            usuariorepository.findById(idUsuario).toString();
-           return usuariorepository.findById(idUsuario);
+            return usuariorepository.getFullName(idUsuario);
+           //return usuariorepository.findById(idUsuario);
         }
     }
 

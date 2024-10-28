@@ -20,6 +20,8 @@ import com.nexo.nexoeducativo.service.PlanService;
 import com.nexo.nexoeducativo.service.RolService;
 import com.nexo.nexoeducativo.service.UsuarioService;
 import jakarta.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -197,20 +199,17 @@ public class UsuarioController {
             + "or hasAuthority('padre')"
             + "or hasAuthority('profesor')" 
             + "or hasAuthority('alumno')" )
-      @GetMapping(value="/getNombreCompleto/{idUsuario}")
+     @GetMapping(value="/getNombreCompleto/{idUsuario}")
      ResponseEntity<?> prueba8(@PathVariable(value = "idUsuario") int idUsuario){
-         //uService.nombreYApellido(id);
-         Optional<Usuario> usuarioObtenido = uService.nombreYApellido(idUsuario);
-
-        if (usuarioObtenido.isPresent()) {
-            Usuario usuario = usuarioObtenido.get();
-            NombreCompletoDTO usuarioDTO = new NombreCompletoDTO(usuario.getNombre(), usuario.getApellido());
-
-            return ResponseEntity.ok(usuarioDTO);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
-        }
-         //return new ResponseEntity<>( uService.nombreYApellido(idUsuario), HttpStatus.OK);
+         List<NombreCompletoDTO> nombreCompleto = new ArrayList<NombreCompletoDTO>();
+	uService.nombreYApellido(idUsuario).forEach(nombreCompleto::add);
+		
+		if(nombreCompleto.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		return new ResponseEntity<>(nombreCompleto, HttpStatus.OK);
+         
          
      }
      
