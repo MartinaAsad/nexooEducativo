@@ -4,10 +4,8 @@
  */
 package com.nexo.nexoeducativo.repository;
 
-import com.nexo.nexoeducativo.models.entities.Plan;
-import java.util.List;
+import com.nexo.nexoeducativo.models.entities.Materia;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -15,10 +13,6 @@ import org.springframework.stereotype.Repository;
  * @author Martina
  */
 @Repository
-public interface PlanRepository extends JpaRepository<Plan, Integer> {
-    boolean existsByDescripcion (String descripcion);
-
-    @Query(value="SELECT idPlan, descripcion FROM Plan")
-    public List<String> getDescripcionAndIdPlan();
+public interface MateriaRepository extends JpaRepository<Materia, Integer> {
     
 }

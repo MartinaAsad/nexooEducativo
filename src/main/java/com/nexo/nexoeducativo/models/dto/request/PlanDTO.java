@@ -12,6 +12,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import java.io.Serializable;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -19,6 +21,8 @@ import org.hibernate.validator.constraints.Length;
  * @author Martina
  */
 @Data
+@Getter
+@Setter
 public class PlanDTO implements Serializable{
     
     @Pattern(regexp = "^[a-zA-Z-0-9\s]+$", message = "campo descripcion solo debe tener letras")//solo acepta letras
