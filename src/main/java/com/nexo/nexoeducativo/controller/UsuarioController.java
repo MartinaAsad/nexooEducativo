@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/usuario") //reemplazarlo por api
+@CrossOrigin(origins="http://localhost:3000")
 public class UsuarioController {
     //los controladores se comunican con el frontend
      @Autowired
@@ -258,6 +260,18 @@ public class UsuarioController {
         }
 
         return new ResponseEntity<>(roles, HttpStatus.OK);
+
+    } 
+     @GetMapping(value = "/getNombrePlanes")
+    ResponseEntity<?> prueba13() {
+        List<String> planes = new ArrayList<String>();
+        planService.obtenerNombrePlanes().forEach(planes::add);
+
+        if (planes.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(planes, HttpStatus.OK);
 
     }
      

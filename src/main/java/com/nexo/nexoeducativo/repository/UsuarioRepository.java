@@ -40,7 +40,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
     @Query(value = "SELECT u.nombre, u.apellido FROM Usuario u WHERE id_usuario = :idUsuario", nativeQuery = true)
     List<NombreCompletoDTO> getFullName(@Param("idUsuario") int idUsuario);
 
-    @Query(value = "SELECT u.nombre, u.apellido FROM usuario u LEFT JOIN escuela_usuario eu ON eu.usuario_id_usuario=u.id_usuario WHERE u.Rol_id_rol=2 and eu.escuela_id_escuela IS NULL", nativeQuery = true)
+    @Query(value = "SELECT u.id_usuario, u.nombre, u.apellido FROM usuario u LEFT JOIN escuela_usuario eu ON eu.usuario_id_usuario=u.id_usuario WHERE u.Rol_id_rol=2 and eu.escuela_id_escuela IS NULL", nativeQuery = true)
     List<NombreCompletoDTO> getJefeColegioWithoutSchool();
        
        

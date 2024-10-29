@@ -7,6 +7,7 @@ package com.nexo.nexoeducativo.service;
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
 import com.nexo.nexoeducativo.models.entities.Plan;
 import com.nexo.nexoeducativo.repository.PlanRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,10 @@ public class PlanService {
         }else{
              throw new IllegalArgumentException("el plan ya existe");
         }
+    }
+    
+     public List<String> obtenerNombrePlanes(){
+        return planRepository.getDescripcionAndIdPlan();
     }
     
 }

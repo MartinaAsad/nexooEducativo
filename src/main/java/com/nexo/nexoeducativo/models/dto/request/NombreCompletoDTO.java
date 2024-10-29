@@ -10,7 +10,7 @@ package com.nexo.nexoeducativo.models.dto.request;
  */
 
 public interface NombreCompletoDTO {
-    
+    int getId_usuario();
     String getNombre();
     String getApellido();
     
