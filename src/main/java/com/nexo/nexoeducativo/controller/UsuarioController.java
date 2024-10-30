@@ -8,6 +8,7 @@ import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
+import com.nexo.nexoeducativo.models.dto.request.MateriaDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
 import com.nexo.nexoeducativo.models.dto.request.RolDTO;
@@ -16,6 +17,7 @@ import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.service.CursoEscuelaService;
 import com.nexo.nexoeducativo.service.CursoService;
 import com.nexo.nexoeducativo.service.EscuelaService;
+import com.nexo.nexoeducativo.service.MateriaService;
 import com.nexo.nexoeducativo.service.PlanService;
 import com.nexo.nexoeducativo.service.RolService;
 import com.nexo.nexoeducativo.service.UsuarioService;
@@ -63,16 +65,16 @@ public class UsuarioController {
     @Autowired
     private CursoEscuelaService cursoEscuelaService;
     
+    @Autowired
+    private MateriaService materiaService;
+    
     //aca especifica que roles de usuario estan autorizados a usar ese endpoint, lo de hasAuthority es segun lo escrito en la bbdd
     //se usan operadores de base de datos
     /*@PreAuthorize("hasAuthority('ROLE_BM_BACKOFFICE_ADMIN') "
             + "or hasAuthority('ROLE_BM_BACKOFFICE_DACTILAR') "
             + "or hasAuthority('ROLE_BM_BACKOFFICE_FACIAL') "
             + "or hasAuthority('ROLE_BM_BACKOFFICE_FACIAL_SEGURIDAD')")*/
-    @GetMapping("/getUsuario")
-    public ResponseEntity<?> prueba(){
-        return new ResponseEntity<>("prueba", HttpStatus.OK);
-    }
+  
     
     @PreAuthorize("hasAuthority('administrativo') "
             + "or hasAuthority('jefe colegio') ")
@@ -261,7 +263,8 @@ public class UsuarioController {
 
         return new ResponseEntity<>(roles, HttpStatus.OK);
 
-    } 
+    }
+    @PreAuthorize("hasAuthority('super admin') ")//chequear
      @GetMapping(value = "/getNombrePlanes")
     ResponseEntity<?> prueba13() {
         List<String> planes = new ArrayList<String>();
@@ -273,6 +276,12 @@ public class UsuarioController {
 
         return new ResponseEntity<>(planes, HttpStatus.OK);
 
+    }
+    
+    @PostMapping(value="/saveMateria")
+    ResponseEntity<?> prueba14(@Valid @RequestBody MateriaDTO m){
+        materiaService.crearMateria(m);
+         return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.OK);
     }
      
   }

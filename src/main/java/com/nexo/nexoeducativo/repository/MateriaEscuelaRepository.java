@@ -4,9 +4,8 @@
  */
 package com.nexo.nexoeducativo.repository;
 
-import com.nexo.nexoeducativo.models.entities.Curso;
+import com.nexo.nexoeducativo.models.entities.MateriaEscuela;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Repository;
  * @author Martina
  */
 @Repository
-public interface CursoRepository extends JpaRepository<Curso, Integer> {   
-
+public interface MateriaEscuelaRepository extends JpaRepository<MateriaEscuela, Integer>{
     
 }
