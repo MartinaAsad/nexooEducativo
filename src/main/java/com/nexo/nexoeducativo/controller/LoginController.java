@@ -77,7 +77,7 @@ public class LoginController {
             
             if (u != null && u.getClave().equals(contraEncriptada)) {
             // Si el usuario existe, retornamos el string en el cuerpo de la respuesta
-            return ResponseEntity.ok("bienvenido!");
+            return ResponseEntity.ok(u.getRolidrol().getNombre());
         } else {
             // Si no se encuentra el usuario, retornamos un error
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("contraseña incorrecta");
