@@ -38,34 +38,36 @@ private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticatio
     @Override
     //@Transactional //para que la sesion este abierta en todo el proceso
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String email = authentication.getName();
-        String password = authentication.getCredentials().toString();
-        Usuario usuario =  new Usuario();
-        //usuarioRepository.findByMail(email);
-        
-        //usuario.setMail(usuarioRepository.findByMail(email));
-        //Hibernate.initialize(usuario.getRolidrol());
-        //Hibernate.initialize(usuario.getCursoUsuarioList()); 
-        
-        if (usuario == null) {
-            throw new UsernameNotFoundException("Usuario no encontrado: " + email);
-        }
-        if (usuario.getActivo() != (short) 1) { // Verificar que el usuario esté activo
-            throw new UsernameNotFoundException(email + " no habilitado."+usuario.getActivo()+usuario.getMail());
-        }
-        // Verificar si la contraseña es correcta
-        if (!usuario.getClave().equals(convertirSHA256(password))) {
-            throw new BadCredentialsException("Contraseña incorrecta.");
-        }
-        
-        // Asignar roles al usuario
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        Rol rol = usuario.getRolidrol();
-        if (rol != null) {
-            authorities.add(new SimpleGrantedAuthority(rol.getNombre()));
-        }
-        // Retornar el token de autenticación con el objeto usuario
-        return new UsernamePasswordAuthenticationToken(usuario, null, authorities);
+          String email = authentication.getName();
+    String password = authentication.getCredentials().toString();
+
+    // Buscar el usuario en el repositorio
+    Usuario usuario = usuarioRepository.findByMail(email);
+
+    // Verificar que el usuario existe
+    if (usuario == null) {
+        throw new UsernameNotFoundException("Usuario no encontrado: " + email);
+    }
+
+    // Verificar que el usuario esté activo
+    if (usuario.getActivo() != (short) 1) {
+        throw new UsernameNotFoundException(email + " no habilitado.");
+    }
+
+    // Verificar si la contraseña es correcta
+    if (!usuario.getClave().equals(convertirSHA256(password))) {
+        throw new BadCredentialsException("Contraseña incorrecta.");
+    }
+
+    // Asignar roles al usuario
+    Collection<GrantedAuthority> authorities = new ArrayList<>();
+    Rol rol = usuario.getRolidrol();
+    if (rol != null) {
+        authorities.add(new SimpleGrantedAuthority(rol.getNombre()));
+    }
+
+    // Retornar el token de autenticación
+    return new UsernamePasswordAuthenticationToken(usuario, null, authorities);
     }
     @Override
     public boolean supports(Class<?> authentication) {

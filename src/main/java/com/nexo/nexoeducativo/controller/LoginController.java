@@ -71,9 +71,7 @@ public class LoginController {
             //return ResponseEntity.ok(loginRequest.getMail());//LLEGA LA CLAVE PERO NO EL EMAIL
             String contraEncriptada=convertirSHA256(loginRequest.getClave());
            Usuario u = usuarioRepository.findByMail(loginRequest.getMail());//chequear lo que recibo del email y contraseña despues
-           // chequear si esta en el repositoriodel body
-           //desencriptar la clave llegada obtenida en el objeto u
-           //u.getClave();
+           //return ResponseEntity.ok(contraEncriptada);
             
             if (u != null && u.getClave().equals(contraEncriptada)) {
             // Si el usuario existe, retornamos el string en el cuerpo de la respuesta

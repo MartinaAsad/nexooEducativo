@@ -47,7 +47,7 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                 //.requestMatchers("/api/**").authenticated() //loguearse si o si
-                //.requestMatchers("/api/usuario/**").permitAll() //entran todos
+                .requestMatchers("/api/usuario/**").permitAll() //entran todos
                 .requestMatchers("/auth/**").permitAll()
                 )
                 .cors(withDefaults()) // Habilitar CORS             //opcional de customizar                  //opcional de customizar

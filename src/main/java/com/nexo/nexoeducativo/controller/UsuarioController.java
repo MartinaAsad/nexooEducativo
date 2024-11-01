@@ -118,7 +118,7 @@ public class UsuarioController {
 }
         */
     }
-    @PreAuthorize("hasAuthority('super admin') ")
+   // @PreAuthorize("hasAuthority('super admin') ")
     @PostMapping("/saveEscuela")
      public ResponseEntity<?> prueba3(@Valid @RequestBody EscuelaDTO e ){
         /*if (u.getEMail().isEmpty()){

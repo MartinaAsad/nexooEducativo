@@ -34,7 +34,8 @@ public class EscuelaService {
     private EscuelaUsuarioRepository escuelaUsuarioRepository;
     
      public void crearEscuela (EscuelaDTO e){
-         
+        
+        //e.setIdPlan(0);
        int idPlanDto=e.getIdPlan(); //obtengo id del plan ingresado en el body del Postman
        Plan p=new Plan();
        p.setIdPlan(idPlanDto);
@@ -48,7 +49,7 @@ public class EscuelaService {
              throw new EscuelaNotFoundException("la escuela ya existe en la plataforma");
          } else if (!planRepository.existsById(idPlanDto)) {//si se intenta guardar un id de un plan inexistente
              //aca salta una excepcion evitando que se guarde la escuela, ver si esta bien el tipo de excepcion
-             throw new IllegalArgumentException("el plan seleccionado no existe");
+             throw new IllegalArgumentException("el plan seleccionado no existe"+e.getIdPlan());
         } else {
              //si se ingresa un plan existente y el nombre de una escuela que no existe , seguir guardando sino no
               Escuela escuela = new Escuela();
