@@ -47,8 +47,8 @@ public class WebSecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                 //.requestMatchers("/api/**").authenticated() //loguearse si o si
-                .requestMatchers("/api/usuario/**").permitAll() //entran todos
-                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/api/usuario/**").authenticated() //entran todos
+                //.requestMatchers("/auth/**").permitAll()
                  .requestMatchers("/login").permitAll()
                 //.anyRequest().authenticated();
                 )

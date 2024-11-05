@@ -4,13 +4,15 @@
  */
 package com.nexo.nexoeducativo.models.dto.request;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Martina
  */
 
-public interface NombreCompletoDTO {
-    int getId_usuario();
+public interface NombreCompletoDTO extends Serializable {
+    Integer getId_usuario();
     String getNombre();
     String getApellido();
     
