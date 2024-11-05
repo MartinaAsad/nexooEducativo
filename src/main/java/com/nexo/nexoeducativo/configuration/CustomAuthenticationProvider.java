@@ -1,6 +1,7 @@
 package com.nexo.nexoeducativo.configuration;
 
 
+import ch.qos.logback.core.CoreConstants;
 import static com.mysql.cj.conf.PropertyKey.logger;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
@@ -10,6 +11,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
@@ -38,36 +40,40 @@ private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticatio
     @Override
     //@Transactional //para que la sesion este abierta en todo el proceso
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-          String email = authentication.getName();
-    String password = authentication.getCredentials().toString();
+         String email = authentication.getName();
+        String password = authentication.getCredentials().toString();
+        
+        System.out.println("Mail recibido: " + email);
+        System.out.println("Largo de la contraseña recibida: " + password.length());
+        System.out.println("objeto authentication"+ authentication.toString());
 
-    // Buscar el usuario en el repositorio
-    Usuario usuario = usuarioRepository.findByMail(email);
+        try {
+            Usuario user = usuarioRepository.findByMail(email)
+                .orElseThrow(() -> {
+                    System.out.println("Usuario no enconteado desde authenticate: " + email);
+                    return new UsernameNotFoundException("Usuario no encontrado: " + email);
+                });
 
-    // Verificar que el usuario existe
-    if (usuario == null) {
-        throw new UsernameNotFoundException("Usuario no encontrado: " + email);
-    }
+            String hashedPassword = convertirSHA256(password);
+            System.out.println("⭐ COMPARANDO CONTRAS...");
+            System.out.println("Largo de la contra hasheada: " + hashedPassword.length());
+            System.out.println("Contrasena hasheada proveniente del objeto: " + user.getClave());
+            System.out.println("contra hasheada segun lo recibido: " + hashedPassword);
 
-    // Verificar que el usuario esté activo
-    if (usuario.getActivo() != (short) 1) {
-        throw new UsernameNotFoundException(email + " no habilitado.");
-    }
-
-    // Verificar si la contraseña es correcta
-    if (!usuario.getClave().equals(convertirSHA256(password))) {
-        throw new BadCredentialsException("Contraseña incorrecta.");
-    }
-
-    // Asignar roles al usuario
-    Collection<GrantedAuthority> authorities = new ArrayList<>();
-    Rol rol = usuario.getRolidrol();
-    if (rol != null) {
-        authorities.add(new SimpleGrantedAuthority(rol.getNombre()));
-    }
-
-    // Retornar el token de autenticación
-    return new UsernamePasswordAuthenticationToken(usuario, null, authorities);
+            if (user.getClave().equals(hashedPassword)) {
+                System.out.println("siii todo bien: " + email);
+                List<GrantedAuthority> authorities = List.of(
+                    new SimpleGrantedAuthority(user.getRolidrol().getNombre())
+                );
+                return new UsernamePasswordAuthenticationToken(email, password, authorities);
+            } else {
+                System.out.println("contra incorrecta: " + email);
+                throw new BadCredentialsException("Contraseña inválida");
+            }
+        } catch (Exception e) {
+            System.out.println("error en la autenticacion desd eauthenticate: " + e.getMessage());
+            throw e;
+        }
     }
     @Override
     public boolean supports(Class<?> authentication) {

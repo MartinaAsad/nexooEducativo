@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -31,6 +32,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,7 +52,7 @@ public class LoginController {
     @Autowired
        private UsuarioRepository usuarioRepository;
     
-      public static final String convertirSHA256(String password) {
+    /*  public static final String convertirSHA256(String password) {
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("SHA-256");
@@ -81,6 +84,16 @@ public class LoginController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("contraseña incorrecta");
         }
                  //return ResponseEntity.ok("todo bien");
-}
+}*/
+     @GetMapping("/test/{mail}")
+    public ResponseEntity<?> testFindUser(@PathVariable String mail) {
+        Optional<Usuario> user = usuarioRepository.findByMail(mail);
+        if(user.isPresent()) {
+            return ResponseEntity.ok("Usuario encontrado: " + user.get().getMail());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                               .body("Usuario no encontrado con mail: " + mail);
+        }
+    }
     
 }

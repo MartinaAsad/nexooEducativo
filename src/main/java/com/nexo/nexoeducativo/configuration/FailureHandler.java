@@ -24,6 +24,8 @@ public class FailureHandler extends SimpleUrlAuthenticationFailureHandler {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+              response.getWriter().write("{\"error\": \"Error de autenticación del Failure Handler: " + exception.getMessage() + "\"}"+" mail ingresado:"+request.getParameter("mail"));
         LOGGER.equals(exception.getMessage());
+         
     }
 }

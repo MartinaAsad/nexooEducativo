@@ -76,8 +76,8 @@ public class UsuarioController {
             + "or hasAuthority('ROLE_BM_BACKOFFICE_FACIAL_SEGURIDAD')")*/
   
     
-    @PreAuthorize("hasAuthority('administrativo') "
-            + "or hasAuthority('jefe colegio') ")
+    //@PreAuthorize("hasAuthority('administrativo') "
+      //      + "or hasAuthority('jefe colegio') ")
     @PostMapping("/saveUsuario")
     public ResponseEntity<?> prueba2(@Valid @RequestBody UsuarioDTO u ) throws Exception{
         uService.crearUsuario(u);//buscar la manera de que en caso que no se haya creado, mostrar en el Postman un mensaje de error

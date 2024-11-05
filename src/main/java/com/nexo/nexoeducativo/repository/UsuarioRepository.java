@@ -9,6 +9,7 @@ import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -34,14 +35,17 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
     Rol findByRolidrol(Rol rolidrol);
     //EL PROBLEMA ES QUE EL MAIL NO ESTA LLEGANDO BIEN AL METODO, DESDE EL CONTROLADOR FUNCIONA BIEN PERO NO LLEGA ACA
 
-    @Query(value = "SELECT * FROM Usuario u WHERE u.mail=:mail", nativeQuery = true)
-    Usuario findByMail(String mail);
+    //@Query(value = "SELECT * FROM Usuario u WHERE u.mail=:mail", nativeQuery = true)
+    //Usuario findByMail(String mail);
 
     @Query(value = "SELECT u.nombre, u.apellido FROM Usuario u WHERE id_usuario = :idUsuario", nativeQuery = true)
     List<NombreCompletoDTO> getFullName(@Param("idUsuario") int idUsuario);
 
     @Query(value = "SELECT u.id_usuario, u.nombre, u.apellido FROM usuario u LEFT JOIN escuela_usuario eu ON eu.usuario_id_usuario=u.id_usuario WHERE u.Rol_id_rol=2 and eu.escuela_id_escuela IS NULL", nativeQuery = true)
     List<NombreCompletoDTO> getJefeColegioWithoutSchool();
+    
+    //PARA EL LOGIN
+     Optional<Usuario> findByMail(String mail);
        
        
        

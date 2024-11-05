@@ -49,18 +49,20 @@ public class WebSecurityConfig {
                 //.requestMatchers("/api/**").authenticated() //loguearse si o si
                 .requestMatchers("/api/usuario/**").permitAll() //entran todos
                 .requestMatchers("/auth/**").permitAll()
+                 .requestMatchers("/login").permitAll()
+                //.anyRequest().authenticated();
                 )
                 .cors(withDefaults()) // Habilitar CORS             //opcional de customizar                  //opcional de customizar
                 .formLogin(form -> form.loginProcessingUrl("/login")
-                        .usernameParameter("mail")
-                        .passwordParameter("clave")
+                        //.usernameParameter("mail")
+                        //.passwordParameter("clave")
                         .successHandler(this.successHandler).failureHandler(this.failureHandler).permitAll())
                 .authenticationProvider(this.authenticationProvider)
                 .exceptionHandling(exception -> exception
                 .authenticationEntryPoint((request, response, authException) -> {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.setContentType("application/json");
-                    response.getWriter().write("{\"error\": \"No está autenticado o la sesión ha expirado.\"}");
+                    response.getWriter().write("{\"error\": \"No está autenticado o la sesión ha expirado.\"}"+authException.getMessage());
                 })
                 .accessDeniedHandler((request, response, accessDeniedException) -> {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);//falta de permisos
