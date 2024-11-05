@@ -77,8 +77,8 @@ public class UsuarioController {
             + "or hasAuthority('ROLE_BM_BACKOFFICE_FACIAL_SEGURIDAD')")*/
   
     
-    //@PreAuthorize("hasAuthority('administrativo') "
-      //      + "or hasAuthority('jefe colegio') ")
+    @PreAuthorize("hasAuthority('administrativo') "
+            + "or hasAuthority('jefe colegio') ")
     @PostMapping("/saveUsuario")
     public ResponseEntity<?> prueba2(@Valid @RequestBody UsuarioDTO u ) throws Exception{
         uService.crearUsuario(u);//buscar la manera de que en caso que no se haya creado, mostrar en el Postman un mensaje de error
@@ -119,7 +119,7 @@ public class UsuarioController {
 }
         */
     }
-   // @PreAuthorize("hasAuthority('super admin') ")
+    @PreAuthorize("hasAuthority('super admin') ")
     @PostMapping("/saveEscuela")
      public ResponseEntity<?> prueba3(@Valid @RequestBody EscuelaDTO e ){
         /*if (u.getEMail().isEmpty()){
@@ -279,16 +279,27 @@ public class UsuarioController {
 
     }
     
+     @PreAuthorize("hasAuthority('administrativo') ")//chequear
     @PostMapping(value="/saveMateria")
     ResponseEntity<?> prueba14(@Valid @RequestBody MateriaDTO m){
         materiaService.crearMateria(m);
          return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.OK);
     }
     
+     @PreAuthorize("hasAuthority('super admin') ")//chequear
      @DeleteMapping("borrarEscuela/{idEscuela}")
     ResponseEntity<?> prueba14(@PathVariable("idEscuela") int idEscuela){
         escuelaService.borrarEscuela(idEscuela);
          return new ResponseEntity<>("escuela borrada exitosamente", HttpStatus.OK);
+    }
+    
+      @PreAuthorize("hasAuthority('super admin') "
+            + "or hasAuthority('jefe colegio') "
+            + "or hasAuthority('administrativo') ")
+    @DeleteMapping("borrarUsuario/{idUsuario}")
+    ResponseEntity<?> prueba15(@PathVariable(value = "idUsuario") int idUsuario){
+        uService.eliminarUsuario(idUsuario);
+        return new ResponseEntity<>("usuario borrado exitosamente", HttpStatus.OK);
     }
      
   }

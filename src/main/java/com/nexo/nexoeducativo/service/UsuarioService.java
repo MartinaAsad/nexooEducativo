@@ -214,6 +214,10 @@ public class UsuarioService {
      public List<NombreCompletoDTO> jefeColegioSinAsignar(){
        return usuariorepository.getJefeColegioWithoutSchool();
         }
+     
+     public void eliminarUsuario(int idUsuario){
+         usuariorepository.deleteById(idUsuario);
+     }
         
      
 }
