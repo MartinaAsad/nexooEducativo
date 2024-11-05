@@ -68,6 +68,10 @@ public class EscuelaService {
                 escuelaUsuarioRepository.save(jefeColegio);//se guarda la info donde se asocia 1 ejefe colegio a un colegio, en su tabla intermedia correspondiente
         }
      }
+     
+      public void borrarEscuela(int idEscuela){
+         escuelaRepository.deleteById(idEscuela);
+     }
     
     
  
