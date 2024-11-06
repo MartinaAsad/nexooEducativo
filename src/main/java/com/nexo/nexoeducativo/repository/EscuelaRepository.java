@@ -4,6 +4,7 @@
  */
 package com.nexo.nexoeducativo.repository;
 
+import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,5 +29,8 @@ public interface EscuelaRepository extends JpaRepository<Escuela, Integer> {
     boolean existsCursoInEscuela(@Param("escuelaId") Integer escuelaId, 
                                  @Param("numero") int numero, 
                                  @Param("division") Character division);
+    
+     @Query(value="SELECT id_escuela, nombre, direccion FROM escuela", nativeQuery = true)
+    List<NombreDireccionEscuelaDTO> getInfoEscuelas();
     
 }

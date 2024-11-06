@@ -11,6 +11,7 @@ import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.MateriaDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
+import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
 import com.nexo.nexoeducativo.models.dto.request.RolDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
@@ -313,6 +314,13 @@ public class UsuarioController {
         return new ResponseEntity<>("se creo una materia", HttpStatus.OK);
     }
     
+         @PreAuthorize("hasAuthority('super admin') "
+            + "or hasAuthority('jefe colegio') "
+            + "or hasAuthority('administrativo') "
+            + "or hasAuthority('preceptor')" 
+            + "or hasAuthority('padre')"
+            + "or hasAuthority('profesor')" 
+            + "or hasAuthority('alumno')" )
     @GetMapping("/getRolUsuarioLogueado")
     public ResponseEntity<?> prueba17(Authentication authentication) {
         String rol = authentication.getAuthorities().stream()
@@ -320,6 +328,18 @@ public class UsuarioController {
                 .findFirst()
                 .orElse("error");
         return new ResponseEntity<>("el rol del usuario logueado es: "+rol, HttpStatus.OK);
+    }
+    
+    @PreAuthorize("hasAuthority('super admin') ")
+     @GetMapping(value="/getEscuelas")
+    ResponseEntity<?> prueba18(){
+        List<NombreDireccionEscuelaDTO> escuelas = new ArrayList<NombreDireccionEscuelaDTO>();
+        escuelaService.obtenerEscuelas().forEach(escuelas::add);
+         if (escuelas.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(escuelas, HttpStatus.OK);
     }
      
   }

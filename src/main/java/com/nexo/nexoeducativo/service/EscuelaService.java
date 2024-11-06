@@ -6,6 +6,7 @@ package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
+import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.EscuelaUsuario;
 import com.nexo.nexoeducativo.models.entities.Plan;
@@ -13,6 +14,7 @@ import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.repository.EscuelaRepository;
 import com.nexo.nexoeducativo.repository.EscuelaUsuarioRepository;
 import com.nexo.nexoeducativo.repository.PlanRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +73,10 @@ public class EscuelaService {
      
       public void borrarEscuela(int idEscuela){
          escuelaRepository.deleteById(idEscuela);
+     }
+      
+        public List<NombreDireccionEscuelaDTO> obtenerEscuelas(){
+         return escuelaRepository.getInfoEscuelas();
      }
     
     
