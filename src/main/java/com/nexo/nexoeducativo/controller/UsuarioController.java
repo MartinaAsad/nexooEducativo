@@ -4,6 +4,7 @@
  */
 package com.nexo.nexoeducativo.controller;
 
+import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
@@ -25,10 +26,13 @@ import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -300,6 +304,22 @@ public class UsuarioController {
     ResponseEntity<?> prueba15(@PathVariable(value = "idUsuario") int idUsuario){
         uService.eliminarUsuario(idUsuario);
         return new ResponseEntity<>("usuario borrado exitosamente", HttpStatus.OK);
+    }
+    
+    @PreAuthorize("hasAuthority('administrativo')")
+    @PostMapping(value="/crearMateria")
+    ResponseEntity<?> prueba16(@Valid @RequestBody MateriaDTO m){
+        materiaService.crearMateria(m);
+        return new ResponseEntity<>("se creo una materia", HttpStatus.OK);
+    }
+    
+    @GetMapping("/getRolUsuarioLogueado")
+    public ResponseEntity<?> prueba17(Authentication authentication) {
+        String rol = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)//recorre
+                .findFirst()
+                .orElse("error");
+        return new ResponseEntity<>("el rol del usuario logueado es: "+rol, HttpStatus.OK);
     }
      
   }

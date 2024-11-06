@@ -46,7 +46,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
     
     //PARA EL LOGIN
      Optional<Usuario> findByMail(String mail);
-       
+     
+     //para chequear usuario logueado
+      Usuario getUsuarioByMail(String mail);
        
        
        
