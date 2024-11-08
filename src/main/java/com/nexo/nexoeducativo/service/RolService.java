@@ -36,4 +36,8 @@ public class RolService {
         return rolRepository.getNombreRol();
     }
     
+    public int obtenerId(String nombre){
+        return rolRepository.getIdByNombre(nombre);
+    }
+    
 }

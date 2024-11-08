@@ -21,4 +21,6 @@ public interface RolRepository extends JpaRepository<Rol, Integer>{
     
     @Query(value="SELECT nombre FROM Rol")
     List<String> getNombreRol();
+    
+    int getIdByNombre(String nombre);//chequear
 }

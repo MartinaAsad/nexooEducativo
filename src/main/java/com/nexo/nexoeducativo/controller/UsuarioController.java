@@ -9,6 +9,7 @@ import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
+import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioDTO;
 import com.nexo.nexoeducativo.models.dto.request.MateriaDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
@@ -23,6 +24,7 @@ import com.nexo.nexoeducativo.service.MateriaService;
 import com.nexo.nexoeducativo.service.PlanService;
 import com.nexo.nexoeducativo.service.RolService;
 import com.nexo.nexoeducativo.service.UsuarioService;
+import jakarta.persistence.Tuple;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -340,6 +342,19 @@ public class UsuarioController {
         }
 
         return new ResponseEntity<>(escuelas, HttpStatus.OK);
+    }
+    
+    //@PreAuthorize("hasAuthority('super admin') ")
+    @GetMapping(value="/getUsuarios/{nombre}")
+    ResponseEntity<?> prueba19(@PathVariable(value = "nombre") String nombre){
+          List<InfoUsuarioDTO> usuarios = new ArrayList<InfoUsuarioDTO>();
+	uService.obtenerUsuarioSegunRol(nombre).forEach(usuarios::add);
+		
+		if(usuarios.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		return new ResponseEntity<>(usuarios, HttpStatus.OK);   
     }
      
   }

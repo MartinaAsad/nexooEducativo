@@ -4,10 +4,12 @@
  */
 package com.nexo.nexoeducativo.repository;
 
+import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
+import jakarta.persistence.Tuple;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  *
@@ -49,6 +52,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
      
      //para chequear usuario logueado
       Usuario getUsuarioByMail(String mail);
+      
+      //para obtener todos los usuario segun el rol
+      @Query(value="SELECT u.id_usuario, u.nombre, u.apellido, u.dni FROM Usuario u INNER JOIN Rol r ON r.id_rol=u.Rol_id_rol WHERE r.nombre = :nombre", nativeQuery = true)
+      List<InfoUsuarioDTO>getUsuarioByRol(@PathVariable(value = "nombre") String nombre);
        
        
        

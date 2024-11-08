@@ -44,7 +44,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/usuario/**").authenticated() // Rutas protegidas
+                .requestMatchers("/api/usuario/**").permitAll() // Rutas protegidas
                 .requestMatchers("/login").permitAll() // Permitir acceso a login sin autenticación
             )
             .cors(withDefaults()) // Habilitar CORS usando la configuración de WebMvcConfigurer
