@@ -309,11 +309,13 @@ public class UsuarioController {
         return new ResponseEntity<>("usuario borrado exitosamente", HttpStatus.OK);
     }
     
-    @PreAuthorize("hasAuthority('administrativo')")
+    //@PreAuthorize("hasAuthority('administrativo')")
     @PostMapping(value="/crearMateria")
     ResponseEntity<?> prueba16(@Valid @RequestBody MateriaDTO m){
         materiaService.crearMateria(m);
         return new ResponseEntity<>("se creo una materia", HttpStatus.OK);
+        /*PONER ESTO EN EL POSTMAN:
+        */
     }
     
          @PreAuthorize("hasAuthority('super admin') "

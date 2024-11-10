@@ -4,6 +4,8 @@
  */
 package com.nexo.nexoeducativo.repository;
 
+import com.nexo.nexoeducativo.models.entities.Curso;
+import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.MateriaCurso;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,5 +16,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface MateriaCursoRepository extends JpaRepository<MateriaCurso, Integer> {
-    
+    boolean existsByMateriaIdMateriaAndCursoIdCursoAndDia(Materia materiaIdMateria, Curso cursoIdCurso, String dia);
 }

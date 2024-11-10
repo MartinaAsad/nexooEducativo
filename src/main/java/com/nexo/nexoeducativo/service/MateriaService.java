@@ -6,6 +6,7 @@ package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
+import com.nexo.nexoeducativo.exception.MateriaExistingException;
 import com.nexo.nexoeducativo.models.dto.request.MateriaDTO;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Escuela;
@@ -71,12 +72,25 @@ public class MateriaService {
         mc.setMateriaIdMateria(materia);
         //mc.setMateriaCursoMaterialList(materiaCursoMaterialList); DUDOSO DE SI VA O NO
         
-        //validar si el curso esta activo
-        if(cursoEscuelaRepository.existsByCursoIdCursoAndEscuelaIdEscuela(c, e)==0){
+        //si el curso esta inactivo
+        if(cursoEscuelaRepository.existsByCursoIdCursoAndEscuelaIdEscuela(c.getIdCurso(), e.getIdEscuela())==0){
             //excepcion de ejemplo, solo para comporobar si efectivamente funciona la query
-            throw new CursoNotFound("el curso esta inactivo");
+            throw new CursoNotFound("el curso o escuela esta inactivo");
         }
         
+        
+        //validar si existe esa materia en ese curso en esa escuela en ese dia entre las horas de inicio y fin
+        //ejemplo: si ya existe materia biologia en escuela id 2 en curso id 2 los martes de 9 a 11 NO se va
+        //a poder ingresar la misma materia en ese mismo curso y escuela a las 9:30 por ejemplo
+        //PROBAR MAS TARDE ESTA VALIDACION
+        if(materiaEscuelaRepository.existsByMateriaIdMateriaAndEscuelaIdEscuela(materia, e)
+                && materiaCursoRepository.existsByMateriaIdMateriaAndCursoIdCursoAndDia(materia, c, m.getDia())){
+            throw new MateriaExistingException("la materia que se desea ingresar ya existe en ese curso");
+        }
+        
+        materiaRepository.save(materia);
+        materiaEscuelaRepository.save(me);
+        materiaCursoRepository.save(mc);
     }
     
 }

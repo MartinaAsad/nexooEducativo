@@ -4,6 +4,8 @@
  */
 package com.nexo.nexoeducativo.repository;
 
+import com.nexo.nexoeducativo.models.entities.Escuela;
+import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.MateriaEscuela;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,5 +16,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface MateriaEscuelaRepository extends JpaRepository<MateriaEscuela, Integer>{
-    
+                    //nombre de las campos SEGUN ENTIDAD, NO SEGUN LA ABSE DE DATOS
+    boolean existsByMateriaIdMateriaAndEscuelaIdEscuela(Materia materiaIdMateria, Escuela escuelaIdEscuela);
 }

@@ -20,6 +20,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
@@ -47,10 +48,10 @@ public class MateriaCurso implements Serializable {
     private String dia;
     @Column(name = "hora_inicio")
     @Temporal(TemporalType.TIME)
-    private Date horaInicio;
+    private LocalTime horaInicio;//poner tipo de dato Time en mysql
     @Column(name = "hora_fin")
     @Temporal(TemporalType.TIME)
-    private Date horaFin;
+    private LocalTime horaFin;
     @JoinColumn(name = "curso_id_curso", referencedColumnName = "id_curso")
     @ManyToOne(optional = false)
     private Curso cursoIdCurso;
