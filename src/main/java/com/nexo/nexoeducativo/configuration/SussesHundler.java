@@ -1,6 +1,7 @@
 package com.nexo.nexoeducativo.configuration;
 
 
+import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioDTO;
 import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,36 +22,19 @@ public class SussesHundler extends SimpleUrlAuthenticationSuccessHandler {
     
     private static final Logger LOGGER = LoggerFactory.getLogger(SussesHundler.class);
     
-   /* @Autowired
-    private UserAutenticatedService tokenService;
-    @Autowired
-    private UsuarioActividadService usuarioActividadService;
-    @Autowired
-    private SegundoFactorAutenticacionService segundoFactorAutenticacionService;*/
     
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-       /* UserAuthenticationDTO user = (UserAuthenticationDTO) authentication;
-        usuarioActividadService.saveActividad(ActividadEnum.LOGIN);
-        response.getWriter().write("AUTENTICATED:" + tokenService.getAutoritys() );*/
-       /* if (user.getUse2fa()) {
-            segundoFactorAutenticacionService.sendOtpBancoCiudad(user);
-            response.getWriter().write(":/2fa");
-            LOGGER.info("Esperando autenticacion 2FA.");
-        } else {
-            response.getWriter().write(":/home");
-        }
-        response.getWriter().write(":entidaes: " + user.getAllEntidades());
-        response.setContentType("application/json");*/
-//        response.setHeader("Access-Control-Allow-Origin", request.getHeader("origin"));
-//        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-//        response.setHeader("Access-Control-Max-Age", "3600");
-//        response.setHeader("Access-Control-Allow-Headers", "authorization, content-type, xsrf-token");
-//        response.addHeader("Access-Control-Expose-Headers", "xsrf-token");
-//        response.addHeader("Access-Control-Allow-Credentials","true");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().flush();
-        response.setStatus(HttpServletResponse.SC_OK);
-        LOGGER.info("Token encriptado y devuelto con exito.");
-    }
+@Override
+public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    InfoUsuarioDTO user = (InfoUsuarioDTO) authentication;
+
+    response.setCharacterEncoding("UTF-8");
+    response.setContentType("application/json");  // Asegura que el contenido sea JSON
+    response.setStatus(HttpServletResponse.SC_OK);
+
+    // Enviar datos en JSON
+    response.getWriter().write("{\"nombre\":\"" + user.getGetNombre() + "\", \"apellido\":\"" + user.getGetApellido() + "\"}");
+    response.getWriter().flush();
+    LOGGER.info("Usuario logueado correctamente");
+}
+
 }

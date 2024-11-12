@@ -6,16 +6,29 @@ package com.nexo.nexoeducativo.models.dto.request;
 
 
 import java.io.Serializable;
+import java.util.Collection;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 
-/**
- *
- * @author Martina
- */
-public interface InfoUsuarioDTO  extends Serializable{
-    Integer getId_usuario();
-    String getNombre();
-    String getApellido();
-    Integer getDni();
+
+
+@Getter
+@Setter
+public class InfoUsuarioDTO extends UsernamePasswordAuthenticationToken implements Serializable{
+   
+    private String getNombre;
+    private String getApellido;
+
+    public InfoUsuarioDTO(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities, String nombre, String apellido) {
+        super(principal, credentials, authorities);
+        this.getNombre = nombre;
+        this.getApellido = apellido;
+    }
+    
+    
+
     
 }
 

@@ -3,6 +3,7 @@ package com.nexo.nexoeducativo.configuration;
 
 import ch.qos.logback.core.CoreConstants;
 import static com.mysql.cj.conf.PropertyKey.logger;
+import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioDTO;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
@@ -65,7 +66,7 @@ private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticatio
                 List<GrantedAuthority> authorities = List.of(
                     new SimpleGrantedAuthority(user.getRolidrol().getNombre())
                 );
-                return new UsernamePasswordAuthenticationToken(email, password, authorities);
+                return new InfoUsuarioDTO(email, password, authorities, user.getNombre(), user.getApellido());
             } else {
                 System.out.println("contra incorrecta: " + email);
                 throw new BadCredentialsException("Contraseña inválida");
