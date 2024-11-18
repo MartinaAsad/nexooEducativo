@@ -36,6 +36,7 @@ import com.nexo.nexoeducativo.repository.UsuarioUsuarioRepository;
 import jakarta.persistence.Tuple;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -225,8 +226,14 @@ public class UsuarioService {
          usuariorepository.deleteById(idUsuario);
      }
      
-     public List<InfoUsuarioDTO> obtenerUsuarioSegunRol(String nombre){
-         return usuariorepository.getUsuarioByRol(nombre);
+     public List<NombreCompletoDTO> obtenerUsuarioSegunRol(String nombre){
+         List<Usuario> usuarios = usuariorepository.getUsuarioByRol(nombre);
+         List<NombreCompletoDTO> lista = new ArrayList<>();
+         for (Usuario u : usuarios) {
+              NombreCompletoDTO iu = new NombreCompletoDTO(u.getNombre(), u.getApellido());
+             
+         }
+         return null;
      }
      
      
