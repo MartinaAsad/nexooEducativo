@@ -10,6 +10,7 @@ import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioDTO;
+import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.MateriaDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
@@ -349,7 +350,7 @@ public class UsuarioController {
     //@PreAuthorize("hasAuthority('super admin') ")
     @GetMapping(value="/getUsuarios/{nombre}")
     ResponseEntity<?> prueba19(@PathVariable(value = "nombre") String nombre){
-          List<InfoUsuarioDTO> usuarios = new ArrayList<InfoUsuarioDTO>();
+          List<InfoUsuarioSegunRolDTO> usuarios = new ArrayList<InfoUsuarioSegunRolDTO>();
 	uService.obtenerUsuarioSegunRol(nombre).forEach(usuarios::add);
 		
 		if(usuarios.isEmpty()) {

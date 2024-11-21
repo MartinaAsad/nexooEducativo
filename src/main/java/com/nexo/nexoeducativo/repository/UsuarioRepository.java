@@ -5,6 +5,7 @@
 package com.nexo.nexoeducativo.repository;
 
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioDTO;
+import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
 import com.nexo.nexoeducativo.models.entities.Rol;
@@ -54,8 +55,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
       Usuario getUsuarioByMail(String mail);
       
       //para obtener todos los usuario segun el rol
-      @Query(value="SELECT u.id_usuario, u.nombre, u.apellido, u.dni FROM Usuario u INNER JOIN Rol r ON r.id_rol=u.Rol_id_rol WHERE r.nombre = :nombre", nativeQuery = true)
-      List<Usuario>getUsuarioByRol(@PathVariable(value = "nombre") String nombre);
+      @Query(value="SELECT new com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO(u.idUsuario, u.nombre, u.apellido, u.dni) FROM Usuario u INNER JOIN Rol r ON r.idRol=u.rolidrol WHERE r.nombre = :nombre")
+      List<InfoUsuarioSegunRolDTO>getUsuarioByRol(@PathVariable(value = "nombre") String nombre);
        
        
        

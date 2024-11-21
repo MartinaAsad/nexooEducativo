@@ -22,6 +22,7 @@ import com.nexo.nexoeducativo.exception.UsuarioExistingException;
 import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
 import com.nexo.nexoeducativo.exception.UsuarioWithPadreException;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioDTO;
+import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
@@ -226,14 +227,15 @@ public class UsuarioService {
          usuariorepository.deleteById(idUsuario);
      }
      
-     public List<NombreCompletoDTO> obtenerUsuarioSegunRol(String nombre){
-         List<Usuario> usuarios = usuariorepository.getUsuarioByRol(nombre);
-         List<NombreCompletoDTO> lista = new ArrayList<>();
+     public List<InfoUsuarioSegunRolDTO> obtenerUsuarioSegunRol(String nombre){
+         //List<Usuario> usuarios = usuariorepository.getUsuarioByRol(nombre);
+         /*List<InfoUsuarioSegunRolDTO> lista = new ArrayList<>();
          for (Usuario u : usuarios) {
-              NombreCompletoDTO iu = new NombreCompletoDTO(u.getNombre(), u.getApellido());
+              InfoUsuarioSegunRolDTO iu = new InfoUsuarioSegunRolDTO
+        (u.getIdUsuario(),u.getNombre(), u.getApellido(), u.getDni());
              
-         }
-         return null;
+         }*/
+         return usuariorepository.getUsuarioByRol(nombre);
      }
      
      

@@ -44,7 +44,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/**").authenticated()    
+                .requestMatchers("/api/**").permitAll()   
   //             .requestMatchers("/api/usuario/**").authenticated() // Rutas protegidas
                    
                 .requestMatchers("/login").permitAll() // Permitir acceso a login sin autenticación
