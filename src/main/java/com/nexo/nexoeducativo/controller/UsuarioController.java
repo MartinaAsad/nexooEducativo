@@ -360,6 +360,13 @@ public class UsuarioController {
 		return new ResponseEntity<>(usuarios, HttpStatus.OK);   
     }
     
+    /*
+    Crear el controlador de logout
+Como no se tiene una API preexistente de logout, podemos implementar un método que invalide la sesión del usuario y elimine el token JWT, si lo estás usando. Si no usas JWT, este proceso dependería de cómo manejas la sesión (por ejemplo, con cookies o sesión HTTP).
+
+Si estás usando JWT, un enfoque común es simplemente hacer que el frontend elimine el token y así "cerrar sesión". Sin embargo, si necesitas hacer algo más en el backend (como invalidar un token en un servidor de sesión), puedes agregar este código:
+    
+    */
     
     // Cierre de sesión (Logout)
 //@PreAuthorize("hasAuthority('super admin') or hasAuthority('jefe colegio') or hasAuthority('administrativo')")
