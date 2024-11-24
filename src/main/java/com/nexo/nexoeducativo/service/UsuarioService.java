@@ -234,7 +234,7 @@ public class UsuarioService {
               InfoUsuarioSegunRolDTO iu = new InfoUsuarioSegunRolDTO
         (u.getIdUsuario(),u.getNombre(), u.getApellido(), u.getDni());
              
-         }*/
+         }*///chequeo
          return usuariorepository.getUsuarioByRol(nombre);
      }
      
