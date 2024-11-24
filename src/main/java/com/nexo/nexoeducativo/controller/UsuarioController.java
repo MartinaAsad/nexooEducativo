@@ -359,7 +359,21 @@ public class UsuarioController {
 		
 		return new ResponseEntity<>(usuarios, HttpStatus.OK);   
     }
+    
+    
+    // Cierre de sesión (Logout)
+//@PreAuthorize("hasAuthority('super admin') or hasAuthority('jefe colegio') or hasAuthority('administrativo')")
+//@PostMapping("/logout")
+// ResponseEntity<?> logout(HttpServletRequest request) {
+    // Aquí puedes invalidar la sesión si usas session-based authentication
+    // request.getSession().invalidate();
+
+    // Si estás usando JWT, no necesitas hacer nada del lado del servidor,
+    // ya que el token se invalida solo cuando expira o el cliente lo elimina.
+   // return new ResponseEntity<>("Sesión cerrada correctamente", HttpStatus.OK);
+}
+
      
-  }
+  
     
 
