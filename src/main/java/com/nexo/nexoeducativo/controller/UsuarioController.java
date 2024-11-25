@@ -328,13 +328,12 @@ public class UsuarioController {
             + "or hasAuthority('alumno')" )
     @GetMapping("/getRolUsuarioLogueado")
     public ResponseEntity<?> prueba17(Authentication authentication) {
-       /* String rol = authentication.getAuthorities().stream()
+        String rol = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)//recorre
                 .findFirst()
-                .orElse("error");*/
-       String nombre= authentication.getName();
+                .orElse("error");
        
-        return new ResponseEntity<>("el rol del usuario logueado es: "+nombre, HttpStatus.OK);
+        return new ResponseEntity<>("el rol del usuario logueado es: "+rol, HttpStatus.OK);
     }
     
     @PreAuthorize("hasAuthority('super admin') ")

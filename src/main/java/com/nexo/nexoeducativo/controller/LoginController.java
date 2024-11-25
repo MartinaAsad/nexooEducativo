@@ -3,9 +3,11 @@ package com.nexo.nexoeducativo.controller;
 
 //import com.nexo.nexoeducativo.configuration.CustomAuthenticationProvider;
 import com.nexo.nexoeducativo.models.dto.request.AuthRequestDTO;
+import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
+import com.nexo.nexoeducativo.service.LoginService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import static java.lang.Math.log;
@@ -50,7 +52,7 @@ import org.springframework.web.bind.annotation.RestController;
 //NO SALTA EL MENSAJE EN POSTMAN SINO EN CONSOLA DE JAVA, ARREGLAR ESO
 public class LoginController {
     @Autowired
-       private UsuarioRepository usuarioRepository;
+       private LoginService loginService;
     
     /*  public static final String convertirSHA256(String password) {
         MessageDigest md = null;
@@ -85,15 +87,16 @@ public class LoginController {
         }
                  //return ResponseEntity.ok("todo bien");
 }*/
-     @GetMapping("/test/{mail}")
-    public ResponseEntity<?> testFindUser(@PathVariable String mail) {
-        Optional<Usuario> user = usuarioRepository.findByMail(mail);
-        if(user.isPresent()) {
-            return ResponseEntity.ok("Usuario encontrado: " + user.get().getMail());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                               .body("Usuario no encontrado con mail: " + mail);
-        }
-    }
-    
+     @GetMapping("/info")
+     public ResponseEntity<String>obtenerInfoUsuarioLogueado(Authentication authentication){
+         String mailLogueado=authentication.getName();
+         NombreCompletoDTO infoObtenida=loginService.infoLogin(mailLogueado);
+         String infoARetornar=separar(infoObtenida.getNombre(), infoObtenida.getApellido());
+          return new ResponseEntity<>(infoARetornar, HttpStatus.OK);
+     }
+     
+     public String separar(String nombre, String apellido){
+         return nombre+" "+apellido;
+     }
+
 }

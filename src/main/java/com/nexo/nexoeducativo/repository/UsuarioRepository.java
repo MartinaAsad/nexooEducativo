@@ -58,6 +58,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
       @Query(value="SELECT new com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO(u.idUsuario, u.nombre, u.apellido, u.dni) FROM Usuario u INNER JOIN Rol r ON r.idRol=u.rolidrol WHERE r.nombre = :nombre")
       List<InfoUsuarioSegunRolDTO>getUsuarioByRol(@PathVariable(value = "nombre") String nombre);
        
+      //para obtener nombre y apellido del usuario logueado
+          @Query(value = "SELECT u.nombre, u.apellido FROM Usuario u WHERE mail = :mail", nativeQuery = true)
+          NombreCompletoDTO getFullName(String mail);
        
        
 }
