@@ -40,6 +40,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -77,16 +78,9 @@ public class UsuarioController {
     @Autowired
     private MateriaService materiaService;
     
-    //aca especifica que roles de usuario estan autorizados a usar ese endpoint, lo de hasAuthority es segun lo escrito en la bbdd
-    //se usan operadores de base de datos
-    /*@PreAuthorize("hasAuthority('ROLE_BM_BACKOFFICE_ADMIN') "
-            + "or hasAuthority('ROLE_BM_BACKOFFICE_DACTILAR') "
-            + "or hasAuthority('ROLE_BM_BACKOFFICE_FACIAL') "
-            + "or hasAuthority('ROLE_BM_BACKOFFICE_FACIAL_SEGURIDAD')")*/
-  
-    
     @PreAuthorize("hasAuthority('administrativo') "
-            + "or hasAuthority('jefe colegio') ")
+            + "or hasAuthority('jefe colegio') "
+            + "or hasAuthority('super admin') ")
     @PostMapping("/saveUsuario")
     public ResponseEntity<?> prueba2(@Valid @RequestBody UsuarioDTO u ) throws Exception{
         uService.crearUsuario(u);//buscar la manera de que en caso que no se haya creado, mostrar en el Postman un mensaje de error
@@ -130,11 +124,8 @@ public class UsuarioController {
     @PreAuthorize("hasAuthority('super admin') ")
     @PostMapping("/saveEscuela")
      public ResponseEntity<?> prueba3(@Valid @RequestBody EscuelaDTO e ){
-        /*if (u.getEMail().isEmpty()){
-             return new ResponseEntity<>("email vacio", HttpStatus.BAD_REQUEST);
-        }*/
         
-        escuelaService.crearEscuela(e);//NO ME TOMA LAS VALIDACIONES HECHAS DEL SERVICE
+        escuelaService.crearEscuela(e);
         
         //poner esto en el Postman
         /*{
@@ -144,14 +135,14 @@ public class UsuarioController {
    "idPlan":1,
    "jefeColegio":3
 }*/
-        return new ResponseEntity<>("prueba", HttpStatus.OK);
+        return new ResponseEntity<>("Escuela guardada exitosamente", HttpStatus.OK);
     }
      @PreAuthorize("hasAuthority('super admin') ")
       @PostMapping("/saveRol")
      public ResponseEntity<?> prueba4(@Valid @RequestBody RolDTO r){
          
           rolService.crearRol(r);//buscar la manera de que en caso que no se haya creado, mostrar en el Postman un mensaje de error
-          return new ResponseEntity<>("prueba rol", HttpStatus.OK);
+          return new ResponseEntity<>("Rol guardado exitosamente", HttpStatus.OK);
      }
      @PreAuthorize("hasAuthority('administrativo') "
             + "or hasAuthority('preceptor') ")
@@ -226,7 +217,7 @@ public class UsuarioController {
          
      }
      
-     @PreAuthorize("hasAuthority('jefe colegio') ")//chequear
+     @PreAuthorize("hasAuthority('jefe colegio') ")
      @PostMapping("/altaAdministrativo")
       ResponseEntity<?> prueba9(@Valid @RequestBody AdministrativoDTO a){
          uService.crearAdministrativo(a);
@@ -243,7 +234,7 @@ public class UsuarioController {
    "idEscuela":4
 }*/
      }
-      @PreAuthorize("hasAuthority('super admin') ")//chequear
+      @PreAuthorize("hasAuthority('super admin') ")
       @GetMapping(value="/getJefeColegioSinEscuela")
      ResponseEntity<?> prueba11(){
          List<NombreCompletoDTO> nombreCompleto = new ArrayList<NombreCompletoDTO>();
@@ -260,7 +251,7 @@ public class UsuarioController {
 		return new ResponseEntity<>(nombreCompleto, HttpStatus.OK);   
      }
      
-      @PreAuthorize("hasAuthority('super admin') ")//chequear
+      @PreAuthorize("hasAuthority('super admin') ")
     @GetMapping(value = "/getNombreRoles")
     ResponseEntity<?> prueba12() {
         List<String> roles = new ArrayList<String>();
@@ -273,7 +264,7 @@ public class UsuarioController {
         return new ResponseEntity<>(roles, HttpStatus.OK);
 
     }
-    @PreAuthorize("hasAuthority('super admin') ")//chequear
+    @PreAuthorize("hasAuthority('super admin') ")
      @GetMapping(value = "/getNombrePlanes")
     ResponseEntity<?> prueba13() {
         List<String> planes = new ArrayList<String>();
@@ -287,14 +278,14 @@ public class UsuarioController {
 
     }
     
-     @PreAuthorize("hasAuthority('administrativo') ")//chequear
+     @PreAuthorize("hasAuthority('administrativo') ")
     @PostMapping(value="/saveMateria")
     ResponseEntity<?> prueba14(@Valid @RequestBody MateriaDTO m){
         materiaService.crearMateria(m);
          return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.OK);
     }
     
-     @PreAuthorize("hasAuthority('super admin') ")//chequear
+     @PreAuthorize("hasAuthority('super admin') ")
      @DeleteMapping("borrarEscuela/{idEscuela}")
     ResponseEntity<?> prueba14(@PathVariable("idEscuela") int idEscuela){
         escuelaService.borrarEscuela(idEscuela);
@@ -310,7 +301,7 @@ public class UsuarioController {
         return new ResponseEntity<>("usuario borrado exitosamente", HttpStatus.OK);
     }
     
-    //@PreAuthorize("hasAuthority('administrativo')")
+    @PreAuthorize("hasAuthority('administrativo')")
     @PostMapping(value="/crearMateria")
     ResponseEntity<?> prueba16(@Valid @RequestBody MateriaDTO m){
         materiaService.crearMateria(m);
@@ -348,7 +339,8 @@ public class UsuarioController {
         return new ResponseEntity<>(escuelas, HttpStatus.OK);
     }
     
-    //@PreAuthorize("hasAuthority('super admin') ")
+    @PreAuthorize("hasAuthority('super admin') "
+            + "or hasAuthority('jefe colegio') ")
     @GetMapping(value="/getUsuarios/{nombre}")
     ResponseEntity<?> prueba19(@PathVariable(value = "nombre") String nombre){
           List<InfoUsuarioSegunRolDTO> usuarios = new ArrayList<InfoUsuarioSegunRolDTO>();
@@ -361,24 +353,7 @@ public class UsuarioController {
 		return new ResponseEntity<>(usuarios, HttpStatus.OK);   
     }
     
-    /*
-    Crear el controlador de logout
-Como no se tiene una API preexistente de logout, podemos implementar un método que invalide la sesión del usuario y elimine el token JWT, si lo estás usando. Si no usas JWT, este proceso dependería de cómo manejas la sesión (por ejemplo, con cookies o sesión HTTP).
-
-Si estás usando JWT, un enfoque común es simplemente hacer que el frontend elimine el token y así "cerrar sesión". Sin embargo, si necesitas hacer algo más en el backend (como invalidar un token en un servidor de sesión), puedes agregar este código:
     
-    */
-    
-    // Cierre de sesión (Logout)
-//@PreAuthorize("hasAuthority('super admin') or hasAuthority('jefe colegio') or hasAuthority('administrativo')")
-//@PostMapping("/logout")
-// ResponseEntity<?> logout(HttpServletRequest request) {
-    // Aquí puedes invalidar la sesión si usas session-based authentication
-    // request.getSession().invalidate();
-
-    // Si estás usando JWT, no necesitas hacer nada del lado del servidor,
-    // ya que el token se invalida solo cuando expira o el cliente lo elimina.
-   // return new ResponseEntity<>("Sesión cerrada correctamente", HttpStatus.OK);
 }
 
      

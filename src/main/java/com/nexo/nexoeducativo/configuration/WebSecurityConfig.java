@@ -46,6 +46,7 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/**").authenticated()
                  .requestMatchers("/auth/**").authenticated()
+                    .requestMatchers("/logout").authenticated()
   //             .requestMatchers("/api/usuario/**").authenticated() // Rutas protegidas
                    
                 .requestMatchers("/login").permitAll() // Permitir acceso a login sin autenticación

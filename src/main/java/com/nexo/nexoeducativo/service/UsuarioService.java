@@ -238,6 +238,10 @@ public class UsuarioService {
          return usuariorepository.getUsuarioByRol(nombre);
      }
      
+     public void actualizarUsuario(UsuarioDTO u){
+         
+     }
+     
      
      
         
