@@ -1,19 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package com.nexo.nexoeducativo.repository;
 
-import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioDTO;
+
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
+import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
-import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
-import jakarta.persistence.Tuple;
 import java.util.List;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -52,7 +46,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
      Optional<Usuario> findByMail(String mail);
      
      //para chequear usuario logueado
-      Usuario getUsuarioByMail(String mail);
+      Usuario getUsuarioByMail(String mail); 
       
       //para obtener todos los usuario segun el rol
       @Query(value="SELECT new com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO(u.idUsuario, u.nombre, u.apellido, u.dni) FROM Usuario u INNER JOIN Rol r ON r.idRol=u.rolidrol WHERE r.nombre = :nombre")
@@ -61,6 +55,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
       //para obtener nombre y apellido del usuario logueado
           @Query(value = "SELECT u.nombre, u.apellido FROM Usuario u WHERE mail = :mail", nativeQuery = true)
           NombreCompletoDTO getFullName(String mail);
+          
+          
        
        
 }

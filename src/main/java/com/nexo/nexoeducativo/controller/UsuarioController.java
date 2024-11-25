@@ -11,6 +11,7 @@ import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioDTO;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
+import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.MateriaDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
@@ -29,6 +30,7 @@ import jakarta.persistence.Tuple;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -351,6 +353,14 @@ public class UsuarioController {
 		}
 		
 		return new ResponseEntity<>(usuarios, HttpStatus.OK);   
+    }
+    
+    //@PreAuthorize("hasAuthority('super admin')")
+    @PatchMapping(value="/modificarUsuario/{id}")
+    ResponseEntity<?> prueba20 (@PathVariable(value = "id") int id, Map<String, Object> campos, @Valid @RequestBody JefeColegioModificacionDTO jc){
+     Usuario s=uService.actualizarJefeColegio(id, campos);
+        
+        return new ResponseEntity<>(s,HttpStatus.OK);   
     }
     
     

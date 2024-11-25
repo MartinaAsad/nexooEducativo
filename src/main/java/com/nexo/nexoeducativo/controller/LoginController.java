@@ -2,7 +2,6 @@ package com.nexo.nexoeducativo.controller;
 
 
 //import com.nexo.nexoeducativo.configuration.CustomAuthenticationProvider;
-import com.nexo.nexoeducativo.models.dto.request.AuthRequestDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
 import com.nexo.nexoeducativo.models.entities.Usuario;

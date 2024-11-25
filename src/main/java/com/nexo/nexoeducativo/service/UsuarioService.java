@@ -20,9 +20,10 @@ import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.EscuelaUsuario;
 import com.nexo.nexoeducativo.exception.UsuarioExistingException;
 import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
+import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.exception.UsuarioWithPadreException;
-import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioDTO;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
+import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
@@ -34,18 +35,15 @@ import com.nexo.nexoeducativo.repository.EscuelaUsuarioRepository;
 import com.nexo.nexoeducativo.repository.RolRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import com.nexo.nexoeducativo.repository.UsuarioUsuarioRepository;
-import jakarta.persistence.Tuple;
+import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
 /**
  *
@@ -77,10 +75,6 @@ public class UsuarioService {
  
    //para saber info del usuario logueado
     private Usuario usuario;
-    
-    /*public void crearUsuario(UsuarioDTO u){
-        //reglas de negocio, ejemplo campos obligatorios con validaciones
-    }*/
     
     public static final String convertirSHA256(String password) {
         MessageDigest md = null;
@@ -165,13 +159,11 @@ public class UsuarioService {
             throw new UsuarioWithPadreException("Ese alumno ya tiene asociado a ese padre");
         }
 
-        // Create the course-student relationship
         CursoUsuario cursoUsuario = new CursoUsuario();
         cursoUsuario.setCursoIdCurso(curso);
         cursoUsuario.setUsuarioIdUsuario(alumno);
         this.cursoUsuarioRepository.save(cursoUsuario);
 
-        // Create the student-parent relationship
         UsuarioUsuario usuarioUsuario = new UsuarioUsuario();
         usuarioUsuario.setUsuarioIdUsuario(alumno);
         usuarioUsuario.setUsuarioIdUsuario1(padre);
@@ -238,8 +230,21 @@ public class UsuarioService {
          return usuariorepository.getUsuarioByRol(nombre);
      }
      
-     public void actualizarUsuario(UsuarioDTO u){
+     public Usuario actualizarJefeColegio(int id, Map<String, Object> campos){
+         Usuario usuarioIngresado = usuariorepository.findById(id).orElseThrow(()-> new UsuarioNotFoundException("el usuario que se desea modificar no existe"));
          
+           campos.forEach((key, value)->{//recorre cada campo de la entidad 
+           Field field=  ReflectionUtils.findField(Usuario.class, key);
+           
+            if(field!= null){
+           field.setAccessible(true);//para que pueda modificarse
+           ReflectionUtils.setField(field, usuarioIngresado, value);
+            usuariorepository.save(usuarioIngresado);
+           }
+            
+           });    
+             return null;
+
      }
      
      
