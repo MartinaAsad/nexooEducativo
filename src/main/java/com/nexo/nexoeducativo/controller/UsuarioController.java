@@ -357,10 +357,10 @@ public class UsuarioController {
     
     //@PreAuthorize("hasAuthority('super admin')")
     @PatchMapping(value="/modificarUsuario/{id}")
-    ResponseEntity<?> prueba20 (@PathVariable(value = "id") int id, Map<String, Object> campos, @Valid @RequestBody JefeColegioModificacionDTO jc){
-     Usuario s=uService.actualizarJefeColegio(id, campos);
+    ResponseEntity<?> prueba20 (@PathVariable(value = "id") int id, @Valid @RequestBody JefeColegioModificacionDTO jc){
+     JefeColegioModificacionDTO s=uService.actualizarJefeColegio(id, jc);
         
-        return new ResponseEntity<>(s,HttpStatus.OK);   
+        return new ResponseEntity<>("Modificacioens realizadas exitosamente",HttpStatus.OK);   
     }
     
     

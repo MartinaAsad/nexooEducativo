@@ -35,14 +35,22 @@ import com.nexo.nexoeducativo.repository.EscuelaUsuarioRepository;
 import com.nexo.nexoeducativo.repository.RolRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import com.nexo.nexoeducativo.repository.UsuarioUsuarioRepository;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -73,8 +81,12 @@ public class UsuarioService {
     @Autowired
     private EscuelaUsuarioRepository escuelaUsuarioRepository;
  
+    @Autowired
+    private Validator validator;
    //para saber info del usuario logueado
     private Usuario usuario;
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(UsuarioService.class);
     
     public static final String convertirSHA256(String password) {
         MessageDigest md = null;
@@ -230,22 +242,54 @@ public class UsuarioService {
          return usuariorepository.getUsuarioByRol(nombre);
      }
      
-     public Usuario actualizarJefeColegio(int id, Map<String, Object> campos){
-         Usuario usuarioIngresado = usuariorepository.findById(id).orElseThrow(()-> new UsuarioNotFoundException("el usuario que se desea modificar no existe"));
-         
-           campos.forEach((key, value)->{//recorre cada campo de la entidad 
-           Field field=  ReflectionUtils.findField(Usuario.class, key);
-           
-            if(field!= null){
-           field.setAccessible(true);//para que pueda modificarse
-           ReflectionUtils.setField(field, usuarioIngresado, value);
-            usuariorepository.save(usuarioIngresado);
-           }
-            
-           });    
-             return null;
-
+     public void validarElDto (JefeColegioModificacionDTO j){
+    Set<ConstraintViolation<JefeColegioModificacionDTO>> violaciones = validator.validate(j);
+    if (!violaciones.isEmpty()) {
+        throw new ConstraintViolationException(violaciones);
+    }
+     //LOGGER.info("EL DTO A VALIDAR TIENE LAS SIGUIENTES PROPIEDADES: "+j.toString());
      }
+     
+     public void actualizarCampos( JefeColegioModificacionDTO dto, Usuario u){
+         if (dto.getNombre() != null) {
+             u.setNombre(dto.getNombre());
+         }
+         if (dto.getApellido() != null) {
+             u.setApellido(dto.getApellido());
+         }
+         if (dto.getDni() != null) {
+             u.setDni(Integer.parseInt(dto.getDni()));
+         }
+         if (dto.getMail() != null) {
+             u.setMail(dto.getMail());
+         }
+         if (dto.getClave() != null) {
+             u.setClave(convertirSHA256(dto.getClave()));
+         }
+         if (dto.getTelefono() != null) {
+             u.setTelefono(dto.getTelefono());
+         }
+         if (dto.getActivo() != 0) {
+             u.setActivo(dto.getActivo());
+         }
+         
+         //LOGGER.info("el nuevo objeto contiene: "+u.toString());
+         
+         
+     }
+     
+     @Transactional
+    public JefeColegioModificacionDTO actualizarJefeColegio(int id, JefeColegioModificacionDTO j) {
+    Usuario usuarioIngresado = usuariorepository.findById(id)
+            .orElseThrow(() -> new UsuarioNotFoundException("El usuario que se desea modificar no existe"));
+
+        validarElDto(j);
+        actualizarCampos(j,usuarioIngresado);
+    Usuario actualizado= usuariorepository.save(usuarioIngresado);
+     //LOGGER.info("EL OBJETO ACTUALIZADO QUE SE VA A GUARDAR: "+actualizado.toString());
+     return new JefeColegioModificacionDTO (actualizado);
+    }
+
      
      
      

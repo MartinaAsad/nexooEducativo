@@ -4,6 +4,7 @@
  */
 package com.nexo.nexoeducativo.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -23,6 +24,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  *
@@ -36,6 +38,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+
 public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -65,25 +68,45 @@ public class Usuario implements Serializable {
     private short activo;
     @Column(name = "pago_cuota")
     private Short pagoCuota;
+    @ToString.Exclude 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdUsuario")
     private List<CursoUsuario> cursoUsuarioList;
+    @ToString.Exclude 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdUsuario")
     private List<PresentismoUsuario> presentismoUsuarioList;
+    @ToString.Exclude 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdUsuario")
     private List<UsuarioTarea> usuarioTareaList;
+    @ToString.Exclude 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdUsuario")
     private List<UsuarioAsistencia> usuarioAsistenciaList;
     @JoinColumn(name = "Rol_id_rol", referencedColumnName = "id_rol")
+    @ToString.Exclude 
+    @JsonIgnore
     @ManyToOne
     private Rol rolidrol;
+    @ToString.Exclude 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdUsuario")
     private List<UsuarioMensaje> usuarioMensajeList;
+    @ToString.Exclude 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdUsuario")
     private List<EscuelaUsuario> escuelaUsuarioList;
+     @ToString.Exclude 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdUsuario")
     private List<UsuarioComprobantePago> usuarioComprobantePagoList;
+    @ToString.Exclude 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdUsuario")
     private List<UsuarioUsuario> usuarioUsuarioList;
+    @ToString.Exclude 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdUsuario1")
     private List<UsuarioUsuario> usuarioUsuarioList1;
 }
