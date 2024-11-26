@@ -52,10 +52,13 @@ public class UsuarioDTO implements Serializable{
     //@NotBlank(message = "campo email vacio")
     private String mail;
     
-    @Pattern(
-        regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,32}$",
-        message = "La clave debe tener entre 8 y 32 caracteres, al menos una letra mayúscula, una letra minúscula, un número y un carácter especial."
-    )
+   
+        @Pattern(
+    regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&+])[A-Za-z\\d@$!%*?&+]{8,32}$",
+    message = "La clave debe tener entre 8 y 32 caracteres, al menos una letra mayúscula, una letra minúscula, un número y un carácter especial."
+)
+
+  
     @NotBlank(message="campo clave vacio")
     //@NotBlank(message = "campo clave vacio")
     private String clave;
