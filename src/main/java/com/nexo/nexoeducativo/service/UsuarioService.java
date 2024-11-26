@@ -290,7 +290,14 @@ public class UsuarioService {
      return new JefeColegioModificacionDTO (actualizado);
     }
 
-     
+    
+    @Transactional
+     public JefeColegioModificacionDTO getUsuarioPorID (int id){
+         Optional<Usuario> usuarioIngresado = usuariorepository.findById(id);
+         
+         return new JefeColegioModificacionDTO (usuarioIngresado.get());
+     }
+   
      
      
         
