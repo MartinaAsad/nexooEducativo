@@ -25,60 +25,47 @@ import org.springframework.stereotype.Service;
 @Service
 public class EscuelaService {
 
-       
     @Autowired
     private PlanRepository planRepository;
-    
+
     @Autowired
     private EscuelaRepository escuelaRepository;
-    
+
     @Autowired
     private EscuelaUsuarioRepository escuelaUsuarioRepository;
-    
-     public void crearEscuela (EscuelaDTO e){
-        
-        //e.setIdPlan(0);
-       int idPlanDto=e.getIdPlan(); //obtengo id del plan ingresado en el body del Postman
-       Plan p=new Plan();
-       p.setIdPlan(idPlanDto);
-       
-       Usuario u=new Usuario();//almaceno la info del jefe colegio ingresado
-       u.setIdUsuario(e.getJefeColegio());
-       
-     
-         if(escuelaRepository.existsByDireccion(e.getDireccion())){
-             //aca salta una excepcion evitando que se guarde la escuela, ver si esta bien el tipo de excepcion
-             throw new EscuelaNotFoundException("la escuela ya existe en la plataforma");
-         } else if (!planRepository.existsById(idPlanDto)) {//si se intenta guardar un id de un plan inexistente
-             //aca salta una excepcion evitando que se guarde la escuela, ver si esta bien el tipo de excepcion
-             throw new IllegalArgumentException("el plan seleccionado no existe"+e.getIdPlan());
-        } else {
-             //si se ingresa un plan existente y el nombre de una escuela que no existe , seguir guardando sino no
-              Escuela escuela = new Escuela();
-              
-              EscuelaUsuario jefeColegio=new EscuelaUsuario();
-                escuela.setActivo(e.getActivo());
-                escuela.setDireccion(e.getDireccion());
-                escuela.setNombre(e.getNombre());
-                escuela.setPlanIdPlan(p);
-                //jefeColegio.setIdEscuelaUsuario(e.getJefeColegio());//guardo el id del jefe colegio en la tabla intermedia
-                //jefeColegio.setEscuelaIdEscuela(escuela);//ver si esta bien
-                jefeColegio.setEscuelaIdEscuela(escuela); // Asigna la escuela
-                 jefeColegio.setUsuarioIdUsuario(u); // Establece el jefe del colegio
-                // Aquí iría la lógica para guardar la entidad Escuela
-                escuelaRepository.save(escuela);
-                escuelaUsuarioRepository.save(jefeColegio);//se guarda la info donde se asocia 1 ejefe colegio a un colegio, en su tabla intermedia correspondiente
+
+    public void crearEscuela(EscuelaDTO e) {
+        if (escuelaRepository.existsByDireccion(e.getDireccion())) {
+            throw new EscuelaNotFoundException("La escuela ya existe en la plataforma");
         }
-     }
-     
-      public void borrarEscuela(int idEscuela){
-         escuelaRepository.deleteById(idEscuela);
-     }
-      
-        public List<NombreDireccionEscuelaDTO> obtenerEscuelas(){
-         return escuelaRepository.getInfoEscuelas();
-     }
-    
-    
- 
+
+        if (!planRepository.existsById(e.getIdPlan())) {
+            throw new IllegalArgumentException("El plan seleccionado no existe: " + e.getIdPlan());
+        }
+
+        Escuela escuela = new Escuela();
+        escuela.setNombre(e.getNombre());
+        escuela.setDireccion(e.getDireccion());
+        escuela.setActivo(e.getActivo());
+        escuela.setPlanIdPlan(planRepository.findById(e.getIdPlan()).orElseThrow());
+
+        Usuario jefeColegio = new Usuario();
+        jefeColegio.setIdUsuario(e.getJefeColegio());
+
+        EscuelaUsuario escuelaUsuario = new EscuelaUsuario();
+        escuelaUsuario.setEscuelaIdEscuela(escuela);
+        escuelaUsuario.setUsuarioIdUsuario(jefeColegio);
+
+        escuelaRepository.save(escuela);
+        escuelaUsuarioRepository.save(escuelaUsuario);
+    }
+
+    public void borrarEscuela(int idEscuela) {
+        escuelaRepository.deleteById(idEscuela);
+    }
+
+    public List<NombreDireccionEscuelaDTO> obtenerEscuelas() {
+        return escuelaRepository.getInfoEscuelas();
+    }
+
 }

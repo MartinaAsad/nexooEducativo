@@ -139,6 +139,8 @@ public class UsuarioController {
 }*/
         return new ResponseEntity<>("Escuela guardada exitosamente", HttpStatus.OK);
     }
+     
+     
      @PreAuthorize("hasAuthority('super admin') ")
       @PostMapping("/saveRol")
      public ResponseEntity<?> prueba4(@Valid @RequestBody RolDTO r){
