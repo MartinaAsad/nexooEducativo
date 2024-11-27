@@ -5,6 +5,7 @@
 package com.nexo.nexoeducativo.handler;
 
 import com.nexo.nexoeducativo.exception.CursoNotFound;
+import com.nexo.nexoeducativo.exception.EscuelaExistingException;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.exception.MateriaExistingException;
 import com.nexo.nexoeducativo.exception.RolNotFound;
@@ -80,6 +81,11 @@ public class GlobalExceptionHandler {
             errors.put(error.getField(), error.getDefaultMessage());
         }
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(EscuelaExistingException.class)
+    public ResponseEntity<String>handleEscuelaExistingException(EscuelaExistingException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
     
    

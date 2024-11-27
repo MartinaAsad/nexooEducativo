@@ -4,6 +4,7 @@
  */
 package com.nexo.nexoeducativo.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -50,14 +51,19 @@ public class Escuela implements Serializable {
     @Column(name = "activo")
     private short activo;
     @JoinColumn(name = "plan_id_plan", referencedColumnName = "id_plan")
+    @JsonIgnore
     @ManyToOne(optional = false)
     private Plan planIdPlan;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "escuelaIdEscuela")
     private List<EscuelaComprobantePago> escuelaComprobantePagoList;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "escuelaIdEscuela")
     private List<MateriaEscuela> materiaEscuelaList;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "escuelaIdEscuela")
     private List<CursoEscuela> cursoEscuelaList;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "escuelaIdEscuela")
     private List<EscuelaUsuario> escuelaUsuarioList;
     

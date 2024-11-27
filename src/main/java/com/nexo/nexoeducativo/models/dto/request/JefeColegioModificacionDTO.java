@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.nexo.nexoeducativo.models.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -24,7 +20,7 @@ import org.hibernate.validator.constraints.Length;
 @NoArgsConstructor
 @ToString
 public class JefeColegioModificacionDTO implements Serializable{
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_NULL) //acepta valores nulos este campo
     @Pattern(regexp = "^[a-zA-Z]+$", message = "campo invalido")//solo acepta letras
     @Length(min=3, max=30) //min: cantidad minima, max: cantidad maxima (de caracteres), LENGTH ES PARA STRING NOMAS
     private String nombre;

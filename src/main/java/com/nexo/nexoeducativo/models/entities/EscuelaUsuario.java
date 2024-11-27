@@ -4,6 +4,7 @@
  */
 package com.nexo.nexoeducativo.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,6 +33,7 @@ import lombok.NoArgsConstructor;
 public class EscuelaUsuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
