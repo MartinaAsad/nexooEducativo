@@ -86,6 +86,7 @@ public class UsuarioService {
    //para saber info del usuario logueado
     private Usuario usuario;
     
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(UsuarioService.class);
     
     public static final String convertirSHA256(String password) {
@@ -257,11 +258,22 @@ public class UsuarioService {
          if (dto.getApellido() != null) {
              u.setApellido(dto.getApellido());
          }
+         
+         
          if (dto.getDni() != null) {
-             u.setDni(Integer.parseInt(dto.getDni()));
+             int casteo=Integer.parseInt(dto.getDni());
+             if(!usuariorepository.existsByDni(casteo)){
+                 u.setDni(casteo); //PARA EVITAR QUE EL DNI ACTUALIZADO COINCIDA CON UNO PREVIAMENTE EXISTENTE
+             }else{
+                  throw new UsuarioExistingException("El dni ingresado ya esta asociado a otro usuario");
+                 
+             }
          }
-         if (dto.getMail() != null) {
+                                        //PARA EVITAR QUE EL MAIL ACTUALIZADO COINCIDA CON UNO PREVIAMENTE EXISTENTE
+         if (dto.getMail() != null && !usuariorepository.existsByMail(dto.getMail())) {
              u.setMail(dto.getMail());
+         }else{
+             throw new UsuarioExistingException("El mail ingresado ya esta asociado a otro usuario");
          }
          if (dto.getClave() != null) {
              u.setClave(convertirSHA256(dto.getClave()));
