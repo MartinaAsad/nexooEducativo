@@ -45,11 +45,11 @@ public class EscuelaModificacionDTO implements Serializable{
     @JsonInclude(JsonInclude.Include.NON_NULL)
      @Min(value = 1, message = "El valor debe ser 1 o 2")
     @Max(value = 2, message = "El valor debe ser 1 o 2") 
-    private int idPlan; //tipo de plan, verificacion hecha en service
+    private Integer idPlan; //tipo de plan, verificacion hecha en service
     
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @Min(value = 1, message = "El valor debe ser mayor o igual a 1")
-    private int jefeColegio;
+    private Integer jefeColegio;
     
     @JsonCreator
     public EscuelaModificacionDTO(

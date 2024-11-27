@@ -12,6 +12,7 @@ import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.EscuelaUsuario;
+import com.nexo.nexoeducativo.models.entities.Plan;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.repository.EscuelaRepository;
 import com.nexo.nexoeducativo.repository.EscuelaUsuarioRepository;
@@ -86,7 +87,7 @@ public class EscuelaService {
         //LOGGER.info("EL DTO A VALIDAR TIENE LAS SIGUIENTES PROPIEDADES: "+j.toString());
     }
        
-       public void actualizarCampos( EscuelaModificacionDTO dto, Escuela e){
+       public void actualizarCampos( EscuelaModificacionDTO dto, Escuela e, Plan p){
          if (dto.getNombre() != null) {
              e.setNombre(dto.getNombre());
          }
@@ -94,22 +95,26 @@ public class EscuelaService {
          if (dto.getDireccion() != null && escuelaRepository.existsByDireccion(dto.getDireccion())) {
              e.setDireccion(dto.getDireccion());
          }else{
+             throw new EscuelaNotFoundException("Ya existe una escuela registrada en esa direccion");
+         }
+        
+         if (dto.getIdPlan()!=null) {
+             p.setIdPlan(dto.getIdPlan());
+             e.setPlanIdPlan(p);
+         }
+         
+         if(dto.getJefeColegio()!=null){
+             Usuario u=new Usuario(); //obtener el nuevo jefe colegio
+             u.setIdUsuario(dto.getJefeColegio());
+        
+             EscuelaUsuario eu=new EscuelaUsuario();
+              eu.setEscuelaIdEscuela(e);
+              eu.setUsuarioIdUsuario(u);
              
          }
-                                        //PARA EVITAR QUE EL MAIL ACTUALIZADO COINCIDA CON UNO PREVIAMENTE EXISTENTE
-         if (dto.getMail() != null && !usuariorepository.existsByMail(dto.getMail())) {
-             u.setMail(dto.getMail());
-         }else{
-             throw new UsuarioExistingException("El mail ingresado ya esta asociado a otro usuario");
-         }
-         if (dto.getClave() != null) {
-             u.setClave(convertirSHA256(dto.getClave()));
-         }
-         if (dto.getTelefono() != null) {
-             u.setTelefono(dto.getTelefono());
-         }
+        
          if (dto.getActivo() != 0) {
-             u.setActivo(dto.getActivo());
+             e.setActivo(dto.getActivo());
          }
          
          //LOGGER.info("el nuevo objeto contiene: "+u.toString());
