@@ -4,6 +4,7 @@
  */
 package com.nexo.nexoeducativo.service;
 
+import com.nexo.nexoeducativo.configuration.FailureHandler;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.exception.UsuarioExistingException;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
@@ -23,8 +24,11 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.util.List;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -44,6 +48,8 @@ public class EscuelaService {
     
      @Autowired
     private Validator validator;
+     
+     private static final Logger LOGGER = LoggerFactory.getLogger(EscuelaService.class);
 
     public void crearEscuela(EscuelaDTO e) {
         if (escuelaRepository.existsByDireccion(e.getDireccion())) {
@@ -84,7 +90,7 @@ public class EscuelaService {
         if (!violaciones.isEmpty()) {
             throw new ConstraintViolationException(violaciones);
         }
-        //LOGGER.info("EL DTO A VALIDAR TIENE LAS SIGUIENTES PROPIEDADES: "+j.toString());
+        
     }
        
        public void actualizarCampos( EscuelaModificacionDTO dto, Escuela e, Plan p){
@@ -92,10 +98,17 @@ public class EscuelaService {
              e.setNombre(dto.getNombre());
          }
          
-         if (dto.getDireccion() != null && escuelaRepository.existsByDireccion(dto.getDireccion())) {
+         if (dto.getDireccion() != null && !escuelaRepository.existsByDireccion(dto.getDireccion())) {
              e.setDireccion(dto.getDireccion());
-         }else{
+             LOGGER.info("LA DIRECCION TRAIDA DEL DTO ES: "+dto.getDireccion());
+             //LOGGER.info("LA DIRECCION TRAIDA DEL DTO ES: "+dto.getDireccion());
+         }else if(dto.getDireccion()==null){
+             
+         }
+         else{
+             LOGGER.info("LA DIRECCION TRAIDA DEL DTO (else) ES: "+dto.getDireccion());
              throw new EscuelaNotFoundException("Ya existe una escuela registrada en esa direccion");
+              
          }
         
          if (dto.getIdPlan()!=null) {
@@ -117,9 +130,21 @@ public class EscuelaService {
              e.setActivo(dto.getActivo());
          }
          
-         //LOGGER.info("el nuevo objeto contiene: "+u.toString());
-         
-         
      }
+       
+        @Transactional
+    public EscuelaModificacionDTO actualizarEscuela(int id, EscuelaModificacionDTO e) {
+    Escuela escuelaIngresada = escuelaRepository.findById(id)
+            .orElseThrow(() -> new EscuelaNotFoundException("La escuela que se desea modificar no existe"));
+
+        validarElDto(e);
+        Plan p=new Plan();
+        p.setIdPlan(e.getIdPlan());
+        
+        actualizarCampos(e,escuelaIngresada,p);
+    Escuela actualizado= escuelaRepository.save(escuelaIngresada);
+     //LOGGER.info("EL OBJETO ACTUALIZADO QUE SE VA A GUARDAR: "+actualizado.toString());
+     return new EscuelaModificacionDTO (actualizado);
+    }
 
 }

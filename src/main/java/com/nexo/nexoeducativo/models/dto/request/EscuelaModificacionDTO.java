@@ -27,7 +27,7 @@ import org.hibernate.validator.constraints.Length;
 @NoArgsConstructor
 @ToString
 public class EscuelaModificacionDTO implements Serializable{
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_NULL)//PERMITE IGNORAR LOS VALORES
     @Pattern(regexp = "^[a-zA-Z-0-9\s]+$", message = "campo nombre invalido")//solo acepta letras
     @Length(min=4, max=60, message = "minimo 4 caracteres y maximo 60")
     private String nombre;
@@ -44,7 +44,7 @@ public class EscuelaModificacionDTO implements Serializable{
     
     @JsonInclude(JsonInclude.Include.NON_NULL)
      @Min(value = 1, message = "El valor debe ser 1 o 2")
-    @Max(value = 2, message = "El valor debe ser 1 o 2") 
+    //@Max(value = 2, message = "El valor debe ser 1 o 2") 
     private Integer idPlan; //tipo de plan, verificacion hecha en service
     
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -56,8 +56,8 @@ public class EscuelaModificacionDTO implements Serializable{
               @JsonProperty("nombre")String nombre,
               @JsonProperty("direccion")String direccion,
               @JsonProperty("activo") short activo, 
-              @JsonProperty("idPlan")int idPlan,
-              @JsonProperty("jefeColegio")int jefeColegio) {
+              @JsonProperty("idPlan")Integer idPlan,
+              @JsonProperty("jefeColegio")Integer jefeColegio) {
         
         this.nombre = nombre;
         this.direccion = direccion;

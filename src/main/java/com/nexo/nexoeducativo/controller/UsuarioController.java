@@ -9,6 +9,7 @@ import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
+import com.nexo.nexoeducativo.models.dto.request.EscuelaModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioDTO;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
@@ -39,6 +40,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -357,7 +359,7 @@ public class UsuarioController {
 		return new ResponseEntity<>(usuarios, HttpStatus.OK);   
     }
     
-    //@PreAuthorize("hasAuthority('super admin')")
+    @PreAuthorize("hasAuthority('super admin')")
     @GetMapping(value="/getUsuario/{id}")
     ResponseEntity<?> prueba20 (@PathVariable(value = "id") int id){
      JefeColegioModificacionDTO s=uService.getUsuarioPorID(id);
@@ -366,13 +368,22 @@ public class UsuarioController {
     }
        
     
-        //@PreAuthorize("hasAuthority('super admin')")
+    @PreAuthorize("hasAuthority('super admin')")
     @PatchMapping(value="/modificarUsuario/{id}")
     ResponseEntity<?> prueba21 (@PathVariable(value = "id") int id,  @Valid @RequestBody JefeColegioModificacionDTO jc){
      JefeColegioModificacionDTO s=uService.actualizarJefeColegio(id, jc);
         
         return new ResponseEntity<>(s,HttpStatus.OK);   
     }
+    
+    @PreAuthorize("hasAuthority('super admin')")
+    @PatchMapping(value="/modificarEscuela/{id}")
+     ResponseEntity<?> prueba22 (@PathVariable(value = "id") int id,  @Valid @RequestBody EscuelaModificacionDTO em){
+          EscuelaModificacionDTO s=escuelaService.actualizarEscuela(id, em);
+          
+           return new ResponseEntity<>(s,HttpStatus.OK);   
+    }
+    
        
     
     
