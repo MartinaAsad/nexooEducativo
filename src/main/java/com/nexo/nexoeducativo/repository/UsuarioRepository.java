@@ -29,6 +29,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
     boolean existsByMail(String mail);
 
     boolean existsByRolidrolAndIdUsuario(Rol rolidrol, Integer idUsuario);
+    
+    //@Query("SELECT")
+    boolean existsByIdUsuarioAndRolidrol(int idUsuario, Rol rolidrol );
 
     Rol findByRolidrol(Rol rolidrol);
     //EL PROBLEMA ES QUE EL MAIL NO ESTA LLEGANDO BIEN AL METODO, DESDE EL CONTROLADOR FUNCIONA BIEN PERO NO LLEGA ACA
@@ -55,6 +58,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
       //para obtener nombre y apellido del usuario logueado
           @Query(value = "SELECT u.nombre, u.apellido FROM Usuario u WHERE mail = :mail", nativeQuery = true)
           NombreCompletoDTO getFullName(String mail);
+          
+          
           
           
        

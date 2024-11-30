@@ -7,6 +7,7 @@ package com.nexo.nexoeducativo.service;
 import com.nexo.nexoeducativo.configuration.FailureHandler;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.exception.UsuarioExistingException;
+import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
@@ -14,15 +15,18 @@ import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.EscuelaUsuario;
 import com.nexo.nexoeducativo.models.entities.Plan;
+import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.repository.EscuelaRepository;
 import com.nexo.nexoeducativo.repository.EscuelaUsuarioRepository;
 import com.nexo.nexoeducativo.repository.PlanRepository;
+import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import static com.nexo.nexoeducativo.service.UsuarioService.convertirSHA256;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +50,8 @@ public class EscuelaService {
     @Autowired
     private EscuelaUsuarioRepository escuelaUsuarioRepository;
     
+    @Autowired
+    private UsuarioRepository usuarioRepository;
      @Autowired
     private Validator validator;
      
@@ -100,13 +106,13 @@ public class EscuelaService {
          
          if (dto.getDireccion() != null && !escuelaRepository.existsByDireccion(dto.getDireccion())) {
              e.setDireccion(dto.getDireccion());
-             LOGGER.info("LA DIRECCION TRAIDA DEL DTO ES: "+dto.getDireccion());
+             //LOGGER.info("LA DIRECCION TRAIDA DEL DTO ES: "+dto.getDireccion());
              //LOGGER.info("LA DIRECCION TRAIDA DEL DTO ES: "+dto.getDireccion());
          }else if(dto.getDireccion()==null){
              
          }
          else{
-             LOGGER.info("LA DIRECCION TRAIDA DEL DTO (else) ES: "+dto.getDireccion());
+             //LOGGER.info("LA DIRECCION TRAIDA DEL DTO (else) ES: "+dto.getDireccion());
              throw new EscuelaNotFoundException("Ya existe una escuela registrada en esa direccion");
               
          }
@@ -119,10 +125,31 @@ public class EscuelaService {
          if(dto.getJefeColegio()!=null){
              Usuario u=new Usuario(); //obtener el nuevo jefe colegio
              u.setIdUsuario(dto.getJefeColegio());
-        
-             EscuelaUsuario eu=new EscuelaUsuario();
-              eu.setEscuelaIdEscuela(e);
-              eu.setUsuarioIdUsuario(u);
+             
+             Rol r = new Rol();
+             r.setIdRol(2);
+             //chequear que el jefe colegio ingresado tenga ese rol
+             if(usuarioRepository.existsByIdUsuarioAndRolidrol(u.getIdUsuario(), r)){
+              
+               //ver si esa escuela tenia un jefe colegio asignado previamente
+               Optional<EscuelaUsuario> yaExistente=escuelaUsuarioRepository.siHayJefeAsignado(e.getIdEscuela(), r.getIdRol());
+               if(yaExistente.isPresent()){
+                   Usuario nuevo= new Usuario();
+                   nuevo.setIdUsuario(dto.getJefeColegio()); //almacenar el jefe colegio obtenido del dto
+                   EscuelaUsuario valorAnterior= yaExistente.get();
+                   valorAnterior.setUsuarioIdUsuario(nuevo); //actualziar el jefe colegio anterior por el actual
+                   //valorAnterior.setEscuelaIdEscuela(e);
+                   escuelaUsuarioRepository.save(valorAnterior);
+               }else{//si ese colegio no tiene establecido un jefe colegio de antes, guardarlo desde cero
+                   EscuelaUsuario eu = new EscuelaUsuario();
+                   eu.setEscuelaIdEscuela(e);
+                   eu.setUsuarioIdUsuario(u);
+                   escuelaUsuarioRepository.save(eu);
+               }
+              
+             }else{
+                 throw new UsuarioNotAuthorizedException("El usuario no tiene permisos como jefe colegio");
+             }
              
          }
         
