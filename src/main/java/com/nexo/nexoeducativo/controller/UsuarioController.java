@@ -4,13 +4,12 @@
  */
 package com.nexo.nexoeducativo.controller;
 
-import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaModificacionDTO;
-import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioDTO;
+import com.nexo.nexoeducativo.models.dto.request.EscuelaView;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.MateriaDTO;
@@ -19,7 +18,6 @@ import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
 import com.nexo.nexoeducativo.models.dto.request.RolDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
-import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.service.CursoEscuelaService;
 import com.nexo.nexoeducativo.service.CursoService;
 import com.nexo.nexoeducativo.service.EscuelaService;
@@ -27,20 +25,15 @@ import com.nexo.nexoeducativo.service.MateriaService;
 import com.nexo.nexoeducativo.service.PlanService;
 import com.nexo.nexoeducativo.service.RolService;
 import com.nexo.nexoeducativo.service.UsuarioService;
-import jakarta.persistence.Tuple;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -344,6 +337,25 @@ public class UsuarioController {
 
         return new ResponseEntity<>(escuelas, HttpStatus.OK);
     }
+    
+     @PreAuthorize("hasAuthority('super admin') ")
+     @GetMapping(value="/getEscuela/{id}")
+    ResponseEntity<?> prueba23(@PathVariable("id") @Valid Integer id){
+        EscuelaView escuela = null;
+         for (NombreDireccionEscuelaDTO esc : escuelaService.obtenerEscuelas()) {
+             if (esc.getId_escuela() == id) {
+                 escuela=new EscuelaView(esc.getNombre(), esc.getDireccion());
+             }
+         }
+         if (escuela == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(escuela, HttpStatus.OK);
+    }
+    
+    
+    
     
     @PreAuthorize("hasAuthority('super admin') "
             + "or hasAuthority('jefe colegio') ")
