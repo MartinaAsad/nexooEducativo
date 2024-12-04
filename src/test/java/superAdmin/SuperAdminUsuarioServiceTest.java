@@ -138,6 +138,112 @@ public class SuperAdminUsuarioServiceTest {
         //verify(usuarioRepository, times(0)).save(any(Usuario.class)); 
     }
     
+    @Test
+    public void altaJefeColegioConNombreInvalido() throws Exception{
+        nombre="lol333";
+        
+        UsuarioDTO esperado=new UsuarioDTO();
+        Set<ConstraintViolation<UsuarioDTO>> validaciones = validator.validate(esperado);
+
+        esperado.setNombre(nombre);
+         for (ConstraintViolation<UsuarioDTO> validacion : validaciones) {
+            LOGGER.error(validacion.getMessage());
+        }
+         
+          assertTrue(validaciones.stream().anyMatch(v -> v.getMessage().contains("invalido")), "Se esperaba una violación de validación para campos invalidos");
+    }
+    
+      @Test
+    public void altaJefeColegioConDniInvalido() throws Exception{
+        nombre = "pruebita";
+        apellido = "pruebota";
+        //dni = 0;
+        mail = "mailcito@gmail.com";
+        clave = "Lslslsl2!!";
+        telefono = 45220133;
+        activo = 1;
+        r.setIdRol(1);
+        dni=235600223;
+        
+        UsuarioDTO esperado = new UsuarioDTO(nombre, apellido, dni, mail, clave, telefono, activo, r.getIdRol());
+        Set<ConstraintViolation<UsuarioDTO>> validaciones = validator.validate(esperado);
+
+         for (ConstraintViolation<UsuarioDTO> validacion : validaciones) {
+            LOGGER.error(validacion.getMessage());
+        }
+         
+          assertTrue(validaciones.stream().anyMatch(v -> v.getMessage().contains("El DNI debe tener como maximo 8 numeros")), "Se esperaba una violación de validación para campos invalidos");
+    }
+ 
+    @Test
+    public void altaJefeColegioConClaveInvalido() throws Exception {
+        nombre = "pruebita";
+        apellido = "pruebota";
+        //dni = 0;
+        mail = "mailcito@gmail.com";
+        clave = "juanita123";
+        telefono = 45220133;
+        activo = 1;
+        r.setIdRol(1);
+        dni = 2356023;
+
+        UsuarioDTO esperado = new UsuarioDTO(nombre, apellido, dni, mail, clave, telefono, activo, r.getIdRol());
+        Set<ConstraintViolation<UsuarioDTO>> validaciones = validator.validate(esperado);
+
+        for (ConstraintViolation<UsuarioDTO> validacion : validaciones) {
+            LOGGER.error(validacion.getMessage());
+        }
+
+        assertTrue(validaciones.stream().anyMatch(v -> v.getMessage().contains("caracteres")), "Se esperaba una violación de validación para campos invalidos");
+    }
+    
+      @Test //VER POR QUE ME FALLA EL TEST
+    public void altaJefeColegioConMailInvalido() throws Exception {
+        nombre = "pruebita";
+        apellido = "pruebota";
+        mail = "mailcitoinvalido";
+        clave = "Juanita123!a";
+        telefono = 45220133;
+        activo = 1;
+        r.setIdRol(1);
+        dni = 2356023;
+
+        UsuarioDTO esperado = new UsuarioDTO(nombre, apellido, dni, mail, clave, telefono, activo, r.getIdRol());
+        Set<ConstraintViolation<UsuarioDTO>> validaciones = validator.validate(esperado);
+
+        validaciones.forEach(validacion -> {
+            LOGGER.error(validacion.getMessage());
+        });
+
+        assertTrue(validaciones.stream().anyMatch((var v) -> {
+            return v.getMessage().contains("formato");
+        }), "hay algo mal");
+    }
+    
+     @Test 
+    public void altaJefeColegioConTelefonoInvalido() throws Exception {
+        nombre = "pruebita";
+        apellido = "pruebota";
+        mail = "mailcito@gmail.co";
+        clave = "Juanita123!a";
+        telefono = 4522;
+        activo = 1;
+        r.setIdRol(1);
+        dni = 2356023;
+
+        UsuarioDTO esperado = new UsuarioDTO(nombre, apellido, dni, mail, clave, telefono, activo, r.getIdRol());
+        Set<ConstraintViolation<UsuarioDTO>> validaciones = validator.validate(esperado);
+
+        for (ConstraintViolation<UsuarioDTO> validacion : validaciones) {
+            LOGGER.error(validacion.getMessage());
+        }
+
+        assertTrue(validaciones.stream().anyMatch(v -> {
+            return v.getMessage().contains("7 numeros");
+        }), "hay algo mal");
+    }
+    
+    
     
 
 }

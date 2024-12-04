@@ -4,23 +4,20 @@
  */
 package com.nexo.nexoeducativo.models.dto.request;
 
-import com.nexo.nexoeducativo.models.entities.Plan;
-import com.nexo.nexoeducativo.models.entities.Usuario;
-import jakarta.persistence.Column;
+
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-/**
- *
- * @author Martina
- */
+
 //@Data
+@AllArgsConstructor
 public class EscuelaDTO implements Serializable{
     @Pattern(regexp = "^[a-zA-Z-0-9\s]+$", message = "campo nombre invalido")//solo acepta letras
     @NotBlank(message="campo nombre no puede estar vacio")//notblank para string
