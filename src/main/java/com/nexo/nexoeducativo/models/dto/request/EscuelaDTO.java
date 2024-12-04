@@ -26,7 +26,7 @@ public class EscuelaDTO implements Serializable{
     
     @Pattern(regexp = "^[a-zA-Z-0-9\s]+$", message = "campo direccion invalido")//solo acepta letras
     @NotBlank(message="campo direccion no puede estar vacio")//notblank para string
-    @Length(min=4, max=70, message = "minimo 4 caracteres y maximo 70")
+    @Length(min=4, max=70, message = "direccion debe tener minimo 4 caracteres y maximo 70")
     private String direccion;
      
     @NotNull(message="campo activo invalido")
