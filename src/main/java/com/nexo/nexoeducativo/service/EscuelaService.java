@@ -99,7 +99,7 @@ public class EscuelaService {
         
     }
        
-       public void actualizarCampos( EscuelaModificacionDTO dto, Escuela e, Plan p){
+       public void actualizarCampos( EscuelaModificacionDTO dto, Escuela e, Plan p,int idEscuela){
          if (dto.getNombre() != null) {
              e.setNombre(dto.getNombre());
          }
@@ -118,7 +118,7 @@ public class EscuelaService {
          }
         
          if (dto.getIdPlan()!=null) {
-             p.setIdPlan(dto.getIdPlan());
+             p.setIdPlan(dto.getIdPlan());//SUPUESTAMENTE NO ANDA
              e.setPlanIdPlan(p);
          }
          
@@ -152,9 +152,12 @@ public class EscuelaService {
              }
              
          }
+         
+         //int
+         //LOGGER.info(escuelaRepository.findActivoByIdEscuela(idEscuela));
         
-         if (dto.getActivo() != 0) {
-             e.setActivo(dto.getActivo());
+         if (escuelaRepository.findActivoByIdEscuela(idEscuela).getActivo()!=dto.getActivo()) {
+             e.setActivo(dto.getActivo()); //SUPUESTAMENTE NO ANDA
          }
          
      }
@@ -168,7 +171,7 @@ public class EscuelaService {
         Plan p=new Plan();
         p.setIdPlan(e.getIdPlan());
         
-        actualizarCampos(e,escuelaIngresada,p);
+        actualizarCampos(e,escuelaIngresada,p,id);
     Escuela actualizado= escuelaRepository.save(escuelaIngresada);
      //LOGGER.info("EL OBJETO ACTUALIZADO QUE SE VA A GUARDAR: "+actualizado.toString());
      return new EscuelaModificacionDTO (actualizado);

@@ -33,6 +33,8 @@ public interface EscuelaRepository extends JpaRepository<Escuela, Integer> {
      @Query(value="SELECT id_escuela, nombre, direccion FROM escuela", nativeQuery = true)
     List<NombreDireccionEscuelaDTO> getInfoEscuelas();
     
+    Escuela findActivoByIdEscuela(int idEscuela);
+    
     //boolean isActivo(Integer idEscuela);
     
 }
