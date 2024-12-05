@@ -153,11 +153,8 @@ public class EscuelaService {
              
          }
          
-         //int
-         //LOGGER.info(escuelaRepository.findActivoByIdEscuela(idEscuela));
-        
          if (escuelaRepository.findActivoByIdEscuela(idEscuela).getActivo()!=dto.getActivo()) {
-             e.setActivo(dto.getActivo()); //SUPUESTAMENTE NO ANDA
+             e.setActivo(dto.getActivo());
          }
          
      }

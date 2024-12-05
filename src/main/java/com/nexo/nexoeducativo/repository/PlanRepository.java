@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository;
 public interface PlanRepository extends JpaRepository<Plan, Integer> {
     boolean existsByDescripcion (String descripcion);
 
-    @Query(value="SELECT idPlan, descripcion FROM Plan")
+    @Query(value="SELECT idPlan, descripcion FROM Plan where activo=1 ")
     public List<String> getDescripcionAndIdPlan();
     
 }
