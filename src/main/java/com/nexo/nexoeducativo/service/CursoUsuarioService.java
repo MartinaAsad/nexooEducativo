@@ -47,6 +47,7 @@ public class CursoUsuarioService {
                 CursoUsuario cu=new CursoUsuario();
                 cu.setCursoIdCurso(c);
                 cu.setUsuarioIdUsuario(u);   
+                cuRepository.save(cu);
             }else{
                 throw new UsuarioAssignedException("El usuario ya esta asignado como preceptor en otro curso");
             }
