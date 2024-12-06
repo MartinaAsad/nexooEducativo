@@ -3,6 +3,7 @@ package com.nexo.nexoeducativo.controller;
 
 import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
+import com.nexo.nexoeducativo.models.dto.request.AsignarPreceptorDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaModificacionDTO;
@@ -15,8 +16,8 @@ import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
 import com.nexo.nexoeducativo.models.dto.request.RolDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
-import com.nexo.nexoeducativo.service.CursoEscuelaService;
 import com.nexo.nexoeducativo.service.CursoService;
+import com.nexo.nexoeducativo.service.CursoUsuarioService;
 import com.nexo.nexoeducativo.service.EscuelaService;
 import com.nexo.nexoeducativo.service.MateriaService;
 import com.nexo.nexoeducativo.service.PlanService;
@@ -60,13 +61,12 @@ public class UsuarioController {
     
     @Autowired
     private PlanService planService;
-    //comentario de prueba
-    
-    @Autowired
-    private CursoEscuelaService cursoEscuelaService;
-    
+    //comentario de prueba  
     @Autowired
     private MateriaService materiaService;
+    
+    @Autowired
+    private CursoUsuarioService cursoUsuarioService;
     
     @PreAuthorize("hasAuthority('administrativo') "
             + "or hasAuthority('jefe colegio') "
@@ -137,7 +137,8 @@ public class UsuarioController {
           return new ResponseEntity<>("Rol guardado exitosamente", HttpStatus.OK);
      }
      @PreAuthorize("hasAuthority('administrativo') "
-            + "or hasAuthority('preceptor') ")
+            + "or hasAuthority('preceptor') "+
+             "or hasAuthority('super admin') ") //despues sacar este permiso mas adelante
      @PostMapping("/saveCurso")
      public ResponseEntity<?> prueba5(@Valid @RequestBody CursoDTO r){
          
@@ -389,7 +390,13 @@ public class UsuarioController {
            return new ResponseEntity<>(s,HttpStatus.OK);   
     }
     
-       
+    @PreAuthorize("hasAuthority('super admin')") //asignado como ejemplo, despues cambiar a administrativo
+    @PostMapping(value="/asignarPreceptor")
+     ResponseEntity<?> prueba23 ( @Valid @RequestBody AsignarPreceptorDTO em){
+          cursoUsuarioService.asignarPreceptor(em);
+          
+           return new ResponseEntity<>(HttpStatus.OK);   
+    }   
     
     
     
