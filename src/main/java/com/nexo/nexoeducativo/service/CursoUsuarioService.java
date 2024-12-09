@@ -37,7 +37,7 @@ public class CursoUsuarioService {
         u.setIdUsuario(ap.getPreceptor());
         u.setRolidrol(rolPreceptor);
         
-        Optional<CursoUsuario> verSiYaFueAsignado=cuRepository.findByUsuarioIdUsuario(u);    //aca hay un problema
+        Optional<CursoUsuario> verSiYaFueAsignado=cuRepository.siYaFueAsignado(c.getIdCurso());    //aca hay un problema
         
         //primero verificar si el rol del preceptor correpsonde a un preceptor y que no haya registros previos de ese usuario
         if(u.getRolidrol().getIdRol()!=rolPreceptor.getIdRol()){
