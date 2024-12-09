@@ -19,6 +19,9 @@ import com.nexo.nexoeducativo.repository.EscuelaRepository;
 import com.nexo.nexoeducativo.repository.MateriaCursoRepository;
 import com.nexo.nexoeducativo.repository.MateriaEscuelaRepository;
 import com.nexo.nexoeducativo.repository.MateriaRepository;
+import java.time.LocalTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +49,7 @@ public class MateriaService {
     
     @Autowired
     private CursoEscuelaRepository cursoEscuelaRepository;
+      private static final Logger LOGGER = LoggerFactory.getLogger(MateriaService.class);
     
     public void crearMateria(MateriaDTO m){
         //inserto lo ingresado en el dto en las entidades correspondientes
@@ -79,18 +83,19 @@ public class MateriaService {
         }
         
         
-        //validar si existe esa materia en ese curso en esa escuela en ese dia entre las horas de inicio y fin
-        //ejemplo: si ya existe materia biologia en escuela id 2 en curso id 2 los martes de 9 a 11 NO se va
-        //a poder ingresar la misma materia en ese mismo curso y escuela a las 9:30 por ejemplo
-        //PROBAR MAS TARDE ESTA VALIDACION
-        if(materiaEscuelaRepository.existsByMateriaIdMateriaAndEscuelaIdEscuela(materia, e)
-                && materiaCursoRepository.existsByMateriaIdMateriaAndCursoIdCursoAndDia(materia, c, m.getDia())){
-            throw new MateriaExistingException("la materia que se desea ingresar ya existe en ese curso");
+        //validar si ya existe una materia en ese mismo horario o que no se suponga. Ejemplo: biologia 1 12:00 - 13:00 2b lunes y jueves
+        //NO ES VALIDO: biologia 1 12:30 a 13:30 2b lunes y jueves
+        if(materiaCursoRepository.verSiYaExisteEsaMateria(m.getIdCurso(), m.getDia(), m.getHoraInicio(), m.getHoraFin())){
+            throw new MateriaExistingException("Ya existe esa materia entre esos horarios en ese curso");
+        }else{
+            LOGGER.info("primera validacion resultado: ");
         }
         
-        materiaRepository.save(materia);
+       
+      
+        /*materiaRepository.save(materia);
         materiaEscuelaRepository.save(me);
-        materiaCursoRepository.save(mc);
+        materiaCursoRepository.save(mc);*/
     }
     
 }
