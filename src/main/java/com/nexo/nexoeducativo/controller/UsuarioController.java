@@ -16,6 +16,7 @@ import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
 import com.nexo.nexoeducativo.models.dto.request.RolDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
+import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.service.CursoService;
 import com.nexo.nexoeducativo.service.CursoUsuarioService;
 import com.nexo.nexoeducativo.service.EscuelaService;
@@ -279,10 +280,12 @@ public class UsuarioController {
          return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.CREATED);
     }
     
-    @PreAuthorize("hasAuthority('jefe colegio")
+    @PreAuthorize("hasAuthority('super admin')")
+   // @PreAuthorize("hasAuthority('jefe colegio')")
     @GetMapping(value="/selectCurso/{idCurso}")
     ResponseEntity<?> pruebita(@PathVariable("idCurso") int idCurso){
-        return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.OK);
+        List<Curso> c= new ArrayList<Curso>();
+        return new ResponseEntity<>(cursoService.seleccionarCurso(idCurso), HttpStatus.OK);
     }
     
      @PreAuthorize("hasAuthority('super admin') ")

@@ -10,11 +10,19 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class CursoView implements Serializable{
-    private int numero;
+    private int numero;//numero del curso
     private Character division;
     private String nombreP;
     private String apellidoP;
     
     List<MateriaView> materias;
     List<UsuarioView> alumnos;    
+
+    //lleno con solo datos del curso
+    public CursoView(int numero, Character division) {
+        this.numero=numero;
+        this.division=division;
+    }
+    
+    
 }

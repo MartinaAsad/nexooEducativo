@@ -5,12 +5,15 @@
 package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
+import com.nexo.nexoeducativo.models.dto.request.CursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.CursoEscuela;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.repository.CursoEscuelaRepository;
 import com.nexo.nexoeducativo.repository.CursoRepository;
 import com.nexo.nexoeducativo.repository.EscuelaRepository;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,5 +71,13 @@ public class CursoService {
              throw new IllegalArgumentException("El curso ya existe en la escuela!");
         }
 
+    }
+    
+    public List<CursoView> seleccionarCurso (int idCurso){
+        Curso c=cursoRepository.findNumeroAndDivisionByIdCurso(idCurso);
+        CursoView datosCurso=new CursoView(c.getNumero(), c.getDivision());
+        List<CursoView> cView = new ArrayList<CursoView>();
+        cView.add(datosCurso);
+        return cView;
     }
 }
