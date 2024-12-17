@@ -4,16 +4,23 @@
  */
 package com.nexo.nexoeducativo.service;
 
+import com.nexo.nexoeducativo.exception.CursoNotFound;
+import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.CursoEscuela;
+import com.nexo.nexoeducativo.models.entities.CursoUsuario;
 import com.nexo.nexoeducativo.models.entities.Escuela;
+import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.repository.CursoEscuelaRepository;
 import com.nexo.nexoeducativo.repository.CursoRepository;
+import com.nexo.nexoeducativo.repository.CursoUsuarioRepository;
 import com.nexo.nexoeducativo.repository.EscuelaRepository;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +40,11 @@ public class CursoService {
     @Autowired
     private CursoEscuelaRepository cursoEscuelaRepository;
     
+    @Autowired
+    private CursoUsuarioRepository cursoUsuarioRepository;
+    
+        
+    private static final Logger LOGGER = LoggerFactory.getLogger(CursoService.class);
     
        public boolean siYaExisteCombinacion(Integer escuelaId, int numero, Character division){
         return escuelaRepository.existsCursoInEscuela(escuelaId, numero, division);
@@ -74,8 +86,16 @@ public class CursoService {
     }
     
     public List<CursoView> seleccionarCurso (int idCurso){
-        Curso c=cursoRepository.findNumeroAndDivisionByIdCurso(idCurso);
-        CursoView datosCurso=new CursoView(c.getNumero(), c.getDivision());
+        /*datos del curso*/
+        Curso c=cursoRepository.findById(idCurso)
+                 .orElseThrow(() -> new CursoNotFound("El curso no existe"));
+        /*datos del preceptor*/
+        CursoUsuario cu=cursoUsuarioRepository.findUsuarioIdUsuarioBycursoIdCurso(c);//obtengo el id del preceptor
+        //LOGGER.info("info del repository: "+cu.getUsuarioIdUsuario());
+        Usuario u = cu.getUsuarioIdUsuario(); //guardo el id aqui para luego obtener nombre y apellido
+        //LOGGER.info("info del repository: "+u.getRolidrol());
+        
+        CursoView datosCurso=new CursoView(c.getNumero(), c.getDivision(), u.getNombre(), u.getApellido());
         List<CursoView> cView = new ArrayList<CursoView>();
         cView.add(datosCurso);
         return cView;

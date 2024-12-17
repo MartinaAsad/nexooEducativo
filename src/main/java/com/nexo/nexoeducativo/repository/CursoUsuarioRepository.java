@@ -10,6 +10,7 @@ import com.nexo.nexoeducativo.models.entities.Usuario;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 
@@ -23,4 +24,12 @@ public interface CursoUsuarioRepository extends JpaRepository<CursoUsuario, Inte
     
     @Query(value="select * from curso_usuario cu INNER JOIN usuario u ON u.id_usuario= cu.usuario_id_usuario INNER JOIN rol r ON r.id_rol=u.Rol_id_rol WHERE u.Rol_id_rol=4 && cu.curso_id_curso= :cursoIdCurso", nativeQuery = true)
      Optional<CursoUsuario> siYaFueAsignado (int cursoIdCurso );
+     
+     CursoUsuario findUsuarioIdUsuarioBycursoIdCurso(Curso cursoIdCurso);
+     
+         @Query(value="""
+                 select cu.* from curso_usuario cu INNER JOIN usuario u ON u.id_usuario=cu.usuario_id_usuario INNER JOIN rol r ON r.id_rol=u.Rol_id_rol 
+                 INNER JOIN curso c ON c.id_curso=cu.curso_id_curso
+                 WHERE r.nombre='preceptor' and cu.curso_id_curso= :idCurso""", nativeQuery=true)
+    CursoUsuario findNumeroAndDivisionByIdCurso (@Param("idCurso") Integer idCurso);
 }

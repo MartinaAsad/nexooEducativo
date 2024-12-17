@@ -3,6 +3,7 @@ package com.nexo.nexoeducativo.repository;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,8 +12,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CursoRepository extends JpaRepository<Curso, Integer> {
-    
-    Curso findNumeroAndDivisionByIdCurso (Integer idCurso);
+
     
     
     

@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  *
@@ -32,6 +33,7 @@ import lombok.NoArgsConstructor;
     @NamedQuery(name = "CursoUsuario.findAll", query = "SELECT c FROM CursoUsuario c")})
 @Data
 @NoArgsConstructor
+@ToString
 public class CursoUsuario implements Serializable {
 
     private static final long serialVersionUID = 1L;

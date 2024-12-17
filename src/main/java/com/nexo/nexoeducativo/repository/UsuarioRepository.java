@@ -68,6 +68,8 @@ Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
           @Query(value = "SELECT u.nombre, u.apellido FROM Usuario u WHERE mail = :mail", nativeQuery = true)
           NombreCompletoDTO getFullName(String mail);
           
+      Usuario findNombreAndApellidoByIdUsuario(Integer idUsuario);
+          
           
           
           

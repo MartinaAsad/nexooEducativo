@@ -19,9 +19,11 @@ public class CursoView implements Serializable{
     List<UsuarioView> alumnos;    
 
     //lleno con solo datos del curso
-    public CursoView(int numero, Character division) {
+    public CursoView(int numero, Character division, String nombreP,String apellidoP) {
         this.numero=numero;
         this.division=division;
+        this.nombreP=nombreP;
+        this.apellidoP=apellidoP;
     }
     
     
