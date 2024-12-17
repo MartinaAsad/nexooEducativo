@@ -27,7 +27,7 @@ public interface MateriaCursoRepository extends JpaRepository<MateriaCurso, Inte
 "    AND (\n" +
 "        (mc.horaInicio <= :horaFin AND mc.horaFin >= :horaInicio) \n" +
 "    )")
-    boolean verSiYaExisteEsaMateria(@Param("cursoIdCurso") int cursoIdCurso,
+    boolean verSiYaExisteEsaMateria(@Param("cursoIdCurso") Curso cursoIdCurso,
                                  @Param("dia") String dia,
                                  @Param("horaInicio") LocalTime horaInicio,
                                  @Param("horaFin") LocalTime horaFin);
