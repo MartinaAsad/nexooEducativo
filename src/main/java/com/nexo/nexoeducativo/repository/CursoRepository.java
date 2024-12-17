@@ -14,7 +14,9 @@ import org.springframework.stereotype.Repository;
  * @author Martina
  */
 @Repository
-public interface CursoRepository extends JpaRepository<Curso, Integer> {   
+public interface CursoRepository extends JpaRepository<Curso, Integer> {
+    
+    
 
     
 }

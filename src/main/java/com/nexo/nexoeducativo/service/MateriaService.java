@@ -8,18 +8,22 @@ import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.exception.HoraInvalidatedexception;
 import com.nexo.nexoeducativo.exception.MateriaExistingException;
+import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
 import com.nexo.nexoeducativo.models.dto.request.MateriaDTO;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.MateriaCurso;
 import com.nexo.nexoeducativo.models.entities.MateriaEscuela;
+import com.nexo.nexoeducativo.models.entities.Rol;
+import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.repository.CursoEscuelaRepository;
 import com.nexo.nexoeducativo.repository.CursoRepository;
 import com.nexo.nexoeducativo.repository.EscuelaRepository;
 import com.nexo.nexoeducativo.repository.MateriaCursoRepository;
 import com.nexo.nexoeducativo.repository.MateriaEscuelaRepository;
 import com.nexo.nexoeducativo.repository.MateriaRepository;
+import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +52,9 @@ public class MateriaService {
     private EscuelaRepository escuelaRepository;
     
     @Autowired
+    private UsuarioRepository usuarioRepository;
+    
+    @Autowired
     private CursoEscuelaRepository cursoEscuelaRepository;
       private static final Logger LOGGER = LoggerFactory.getLogger(MateriaService.class);
     
@@ -58,6 +65,11 @@ public class MateriaService {
 
         Escuela e = escuelaRepository.findById(m.getIdEscuela())
                 .orElseThrow(() -> new EscuelaNotFoundException("La escuela no existe"));
+        Rol r=new Rol();
+        r.setIdRol(5); //segun bbdd
+        
+        Usuario u=new Usuario();
+        u.setIdUsuario(m.getIdProfesor());
 
         Materia materia = new Materia();
         materia.setNombre(m.getNombre());

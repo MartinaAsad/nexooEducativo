@@ -40,6 +40,10 @@ public class MateriaDTO implements Serializable{
     @Min(value = 1, message = "El valor debe ser igual o mayor a 1")
     private int idCurso;
     
+    @NotNull(message = "la materia debe estar asociada a un curso")
+    @Min(value = 1, message = "El valor debe ser igual o mayor a 1")
+    private int idProfesor;
+    
     @Pattern(regexp = "^[a-zA-Z]+$", message = "campo invalido")//solo acepta letras
     @NotBlank(message = "campo dia invalido")//notblank para string
     @Length(min = 5, max = 9, message="minimo 5 letras y maximo 9") //min: cantidad minima, max: cantidad maxima (de caracteres), LENGTH ES PARA STRING NOMAS

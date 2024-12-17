@@ -278,6 +278,12 @@ public class UsuarioController {
          return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.CREATED);
     }
     
+    @PreAuthorize("hasAuthority('jefe colegio")
+    @GetMapping(value="/selectCurso/{idCurso}")
+    ResponseEntity<?> pruebita(@PathVariable("idCurso") int idCurso){
+        return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.OK);
+    }
+    
      @PreAuthorize("hasAuthority('super admin') ")
      @DeleteMapping("borrarEscuela/{idEscuela}")
     ResponseEntity<?> prueba14(@PathVariable("idEscuela") int idEscuela){

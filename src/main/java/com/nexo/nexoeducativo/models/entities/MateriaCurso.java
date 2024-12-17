@@ -55,6 +55,11 @@ public class MateriaCurso implements Serializable {
     @JoinColumn(name = "curso_id_curso", referencedColumnName = "id_curso")
     @ManyToOne(optional = false)
     private Curso cursoIdCurso;
+    
+    //agregue este nuevo campo
+    @ManyToOne
+    @JoinColumn(name = "profesor_id", nullable = false)
+    private Usuario profesor;
     @JoinColumn(name = "materia_id_materia", referencedColumnName = "id_materia")
     @ManyToOne(optional = false)
     private Materia materiaIdMateria;
