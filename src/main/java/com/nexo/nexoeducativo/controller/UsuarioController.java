@@ -271,7 +271,8 @@ public class UsuarioController {
 
     }
     
-     @PreAuthorize("hasAuthority('administrativo') ")
+     //@PreAuthorize("hasAuthority('administrativo') ")
+     @PreAuthorize("hasAuthority('super admin') ")
     @PostMapping(value="/saveMateria")
     ResponseEntity<?> prueba14(@Valid @RequestBody MateriaDTO m){
         materiaService.crearMateria(m);

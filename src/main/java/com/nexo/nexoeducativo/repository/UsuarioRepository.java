@@ -33,7 +33,14 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
     //@Query("SELECT")
     boolean existsByIdUsuarioAndRolidrol(int idUsuario, Rol rolidrol );
 
-    Rol findByRolidrol(Rol rolidrol);
+    //@Query("SELECT u.rol FROM Usuario u WHERE u.idUsuario = :idUsuario")
+   @Query("SELECT u.rolidrol FROM Usuario u WHERE u.idUsuario = :idUsuario")
+Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
+
+    
+    
+    
+    //boolean existsByRolidrolAndIdUsuario(Rol rolidrol, Integer idUsuario);
     //EL PROBLEMA ES QUE EL MAIL NO ESTA LLEGANDO BIEN AL METODO, DESDE EL CONTROLADOR FUNCIONA BIEN PERO NO LLEGA ACA
 
     //@Query(value = "SELECT * FROM Usuario u WHERE u.mail=:mail", nativeQuery = true)
@@ -47,6 +54,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
     
     //PARA EL LOGIN
      Optional<Usuario> findByMail(String mail);
+     
+     
      
      //para chequear usuario logueado
       Usuario getUsuarioByMail(String mail); 

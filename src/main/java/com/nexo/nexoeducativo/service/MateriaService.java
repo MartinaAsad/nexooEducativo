@@ -9,6 +9,7 @@ import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.exception.HoraInvalidatedexception;
 import com.nexo.nexoeducativo.exception.MateriaExistingException;
 import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
+import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.MateriaDTO;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Escuela;
@@ -65,11 +66,12 @@ public class MateriaService {
 
         Escuela e = escuelaRepository.findById(m.getIdEscuela())
                 .orElseThrow(() -> new EscuelaNotFoundException("La escuela no existe"));
-        Rol r=new Rol();
-        r.setIdRol(5); //segun bbdd
         
-        Usuario u=new Usuario();
+        Usuario u=usuarioRepository.findById(m.getIdProfesor()).
+                orElseThrow(() -> new UsuarioNotFoundException("El profesor no existe"));
         u.setIdUsuario(m.getIdProfesor());
+        
+        Rol rol = usuarioRepository.findRolidrolByIdUsuario(u.getIdUsuario());
 
         Materia materia = new Materia();
         materia.setNombre(m.getNombre());
@@ -86,6 +88,7 @@ public class MateriaService {
         mc.setHoraFin(m.getHoraFin());
         mc.setHoraInicio(m.getHoraInicio());
         mc.setMateriaIdMateria(materia);
+        mc.setProfesor(u);
         //mc.setMateriaCursoMaterialList(materiaCursoMaterialList); DUDOSO DE SI VA O NO
 
         //si el curso esta inactivo
@@ -93,8 +96,9 @@ public class MateriaService {
             //excepcion de ejemplo, solo para comporobar si efectivamente funciona la query
             throw new CursoNotFound("el curso o escuela esta inactivo");
         }
-
-        //validar si ya existe una materia en ese mismo horario o que no se suponga. Ejemplo: biologia 1 12:00 - 13:00 2b lunes y jueves
+        //si el usuario es profesor
+        if(rol.getIdRol()==5){
+            //validar si ya existe una materia en ese mismo horario o que no se suponga. Ejemplo: biologia 1 12:00 - 13:00 2b lunes y jueves
         //NO ES VALIDO: biologia 1 12:30 a 13:30 2b lunes y jueves
         if (materiaCursoRepository.verSiYaExisteEsaMateria(c, m.getDia(), m.getHoraInicio(), m.getHoraFin())) {
             throw new MateriaExistingException("Ya existe esa materia entre esos horarios en ese curso");
@@ -108,6 +112,10 @@ public class MateriaService {
                 materiaEscuelaRepository.save(me);
                 materiaCursoRepository.save(mc);
             }
+        }
+        
+        }else{
+            throw new UsuarioNotAuthorizedException("El usuario que se desea ingresar no es un profesor");
         }
 
     }

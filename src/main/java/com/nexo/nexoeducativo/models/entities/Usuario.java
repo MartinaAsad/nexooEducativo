@@ -109,4 +109,8 @@ public class Usuario implements Serializable {
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdUsuario1")
     private List<UsuarioUsuario> usuarioUsuarioList1;
+    @ToString.Exclude 
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "profesor")
+    private List<MateriaCurso> materiaCursoList;
 }
