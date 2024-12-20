@@ -4,9 +4,11 @@
  */
 package com.nexo.nexoeducativo.repository;
 
+import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.CursoUsuario;
 import com.nexo.nexoeducativo.models.entities.Usuario;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -32,4 +34,6 @@ public interface CursoUsuarioRepository extends JpaRepository<CursoUsuario, Inte
                  INNER JOIN curso c ON c.id_curso=cu.curso_id_curso
                  WHERE r.nombre='preceptor' and cu.curso_id_curso= :idCurso""", nativeQuery=true)
     CursoUsuario findNumeroAndDivisionByIdCurso (@Param("idCurso") Integer idCurso);
+    
+   
 }

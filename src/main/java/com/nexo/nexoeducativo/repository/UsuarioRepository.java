@@ -4,6 +4,8 @@ package com.nexo.nexoeducativo.repository;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
+import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
+import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import java.util.List;
@@ -69,6 +71,12 @@ Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
           NombreCompletoDTO getFullName(String mail);
           
       Usuario findNombreAndApellidoByIdUsuario(Integer idUsuario);
+      
+      @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.UsuarioView(u.nombre, u.apellido) FROM Usuario u "
+              + "JOIN CursoUsuario cu ON u.idUsuario=cu.usuarioIdUsuario"
+              + " WHERE cu.cursoIdCurso= :curso and u.rolidrol=7")
+      
+      List<UsuarioView> infoAlumnos(@Param("curso") Curso curso);
           
           
           

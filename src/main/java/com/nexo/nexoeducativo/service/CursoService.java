@@ -9,6 +9,7 @@ import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoView;
 import com.nexo.nexoeducativo.models.dto.request.MateriaView;
+import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.CursoEscuela;
 import com.nexo.nexoeducativo.models.entities.CursoUsuario;
@@ -19,9 +20,11 @@ import com.nexo.nexoeducativo.repository.CursoRepository;
 import com.nexo.nexoeducativo.repository.CursoUsuarioRepository;
 import com.nexo.nexoeducativo.repository.EscuelaRepository;
 import com.nexo.nexoeducativo.repository.MateriaCursoRepository;
+import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +52,9 @@ public class CursoService {
     
     @Autowired
     private MateriaCursoRepository materiaCursoRepository;
+    
+    @Autowired
+    private UsuarioRepository usuarioRepository;
     
         
     private static final Logger LOGGER = LoggerFactory.getLogger(CursoService.class);
@@ -107,9 +113,14 @@ public class CursoService {
         List<MateriaView> lista2 = lista.stream()
         .map(row -> new MateriaView((String) row[2], (String) row[0], (String) row[1]))
         .collect(Collectors.toList());
-         LOGGER.info("contenido de la lista"+lista2.toString());
-         LOGGER.info("Parametro : "+c);
-        CursoView datosCurso=new CursoView(c.getNumero(), c.getDivision(), u.getNombre(), u.getApellido(), lista);
+        // LOGGER.info("contenido de la lista"+lista2.toString());
+         //LOGGER.info("Parametro : "+c);
+         
+         /*datos de los usuarios*/
+          List<UsuarioView> alumnos=usuarioRepository.infoAlumnos(c);
+         LOGGER.info("lis a de alumnos: "+alumnos.toString());
+         
+        CursoView datosCurso=new CursoView(c.getNumero(), c.getDivision(), u.getNombre(), u.getApellido(), lista2, alumnos);
         List<CursoView> cView = new ArrayList<CursoView>();
         cView.add(datosCurso);
         return cView;

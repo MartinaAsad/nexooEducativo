@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-class MateriaView implements Serializable {
+public class MateriaView implements Serializable {
     private String nombre;
     private String nombreProfesor;
     private String apellidoProfesor;
