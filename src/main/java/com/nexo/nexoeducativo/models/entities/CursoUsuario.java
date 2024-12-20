@@ -43,11 +43,14 @@ public class CursoUsuario implements Serializable {
     @Column(name = "id_curso_usuario")
     private Integer idCursoUsuario;
     @JoinColumn(name = "curso_id_curso", referencedColumnName = "id_curso")
+    @ToString.Exclude //para evitar stackOverFlowError
     @ManyToOne(optional = false)
     private Curso cursoIdCurso;
     @JoinColumn(name = "usuario_id_usuario", referencedColumnName = "id_usuario")
+    @ToString.Exclude //para evitar stackOverFlowError
     @ManyToOne(optional = false)
     private Usuario usuarioIdUsuario;
+     @ToString.Exclude //para evitar stackOverFlowError
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cursoUsuarioIdCursoUsuario")
     private List<CursoUsuarioEvento> cursoUsuarioEventoList;
     

@@ -8,18 +8,18 @@ import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.MateriaCurso;
 import java.time.LocalDate;
+import com.nexo.nexoeducativo.models.dto.request.MateriaView;
 import java.time.LocalTime;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-/**
- *
- * @author Martina
- */
+
 @Repository
 public interface MateriaCursoRepository extends JpaRepository<MateriaCurso, Integer> {
+    //LOS ATRIBUTOS DENTRO DE LA QUERY SON SEGUN LO ESTABLEVIDO EN LA ENTIDAD DE JAVA NO DE MYSQL
     @Query("SELECT CASE WHEN COUNT(mc) > 0 THEN TRUE ELSE FALSE END\n" +
 "    FROM MateriaCurso mc\n" +
 "    WHERE mc.cursoIdCurso = :cursoIdCurso\n" +
@@ -31,4 +31,10 @@ public interface MateriaCursoRepository extends JpaRepository<MateriaCurso, Inte
                                  @Param("dia") String dia,
                                  @Param("horaInicio") LocalTime horaInicio,
                                  @Param("horaFin") LocalTime horaFin);
+    
+   @Query(value="SELECT u.nombre, u.apellido, m.nombre FROM usuario u "
+           + "INNER JOIN materia_curso mc ON mc.profesor_id=u.id_usuario "
+           + "INNER JOIN materia m ON m.id_materia=mc.materia_id_materia "
+           + "WHERE mc.curso_id_curso= :idCurso", nativeQuery=true)
+List<Object[]> infoMateria(@Param("idCurso") Integer idCurso);
 }
