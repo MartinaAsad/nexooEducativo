@@ -280,8 +280,8 @@ public class UsuarioController {
          return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.CREATED);
     }
     
-    @PreAuthorize("hasAuthority('super admin')")
-   // @PreAuthorize("hasAuthority('jefe colegio')")
+    //@PreAuthorize("hasAuthority('super admin')")
+    @PreAuthorize("hasAuthority('jefe colegio')")
     @GetMapping(value="/selectCurso/{idCurso}")
     ResponseEntity<?> pruebita(@PathVariable("idCurso") int idCurso){
         List<Curso> c= new ArrayList<Curso>();
