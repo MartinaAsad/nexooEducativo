@@ -6,6 +6,7 @@ package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
+import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoView;
 import com.nexo.nexoeducativo.models.dto.request.MateriaView;
@@ -103,10 +104,16 @@ public class CursoService {
         Curso c=cursoRepository.findById(idCurso)
                  .orElseThrow(() -> new CursoNotFound("El curso no existe"));
         /*datos del preceptor*/
-        CursoUsuario cu=cursoUsuarioRepository.findUsuarioIdUsuarioBycursoIdCurso(c);//obtengo el id del preceptor
+        // cu=cursoUsuarioRepository.findUsuarioIdUsuarioBycursoIdCurso(c);//obtengo el id del preceptor
         //LOGGER.info("info del repository: "+cu.getUsuarioIdUsuario());
-        Usuario u = cu.getUsuarioIdUsuario(); //guardo el id aqui para luego obtener nombre y apellido
+        //Usuario u = cu.getUsuarioIdUsuario(); //guardo el id aqui para luego obtener nombre y apellido
         //LOGGER.info("info del repository: "+u.getRolidrol());
+        
+        UsuarioView p=usuarioRepository.infoPreceptor(c);
+        //en caso de que no haya un preceptor
+        if(p==null){
+            throw new UsuarioNotFoundException("No hay un preceptor en este curso");
+        }
         
         /*datos de la materia (nombre y profesor)*/
         List<Object[]> lista=materiaCursoRepository.infoMateria(c.getIdCurso());
@@ -118,9 +125,9 @@ public class CursoService {
          
          /*datos de los usuarios*/
           List<UsuarioView> alumnos=usuarioRepository.infoAlumnos(c);
-         LOGGER.info("lis a de alumnos: "+alumnos.toString());
+         //LOGGER.info("lis a de alumnos: "+alumnos.toString());
          
-        CursoView datosCurso=new CursoView(c.getNumero(), c.getDivision(), u.getNombre(), u.getApellido(), lista2, alumnos);
+        CursoView datosCurso=new CursoView(c.getNumero(), c.getDivision(), p.getNombre(), p.getApellido(), lista2, alumnos);
         List<CursoView> cView = new ArrayList<CursoView>();
         cView.add(datosCurso);
         return cView;
