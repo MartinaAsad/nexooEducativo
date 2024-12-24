@@ -288,6 +288,15 @@ public class UsuarioController {
         return new ResponseEntity<>(cursoService.seleccionarCurso(idCurso), HttpStatus.OK);
     }
     
+    /*NEDPOINTS NECESARIOS PARA EL FRONT METODO SELECCIONAR CURSO*/
+    @PreAuthorize("hasAuthority('jefe colegio')")
+    @PostMapping(value="/verCursos")
+    ResponseEntity<?> pruebita1(Authentication auth) throws NoSuchFieldException{
+        String mailUsuario=auth.getPrincipal().toString();//obtengo el mail del usuario logueado
+        
+         return new ResponseEntity<>(mailUsuario, HttpStatus.OK);
+    }
+    
      @PreAuthorize("hasAuthority('super admin') ")
      @DeleteMapping("borrarEscuela/{idEscuela}")
     ResponseEntity<?> prueba14(@PathVariable("idEscuela") int idEscuela){

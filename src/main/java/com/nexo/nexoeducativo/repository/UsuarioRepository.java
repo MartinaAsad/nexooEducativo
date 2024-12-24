@@ -83,6 +83,11 @@ Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
               + " WHERE cu.cursoIdCurso= :curso and u.rolidrol=4")
       
       UsuarioView infoPreceptor(@Param("curso") Curso curso);
+      
+      //para mostrar numero y division de los cursos de un colegio
+      @Query("SELECT eu.escuela_id_escuela FROM Usuario u INNER JOIN escuela_usuario eu ON u.id_usuario=eu.usuario_id_usuario"
+              + "WHERE u.Rol_id_rol=2 and u.mail= :mail")
+      int buscarEscuelaDelJefeColegio(@Param("mail") String mail);
           
           
           
