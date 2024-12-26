@@ -18,6 +18,7 @@ import com.nexo.nexoeducativo.models.dto.request.RolDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
 import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
+import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.service.CursoService;
 import com.nexo.nexoeducativo.service.CursoUsuarioService;
 import com.nexo.nexoeducativo.service.EscuelaService;
@@ -28,6 +29,7 @@ import com.nexo.nexoeducativo.service.UsuarioService;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -273,12 +275,28 @@ public class UsuarioController {
 
     }
     
-     //@PreAuthorize("hasAuthority('administrativo') ")
-     @PreAuthorize("hasAuthority('super admin') ")
+     @PreAuthorize("hasAuthority('administrativo') ")
+     //@PreAuthorize("hasAuthority('super admin') ")
     @PostMapping(value="/saveMateria")
     ResponseEntity<?> prueba14(@Valid @RequestBody MateriaDTO m){
         materiaService.crearMateria(m);
          return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.CREATED);
+    }
+    
+    @PreAuthorize("hasAuthority('administrativo') ")
+    @DeleteMapping(value="/borrarMateria")
+    ResponseEntity<?> prueba15(@Valid @RequestBody int idCurso, int idMateria){
+        materiaService.borrarMateria(idCurso, idMateria);
+         return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.CREATED);
+    }
+    
+     @PreAuthorize("hasAuthority('administrativo') ")
+    @GetMapping(value="/verCursoAdministrativo")
+    ResponseEntity<?> prueba15(Authentication auth) throws NoSuchFieldException{
+       String mail=auth.getPrincipal().toString();//obtengo el mail del usuario logueado
+        Usuario obtenerUsuario=uService.buscarUsuario(mail);
+        List<verCursoView> listaCursos=cursoService.verCursos(obtenerUsuario);
+         return new ResponseEntity<>(listaCursos, HttpStatus.OK);
     }
     
     //@PreAuthorize("hasAuthority('super admin')")

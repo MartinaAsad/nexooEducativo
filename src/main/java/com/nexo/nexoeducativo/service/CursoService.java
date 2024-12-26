@@ -140,4 +140,10 @@ public class CursoService {
         
         return cursos;
     }
+    
+     public List<verCursoView> verCursos(Usuario usuarioIdUsuario){
+        List<verCursoView> cursos= usuarioRepository.obtenerCursos(usuarioIdUsuario);
+        
+        return cursos;
+    }
 }

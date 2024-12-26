@@ -309,6 +309,12 @@ public class UsuarioService {
          
          return new JefeColegioModificacionDTO (usuarioIngresado.get());
      }
+     
+     public Usuario buscarUsuario(String mail){
+         return usuariorepository.getUsuarioByMail(mail);
+     }
+     
+     
    
      
      

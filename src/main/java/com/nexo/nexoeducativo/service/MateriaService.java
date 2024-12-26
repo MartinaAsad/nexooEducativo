@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.exception.CursoNotFound;
@@ -30,10 +26,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- *
- * @author Martina
- */
 @Service
 public class MateriaService {
     
@@ -118,6 +110,16 @@ public class MateriaService {
             throw new UsuarioNotAuthorizedException("El usuario que se desea ingresar no es un profesor");
         }
 
+    }
+    
+    public boolean borrarMateria(int idCurso, int idMateria){
+        Curso cursoIdCurso=new Curso();
+        cursoIdCurso.setIdCurso(idCurso);
+        Materia materiaIdMateria=new Materia();
+        materiaIdMateria.setIdMateria(idMateria);
+        
+        boolean seBorroCorrectamente=materiaCursoRepository.deleteByCursoIdCursoAndMateriaIdMateria(cursoIdCurso, materiaIdMateria);
+        return seBorroCorrectamente;
     }
     
 }
