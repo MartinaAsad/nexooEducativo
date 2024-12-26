@@ -16,6 +16,7 @@ import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
 import com.nexo.nexoeducativo.models.dto.request.RolDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
+import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.service.CursoService;
 import com.nexo.nexoeducativo.service.CursoUsuarioService;
@@ -292,9 +293,9 @@ public class UsuarioController {
     @PreAuthorize("hasAuthority('jefe colegio')")
     @PostMapping(value="/verCursos")
     ResponseEntity<?> pruebita1(Authentication auth) throws NoSuchFieldException{
-        String mailUsuario=auth.getPrincipal().toString();//obtengo el mail del usuario logueado
-        
-         return new ResponseEntity<>(mailUsuario, HttpStatus.OK);
+        String mail=auth.getPrincipal().toString();//obtengo el mail del usuario logueado
+        List<verCursoView> cursos=cursoService.verCursos(mail);
+         return new ResponseEntity<>(cursos, HttpStatus.OK);
     }
     
      @PreAuthorize("hasAuthority('super admin') ")

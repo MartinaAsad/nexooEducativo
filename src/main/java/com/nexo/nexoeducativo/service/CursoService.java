@@ -11,6 +11,7 @@ import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoView;
 import com.nexo.nexoeducativo.models.dto.request.MateriaView;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
+import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.CursoEscuela;
 import com.nexo.nexoeducativo.models.entities.CursoUsuario;
@@ -131,5 +132,12 @@ public class CursoService {
         List<CursoView> cView = new ArrayList<CursoView>();
         cView.add(datosCurso);
         return cView;
+    }
+    
+    public List<verCursoView> verCursos(String mail){
+        Escuela escuelaIdEscuela=usuarioRepository.obtenerIdEscuela(mail);//buscar el id de la escuela del usuario logueado
+        List<verCursoView> cursos= usuarioRepository.obtenerCursos(escuelaIdEscuela);
+        
+        return cursos;
     }
 }

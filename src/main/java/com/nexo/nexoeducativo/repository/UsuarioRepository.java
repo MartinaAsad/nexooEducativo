@@ -5,7 +5,9 @@ import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
+import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
+import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import java.util.List;
@@ -81,13 +83,21 @@ Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
        @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.UsuarioView(u.nombre, u.apellido) FROM Usuario u "
               + "JOIN CursoUsuario cu ON u.idUsuario=cu.usuarioIdUsuario"
               + " WHERE cu.cursoIdCurso= :curso and u.rolidrol=4")
-      
       UsuarioView infoPreceptor(@Param("curso") Curso curso);
       
       //para mostrar numero y division de los cursos de un colegio
-      @Query("SELECT eu.escuela_id_escuela FROM Usuario u INNER JOIN escuela_usuario eu ON u.id_usuario=eu.usuario_id_usuario"
-              + "WHERE u.Rol_id_rol=2 and u.mail= :mail")
-      int buscarEscuelaDelJefeColegio(@Param("mail") String mail);
+      /*@Query("SELECT eu.escuelaIdEscuela FROM Usuario u INNER JOIN EscuelaUsuario eu ON u.idUsuario=eu.usuarioIdUsuario"
+              + "WHERE u.rolIdRol=2 and u.mail= :mail and eu.escuelaIdEscuela= :escuelaIdEscuela ")
+      int buscarEscuelaDelJefeColegio(@Param("mail") String mail, @Param("escuelaIdEscuela") int escuelaIdEscuela);*/
+      
+      @Query("SELECT eu.escuelaIdEscuela FROM Usuario u INNER JOIN EscuelaUsuario eu ON u.idUsuario=eu.usuarioIdUsuario "
+              + "WHERE u.rolidrol=2 and u.mail= :mail")
+      Escuela obtenerIdEscuela(@Param("mail") String mail);
+      
+      @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.verCursoView (c.numero, c.division, c.activo)"
+              + " FROM Curso c INNER JOIN CursoEscuela ce ON ce.cursoIdCurso=c.idCurso WHERE ce.escuelaIdEscuela= :escuelaIdEscuela")
+      List<verCursoView> obtenerCursos(@Param("escuelaIdEscuela") Escuela escuelaIdEscuela);
+      
           
           
           
