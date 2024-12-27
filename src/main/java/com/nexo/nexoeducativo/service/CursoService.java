@@ -141,8 +141,11 @@ public class CursoService {
         return cursos;
     }
     
-     public List<verCursoView> verCursos(Usuario usuarioIdUsuario){
-        List<verCursoView> cursos= usuarioRepository.obtenerCursos(usuarioIdUsuario);
+     public List<verCursoView> verCursosAdministrativo(String mail){
+       Escuela escuelaIdEscuela=usuarioRepository.obtenerIdEscuelaAdministrativo(mail);//buscar el id de la escuela del usuario logueado
+       //LOGGER.info("el id de la escuela del usuario logueado: "+escuelaIdEscuela.getIdEscuela().toString()); 
+       List<verCursoView> cursos= usuarioRepository.obtenerCursosAdministrativo(escuelaIdEscuela);
+        
         
         return cursos;
     }

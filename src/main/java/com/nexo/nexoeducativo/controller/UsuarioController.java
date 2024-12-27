@@ -18,6 +18,7 @@ import com.nexo.nexoeducativo.models.dto.request.RolDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
 import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
+import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.service.CursoService;
 import com.nexo.nexoeducativo.service.CursoUsuarioService;
@@ -290,12 +291,13 @@ public class UsuarioController {
          return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.CREATED);
     }
     
+    /*endpoint a partir de aca y el de abajo para metodo bajaMateria*/
      @PreAuthorize("hasAuthority('administrativo') ")
     @GetMapping(value="/verCursoAdministrativo")
-    ResponseEntity<?> prueba15(Authentication auth) throws NoSuchFieldException{
+    ResponseEntity<?> prueba150(Authentication auth) throws NoSuchFieldException{
        String mail=auth.getPrincipal().toString();//obtengo el mail del usuario logueado
-        Usuario obtenerUsuario=uService.buscarUsuario(mail);
-        List<verCursoView> listaCursos=cursoService.verCursos(obtenerUsuario);
+        //Usuario obtenerUsuario=uService.buscarUsuario(mail);
+        List<verCursoView> listaCursos=cursoService.verCursosAdministrativo(mail);
          return new ResponseEntity<>(listaCursos, HttpStatus.OK);
     }
     

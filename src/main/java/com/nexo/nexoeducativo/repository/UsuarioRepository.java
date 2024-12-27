@@ -98,10 +98,14 @@ Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
               + " FROM Curso c INNER JOIN CursoEscuela ce ON ce.cursoIdCurso=c.idCurso WHERE ce.escuelaIdEscuela= :escuelaIdEscuela")
       List<verCursoView> obtenerCursos(@Param("escuelaIdEscuela") Escuela escuelaIdEscuela);
       
+         @Query("SELECT eu.escuelaIdEscuela FROM Usuario u INNER JOIN EscuelaUsuario eu ON u.idUsuario=eu.usuarioIdUsuario "
+              + "WHERE u.rolidrol=3 and u.mail= :mail")
+      Escuela obtenerIdEscuelaAdministrativo(@Param("mail") String mail);
        @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.verCursoView (c.numero, c.division, c.activo)"
-              + " FROM Curso c INNER JOIN CursoUsuario cu ON cu.cursoIdCurso=c.idCurso " +
-"WHERE c.activo=1 and cu.usuarioIdUsuario= :usuarioIdUsuario")
-      List<verCursoView> obtenerCursos(@Param("usuarioIdUsuario") Usuario usuarioIdUsuario);
+              + " FROM Curso c INNER JOIN CursoEscuela ce ON " +
+"ce.cursoIdCurso=c.idCurso " +
+"WHERE c.activo=1 and ce.escuelaIdEscuela= :escuelaIdEscuela")
+      List<verCursoView> obtenerCursosAdministrativo(@Param("escuelaIdEscuela") Escuela escuelaIdEscuela);
 //CHEQUEAR ESTA QUERY, CREO QUE ESTA MAL
       
           
