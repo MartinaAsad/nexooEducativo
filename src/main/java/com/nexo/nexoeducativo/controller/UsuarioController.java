@@ -6,6 +6,7 @@ import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsignarPreceptorDTO;
+import com.nexo.nexoeducativo.models.dto.request.BorrarMateriaRequestDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaModificacionDTO;
@@ -312,9 +313,15 @@ public class UsuarioController {
     
     @PreAuthorize("hasAuthority('administrativo') ")
     @DeleteMapping(value="/borrarMateria")
-    ResponseEntity<?> prueba15(@Valid @RequestBody int idCurso, int idMateria){
-        materiaService.borrarMateria(idCurso, idMateria);
-         return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.CREATED);
+    ResponseEntity<?> prueba15(@Valid @RequestBody BorrarMateriaRequestDTO borrar){
+        int resultado=materiaService.borrarMateria(borrar.getIdCurso(), borrar.getIdMateria());
+        if(resultado!=0){
+              return new ResponseEntity<>("la materia fue borrada correctamente", HttpStatus.OK);
+        }else{
+            
+        }return new ResponseEntity<>("la materia no fue borrada correctamente", HttpStatus.BAD_REQUEST);
+        
+       
     }
     
     

@@ -22,6 +22,7 @@ import com.nexo.nexoeducativo.repository.MateriaCursoRepository;
 import com.nexo.nexoeducativo.repository.MateriaEscuelaRepository;
 import com.nexo.nexoeducativo.repository.MateriaRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,13 +115,14 @@ public class MateriaService {
 
     }
     
-    public boolean borrarMateria(int idCurso, int idMateria){
+    @Transactional 
+    public int borrarMateria(int idCurso, int idMateria){
         Curso cursoIdCurso=new Curso();
         cursoIdCurso.setIdCurso(idCurso);
         Materia materiaIdMateria=new Materia();
         materiaIdMateria.setIdMateria(idMateria);
         
-        boolean seBorroCorrectamente=materiaCursoRepository.deleteByCursoIdCursoAndMateriaIdMateria(cursoIdCurso, materiaIdMateria);
+        int seBorroCorrectamente=materiaCursoRepository.deleteByCursoIdCursoAndMateriaIdMateria(cursoIdCurso, materiaIdMateria);
         return seBorroCorrectamente;
     }
     
