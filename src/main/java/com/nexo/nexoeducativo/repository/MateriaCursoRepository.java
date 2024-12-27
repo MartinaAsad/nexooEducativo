@@ -39,5 +39,11 @@ public interface MateriaCursoRepository extends JpaRepository<MateriaCurso, Inte
 List<Object[]> infoMateria(@Param("idCurso") Integer idCurso);
 boolean deleteByCursoIdCursoAndMateriaIdMateria(Curso cursoIdCurso, Materia materiaIdMateria);
 
+@Query("SELECT DISTINCT m.nombre FROM Materia "
+        + "m INNER JOIN MateriaCurso mc ON"
+        + " m.idMateria=mc.materiaIdMateria"
+        + " WHERE mc.cursoIdCurso= :cursoIdCurso")
+List<String> verMaterias(Curso cursoIdCurso);
+
 
 }

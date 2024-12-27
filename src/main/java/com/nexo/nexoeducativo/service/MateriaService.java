@@ -7,6 +7,7 @@ import com.nexo.nexoeducativo.exception.MateriaExistingException;
 import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.MateriaDTO;
+import com.nexo.nexoeducativo.models.dto.request.MateriaView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Materia;
@@ -21,6 +22,7 @@ import com.nexo.nexoeducativo.repository.MateriaCursoRepository;
 import com.nexo.nexoeducativo.repository.MateriaEscuelaRepository;
 import com.nexo.nexoeducativo.repository.MateriaRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,6 +122,11 @@ public class MateriaService {
         
         boolean seBorroCorrectamente=materiaCursoRepository.deleteByCursoIdCursoAndMateriaIdMateria(cursoIdCurso, materiaIdMateria);
         return seBorroCorrectamente;
+    }
+    
+    public List<String> verMaterias (Curso cursoIdCurso){
+        List<String> materias=materiaCursoRepository.verMaterias(cursoIdCurso);
+        return materias;
     }
     
 }

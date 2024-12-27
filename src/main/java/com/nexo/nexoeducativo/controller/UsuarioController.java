@@ -1,6 +1,8 @@
 
 package com.nexo.nexoeducativo.controller;
 
+import com.nexo.nexoeducativo.exception.CursoNotFound;
+import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsignarPreceptorDTO;
@@ -28,6 +30,7 @@ import com.nexo.nexoeducativo.service.PlanService;
 import com.nexo.nexoeducativo.service.RolService;
 import com.nexo.nexoeducativo.service.UsuarioService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -284,13 +287,6 @@ public class UsuarioController {
          return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.CREATED);
     }
     
-    @PreAuthorize("hasAuthority('administrativo') ")
-    @DeleteMapping(value="/borrarMateria")
-    ResponseEntity<?> prueba15(@Valid @RequestBody int idCurso, int idMateria){
-        materiaService.borrarMateria(idCurso, idMateria);
-         return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.CREATED);
-    }
-    
     /*endpoint a partir de aca y el de abajo para metodo bajaMateria*/
      @PreAuthorize("hasAuthority('administrativo') ")
     @GetMapping(value="/verCursoAdministrativo")
@@ -301,13 +297,26 @@ public class UsuarioController {
          return new ResponseEntity<>(listaCursos, HttpStatus.OK);
     }
     
-    //@PreAuthorize("hasAuthority('super admin')")
-    @PreAuthorize("hasAuthority('jefe colegio')")
-    @GetMapping(value="/selectCurso/{idCurso}")
-    ResponseEntity<?> pruebita(@PathVariable("idCurso") int idCurso){
-        List<Curso> c= new ArrayList<Curso>();
-        return new ResponseEntity<>(cursoService.seleccionarCurso(idCurso), HttpStatus.OK);
+        
+    @PreAuthorize("hasAuthority('administrativo')")
+    @GetMapping(value="/verMaterias/{cursoIdCurso}")
+    ResponseEntity<?> pruebita2(@PathVariable("cursoIdCurso") int cursoIdCurso){
+        if(cursoIdCurso==0){
+           throw new CursoNotFound("El curso ingresado no existe");
+        }
+        Curso c=new Curso();
+        c.setIdCurso(cursoIdCurso);
+        List<String> materias=materiaService.verMaterias(c);
+         return new ResponseEntity<>(materias, HttpStatus.OK);
     }
+    
+    @PreAuthorize("hasAuthority('administrativo') ")
+    @DeleteMapping(value="/borrarMateria")
+    ResponseEntity<?> prueba15(@Valid @RequestBody int idCurso, int idMateria){
+        materiaService.borrarMateria(idCurso, idMateria);
+         return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.CREATED);
+    }
+    
     
     /*NEDPOINTS NECESARIOS PARA EL FRONT METODO SELECCIONAR CURSO*/
     @PreAuthorize("hasAuthority('jefe colegio')")
@@ -317,6 +326,16 @@ public class UsuarioController {
         List<verCursoView> cursos=cursoService.verCursos(mail);
          return new ResponseEntity<>(cursos, HttpStatus.OK);
     }
+    
+      //@PreAuthorize("hasAuthority('super admin')")
+    @PreAuthorize("hasAuthority('jefe colegio')")
+    @GetMapping(value="/selectCurso/{idCurso}")
+    ResponseEntity<?> pruebita(@PathVariable("idCurso") int idCurso){
+        List<Curso> c= new ArrayList<Curso>();
+        return new ResponseEntity<>(cursoService.seleccionarCurso(idCurso), HttpStatus.OK);
+    }
+    
+    /*otros metodos*/
     
      @PreAuthorize("hasAuthority('super admin') ")
      @DeleteMapping("borrarEscuela/{idEscuela}")
