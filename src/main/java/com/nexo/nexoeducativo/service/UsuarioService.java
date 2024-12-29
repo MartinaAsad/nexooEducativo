@@ -270,11 +270,14 @@ public class UsuarioService {
              }
          }
                                         //PARA EVITAR QUE EL MAIL ACTUALIZADO COINCIDA CON UNO PREVIAMENTE EXISTENTE
-         if (dto.getMail() != null || !usuariorepository.existsByMail(dto.getMail())) {
-             u.setMail(dto.getMail());
-         }else{
-             throw new UsuarioExistingException("El mail ingresado ya esta asociado a otro usuario"+dto.getMail());
-         }
+        if (dto.getMail() != null) { // Solo intentamos actualizar si hay un mail en el DTO
+    if (!usuariorepository.existsByMail(dto.getMail())) {
+        u.setMail(dto.getMail());
+    } else {
+        throw new UsuarioExistingException("El mail ingresado ya está asociado a otro usuario: " + dto.getMail());
+    }
+}
+
          if (dto.getClave() != null) {
              u.setClave(convertirSHA256(dto.getClave()));
          }
@@ -312,6 +315,19 @@ public class UsuarioService {
      
      public Usuario buscarUsuario(String mail){
          return usuariorepository.getUsuarioByMail(mail);
+     }
+     
+     public void tomarAsistencia(int idCurso){
+         //primero, el preceptor selecciona a que curso de los que el tiene, le quiere tomar la asistencia
+         //luego, le aparece la lista de alumnos de ese curso
+         //colocar 1 en la bbdd SI asistio y 0 si NO asistio
+         //fecha: toma automaticamente la del sistema
+         //solo se puede 1 asistencia por curso y por dia
+         //solo se puede modificar la asistencia hasta el mismo dia a las 23:59
+         
+         //SE UTILIZA LAS TABLAS ASISTENCIA, USUARIO_ASISTENCIA
+         //VOLCAR CANT DE ASISTENCIAS E INASISTENCIAS EN PRESENTISMO
+         //ASOCIAR LO ANTERIOR CON LA TABLA DE PRESENTISMO_USUARIO 
      }
      
      
