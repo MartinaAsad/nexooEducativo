@@ -327,7 +327,7 @@ public class UsuarioController {
     
     /*NEDPOINTS NECESARIOS PARA EL FRONT METODO SELECCIONAR CURSO*/
     @PreAuthorize("hasAuthority('jefe colegio')")
-    @PostMapping(value="/verCursos")
+    @GetMapping(value="/verCursos")
     ResponseEntity<?> pruebita1(Authentication auth) throws NoSuchFieldException{
         String mail=auth.getPrincipal().toString();//obtengo el mail del usuario logueado
         List<verCursoView> cursos=cursoService.verCursos(mail);

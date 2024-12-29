@@ -270,10 +270,10 @@ public class UsuarioService {
              }
          }
                                         //PARA EVITAR QUE EL MAIL ACTUALIZADO COINCIDA CON UNO PREVIAMENTE EXISTENTE
-         if (dto.getMail() != null && !usuariorepository.existsByMail(dto.getMail())) {
+         if (dto.getMail() != null || !usuariorepository.existsByMail(dto.getMail())) {
              u.setMail(dto.getMail());
          }else{
-             throw new UsuarioExistingException("El mail ingresado ya esta asociado a otro usuario");
+             throw new UsuarioExistingException("El mail ingresado ya esta asociado a otro usuario"+dto.getMail());
          }
          if (dto.getClave() != null) {
              u.setClave(convertirSHA256(dto.getClave()));
