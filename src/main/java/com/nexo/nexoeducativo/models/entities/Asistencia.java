@@ -42,6 +42,8 @@ public class Asistencia implements Serializable {
     private short asistio;
     @Column(name = "retiro_antes")
     private Short retiroAntes;
+    @Column(name = "media_falta")
+    private Short mediaFalta;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "asistenciaIdAsistencia")
     private List<CursoAsistencia> cursoAsistenciaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "asistenciaIdAsistencia")
