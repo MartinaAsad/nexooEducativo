@@ -23,6 +23,7 @@ import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Usuario;
+import com.nexo.nexoeducativo.service.AsistenciaService;
 import com.nexo.nexoeducativo.service.CursoService;
 import com.nexo.nexoeducativo.service.CursoUsuarioService;
 import com.nexo.nexoeducativo.service.EscuelaService;
@@ -76,6 +77,9 @@ public class UsuarioController {
     
     @Autowired
     private CursoUsuarioService cursoUsuarioService;
+    
+    @Autowired
+    private AsistenciaService asistenciaS;
     
     @PreAuthorize("hasAuthority('administrativo') "
             + "or hasAuthority('jefe colegio') "
@@ -320,6 +324,15 @@ public class UsuarioController {
         List<verCursoView> listaCursos=cursoService.verCursosPreceptor(mail);
          return new ResponseEntity<>(listaCursos, HttpStatus.OK);
     }
+    
+    @PreAuthorize("hasAuthority('preceptor')")
+    @GetMapping(value="/tomarAsistencia/{idCurso}")
+    ResponseEntity<?> prueba152(@PathVariable("idCurso") int idCurso){
+       
+         return new ResponseEntity<>(asistenciaS.tomarAsistencia(idCurso), HttpStatus.OK);
+    }
+    
+    /*otros endpoints*/
     
     @PreAuthorize("hasAuthority('administrativo') ")
     @DeleteMapping(value="/borrarMateria")
