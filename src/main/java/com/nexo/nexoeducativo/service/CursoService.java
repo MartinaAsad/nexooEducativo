@@ -149,4 +149,12 @@ public class CursoService {
         
         return cursos;
     }
+     
+        public List<verCursoView> verCursosPreceptor(String mail){
+       Usuario usuario=usuarioRepository.findIdUsuarioByMail(mail);
+       List<verCursoView> cursos= usuarioRepository.obtenerCursosPreceptor(usuario.getIdUsuario());
+        
+        
+        return cursos;
+    }
 }

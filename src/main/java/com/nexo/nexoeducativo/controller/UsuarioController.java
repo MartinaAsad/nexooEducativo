@@ -289,7 +289,7 @@ public class UsuarioController {
     }
     
     /*endpoint a partir de aca y el de abajo para metodo bajaMateria*/
-     @PreAuthorize("hasAuthority('administrativo') ")
+    @PreAuthorize("hasAuthority('administrativo')")
     @GetMapping(value="/verCursoAdministrativo")
     ResponseEntity<?> prueba150(Authentication auth) throws NoSuchFieldException{
        String mail=auth.getPrincipal().toString();//obtengo el mail del usuario logueado
@@ -309,6 +309,16 @@ public class UsuarioController {
         c.setIdCurso(cursoIdCurso);
         List<String> materias=materiaService.verMaterias(c);
          return new ResponseEntity<>(materias, HttpStatus.OK);
+    }
+    
+    /*endpoints necesarios para asistencia*/
+     @PreAuthorize("hasAuthority('preceptor')")
+    @GetMapping(value="/verCursoPreceptor")
+    ResponseEntity<?> prueba151(Authentication auth) throws NoSuchFieldException{
+       String mail=auth.getPrincipal().toString();//obtengo el mail del usuario logueado
+        //Usuario obtenerUsuario=uService.buscarUsuario(mail);
+        List<verCursoView> listaCursos=cursoService.verCursosPreceptor(mail);
+         return new ResponseEntity<>(listaCursos, HttpStatus.OK);
     }
     
     @PreAuthorize("hasAuthority('administrativo') ")

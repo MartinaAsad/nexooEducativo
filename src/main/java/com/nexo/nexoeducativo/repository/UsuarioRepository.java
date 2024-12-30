@@ -106,8 +106,16 @@ Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
 "ce.cursoIdCurso=c.idCurso " +
 "WHERE c.activo=1 and ce.escuelaIdEscuela= :escuelaIdEscuela")
       List<verCursoView> obtenerCursosAdministrativo(@Param("escuelaIdEscuela") Escuela escuelaIdEscuela);
-//CHEQUEAR ESTA QUERY, CREO QUE ESTA MAL
-      
+
+      //para preceptor MAS ADELANTE VER COMO MODIFICAR ESTO PARA QUE SEA REUTILIZABLE CON EL ROL ID 2 Y 3
+     Usuario findIdUsuarioByMail(String mail);
+     
+    @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.verCursoView(c.numero, c.division, c.activo) " +
+       "FROM CursoUsuario cu " +
+       "JOIN cu.cursoIdCurso c " +
+       "WHERE cu.usuarioIdUsuario.idUsuario = :usuario")
+List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
+
           
           
           
