@@ -441,7 +441,8 @@ public class UsuarioController {
     
     
     @PreAuthorize("hasAuthority('super admin') "
-            + "or hasAuthority('jefe colegio') ")
+            + "or hasAuthority('jefe colegio') "
+    + "or hasAuthority('administrativo') ")
     @GetMapping(value="/getUsuarios/{nombre}")
     ResponseEntity<?> prueba19(@PathVariable(value = "nombre") String nombre){
           List<InfoUsuarioSegunRolDTO> usuarios = new ArrayList<InfoUsuarioSegunRolDTO>();
