@@ -4,19 +4,16 @@
  */
 package com.nexo.nexoeducativo.models.dto.request;
 
-import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
-public class UsuarioView implements Serializable{
-    private String nombre;
-    private String apellido;
-    
-    
+public class UsuarioAsistenciaDTO {
+    private Integer idUsuario;
+     private short asistio;
+    private short mediaFalta;
+    private short retiroAntes;
 }

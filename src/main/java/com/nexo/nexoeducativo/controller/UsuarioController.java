@@ -329,7 +329,7 @@ public class UsuarioController {
     @GetMapping(value="/tomarAsistencia/{idCurso}")
     ResponseEntity<?> prueba152(@PathVariable("idCurso") int idCurso){
        
-         return new ResponseEntity<>(asistenciaS.tomarAsistencia(idCurso), HttpStatus.OK);
+         return new ResponseEntity<>(asistenciaS.altaAsistencia(idCurso), HttpStatus.OK);
     }
     
     /*otros endpoints*/

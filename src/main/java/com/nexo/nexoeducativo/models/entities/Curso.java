@@ -24,10 +24,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 
-/**
- *
- * @author Martina
- */
 @Entity
 @Table(name = "curso")
 @NamedQueries({
