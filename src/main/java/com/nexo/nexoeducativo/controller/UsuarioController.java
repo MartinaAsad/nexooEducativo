@@ -19,6 +19,7 @@ import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
 import com.nexo.nexoeducativo.models.dto.request.RolDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
+import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
 import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Escuela;
@@ -323,6 +324,15 @@ public class UsuarioController {
         //Usuario obtenerUsuario=uService.buscarUsuario(mail);
         List<verCursoView> listaCursos=cursoService.verCursosPreceptor(mail);
          return new ResponseEntity<>(listaCursos, HttpStatus.OK);
+    }
+    
+    @PreAuthorize("hasAuthority('preceptor')")
+    @GetMapping(value="/verAlumnosCurso/{cursoIdCurso}")
+    ResponseEntity<?> prueba153(@PathVariable("cursoIdCurso") int cursoIdCurso){
+        Curso curso=new Curso();
+        curso.setIdCurso(cursoIdCurso);
+       List<UsuarioView> alumnosDelCurso=uService.alumnosDelCurso(curso);
+         return new ResponseEntity<>(alumnosDelCurso, HttpStatus.OK);
     }
     
     @PreAuthorize("hasAuthority('preceptor')")

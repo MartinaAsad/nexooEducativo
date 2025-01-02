@@ -26,6 +26,7 @@ import com.nexo.nexoeducativo.exception.UsuarioWithPadreException;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
+import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.models.entities.UsuarioUsuario;
@@ -331,10 +332,16 @@ public class UsuarioService {
          //ASOCIAR LO ANTERIOR CON LA TABLA DE PRESENTISMO_USUARIO 
      }
      
+    public List<UsuarioView> alumnosDelCurso(Curso curso) {
+        List<UsuarioView> alumnosDelCurso = usuariorepository.tomarLista(curso);
+        return alumnosDelCurso;
+    }
+     
+}
+     
      
    
      
      
         
      
-}
