@@ -332,8 +332,8 @@ public class UsuarioService {
          //ASOCIAR LO ANTERIOR CON LA TABLA DE PRESENTISMO_USUARIO 
      }
      
-    public List<UsuarioView> alumnosDelCurso(Curso curso) {
-        List<UsuarioView> alumnosDelCurso = usuariorepository.tomarLista(curso);
+    public List<NombreCompletoDTO> alumnosDelCurso(Curso curso) {
+        List<NombreCompletoDTO> alumnosDelCurso = usuariorepository.tomarLista(curso);
         return alumnosDelCurso;
     }
      

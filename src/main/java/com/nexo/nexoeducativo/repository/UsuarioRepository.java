@@ -116,11 +116,11 @@ Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
        "WHERE cu.usuarioIdUsuario.idUsuario = :usuario")
 List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
 
- @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.UsuarioView(u.nombre, u.apellido) FROM Usuario u "
+ @Query("SELECT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido FROM Usuario u "
               + "JOIN CursoUsuario cu ON u.idUsuario=cu.usuarioIdUsuario"
               + " WHERE cu.cursoIdCurso= :curso and u.activo=1 and u.rolidrol=7")
       
-      List<UsuarioView> tomarLista(@Param("curso") Curso curso);
+      List<NombreCompletoDTO> tomarLista(@Param("curso") Curso curso);
 
           
           

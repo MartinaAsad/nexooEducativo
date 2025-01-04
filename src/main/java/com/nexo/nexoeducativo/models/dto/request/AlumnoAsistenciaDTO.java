@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UsuarioAsistenciaDTO {
+public class AlumnoAsistenciaDTO {
     private Integer idUsuario;
      private short asistio;
     private short mediaFalta;

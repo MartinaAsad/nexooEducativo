@@ -6,6 +6,7 @@ import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsignarPreceptorDTO;
+import com.nexo.nexoeducativo.models.dto.request.AsistenciaDTO;
 import com.nexo.nexoeducativo.models.dto.request.BorrarMateriaRequestDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
@@ -331,15 +332,15 @@ public class UsuarioController {
     ResponseEntity<?> prueba153(@PathVariable("cursoIdCurso") int cursoIdCurso){
         Curso curso=new Curso();
         curso.setIdCurso(cursoIdCurso);
-       List<UsuarioView> alumnosDelCurso=uService.alumnosDelCurso(curso);
+       List<NombreCompletoDTO> alumnosDelCurso=uService.alumnosDelCurso(curso);
          return new ResponseEntity<>(alumnosDelCurso, HttpStatus.OK);
     }
     
     @PreAuthorize("hasAuthority('preceptor')")
-    @GetMapping(value="/tomarAsistencia/{idCurso}")
-    ResponseEntity<?> prueba152(@PathVariable("idCurso") int idCurso){
-       
-         return new ResponseEntity<>(asistenciaS.altaAsistencia(idCurso), HttpStatus.OK);
+    @GetMapping(value="/tomarAsistencia")
+    ResponseEntity<?> prueba152(@Valid @RequestBody AsistenciaDTO asistencia){
+       asistenciaS.altaAsistencia(asistencia);
+         return new ResponseEntity<>("texto", HttpStatus.CREATED);
     }
     
     /*otros endpoints*/
