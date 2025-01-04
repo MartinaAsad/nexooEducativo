@@ -147,6 +147,7 @@ public class UsuarioService {
         Usuario alumno = new Usuario();
         alumno.setNombre(a.getNombre());
         alumno.setApellido(a.getApellido());
+        alumno.setClave(a.getClave());
         alumno.setMail(a.getMail());
         alumno.setDni(a.getDni());
         alumno.setTelefono(a.getTelefono());
