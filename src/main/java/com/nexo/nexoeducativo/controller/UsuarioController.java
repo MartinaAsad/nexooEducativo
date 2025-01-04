@@ -337,9 +337,9 @@ public class UsuarioController {
     }
     
     @PreAuthorize("hasAuthority('preceptor')")
-    @GetMapping(value="/tomarAsistencia")
-    ResponseEntity<?> prueba152(@Valid @RequestBody AsistenciaDTO asistencia){
-       asistenciaS.altaAsistencia(asistencia);
+    @GetMapping(value="/tomarAsistencia/{cursoIdCurso}")
+    ResponseEntity<?> prueba152(@Valid @RequestBody AsistenciaDTO asistencia, @PathVariable("cursoIdCurso") Integer cursoIdCurso){
+       asistenciaS.altaAsistencia(asistencia, cursoIdCurso);
          return new ResponseEntity<>("texto", HttpStatus.CREATED);
     }
     
