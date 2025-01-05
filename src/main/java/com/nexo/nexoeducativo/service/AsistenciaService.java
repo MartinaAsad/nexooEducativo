@@ -1,6 +1,8 @@
 package com.nexo.nexoeducativo.service;
 
 
+import com.nexo.nexoeducativo.exception.CursoNotFound;
+import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoAsistenciaDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsistenciaDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
@@ -19,16 +21,14 @@ import com.nexo.nexoeducativo.models.entities.UsuarioAsistencia;
 import com.nexo.nexoeducativo.repository.CursoAsistenciaRepository;
 import com.nexo.nexoeducativo.repository.PresentismoRepository;
 import com.nexo.nexoeducativo.repository.PresentismoUsuarioRepository;
+import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.AbstractList;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import org.hibernate.internal.util.collections.ArrayHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +54,9 @@ public class AsistenciaService {
      
      @Autowired
      private PresentismoUsuarioRepository presenUsuRepository;
+      private static final Logger LOGGER = LoggerFactory.getLogger(AsistenciaService.class);
     
+     @Transactional
     public void altaAsistencia(AsistenciaDTO asistencia, Integer cursoIdCurso){
         /*se obtiene la fecha actual */
          String fechaNueva=hoy.format(formato);
@@ -67,27 +69,36 @@ public class AsistenciaService {
          a.setFecha(fechaDate);
          
          //registrar la asistencia de cada alumno         
-         List<UsuarioAsistencia> registro2=(List<UsuarioAsistencia>) asistencia.getAlumnosCurso().stream()
+         List<UsuarioAsistencia> registro2=asistencia.getAlumnosCurso().stream()
           .map(alumno ->{
+              
+              //para evitar error de persistencia
+              Usuario u=usuarioRepository.findById(
+              alumno.getIdUsuario()).orElseThrow(
+                      ()-> new UsuarioNotFoundException ("Usuario no encontrado "+alumno.getIdUsuario()));
+              
              UsuarioAsistencia usuarioAsistencia = new UsuarioAsistencia();
               usuarioAsistencia.setAsistenciaIdAsistencia(a);
-             usuarioAsistencia.setIdUsuarioAsistencia(alumno.getIdUsuario());
+             usuarioAsistencia.setUsuarioIdUsuario(u);
               a.setAsistio(alumno.getAsistio());
             a.setMediaFalta(alumno.getMediaFalta());
-            a.setRetiroAntes(alumno.getMediaFalta());
+            a.setRetiroAntes(alumno.getRetiroAntes());
+            //LOGGER.info(usuarioAsistencia.toString());
             return usuarioAsistencia;
          })
                  .toList();
         a.setUsuarioAsistenciaList(registro2);
+         asistRepository.save(a);  
         
         //se obtiene info del curso
-        Curso c=new Curso();
-        c.setIdCurso(cursoIdCurso);
-        List<CursoAsistencia> lista=new ArrayList<CursoAsistencia>();
+        Curso c=cursoRepository.findById(cursoIdCurso)
+                .orElseThrow(()-> new CursoNotFound("Curso no encontrado"));
+       
+        //List<CursoAsistencia> lista=new ArrayList<CursoAsistencia>();
         CursoAsistencia ca= guardarCursoAsistencia(c, a);
-        lista.add(ca);
-        a.setCursoAsistenciaList(lista);
-          asistRepository.save(a);       
+        //lista.add(ca);
+        a.setCursoAsistenciaList(List.of(ca));
+             
     }
     
     private String mostrarHora(LocalDateTime actual){
@@ -96,44 +107,50 @@ public class AsistenciaService {
         
     }
     
+    @Transactional
     public void guardarPresentismo(List<AlumnoAsistenciaDTO> lista){
-        Integer cantAsistencia=0;
-        Integer cantInasistencia=0;
-        Integer asistCompleta=0;
-        Integer mediaFalta=0;
-        
+        Integer cantAsistencia = 0;
+        Integer cantInasistencia = 0;
+        Integer asistCompleta = 0;
+        Integer mediaFalta = 0;
+
         for (AlumnoAsistenciaDTO a : lista) {
-            Presentismo p = new Presentismo();
+            
             //si asistio=1 y mediafalta=1, se computa asistencia
-            if(a.getAsistio()==1 && a.getMediaFalta()==0){
-                asistCompleta++;   
-            }else if ( a.getAsistio()==0 &&
-                    a.getMediaFalta()==1){
-                mediaFalta++;
-                
-            }else{
-                cantInasistencia++;
-            }
-            cantAsistencia=asistCompleta+mediaFalta;
+            asistCompleta += (a.getAsistio() == 1 && a.getMediaFalta() == 0) ? 1 : 0;
+            mediaFalta += (a.getAsistio() == 0 && a.getMediaFalta() == 1) ? 1 : 0;
+            cantInasistencia += (asistCompleta == 0 && mediaFalta == 0) ? 1 : 0;
             
-            p.setCantAsistencia(cantAsistencia);
+            Presentismo p = new Presentismo();
+            p.setCantAsistencia(asistCompleta+mediaFalta);
             p.setCantInasistencia(cantInasistencia);
+            //LOGGER.info("Guardando Presentismo...");
+            //Presentismo savedPresentismo = presenRepository.save(p);
+            LOGGER.info("Presentismo guardado con ID: " + p.getIdPresentismo());
+
             presenRepository.save(p);
-            
+
+            Usuario u = usuarioRepository.findById(
+                    a.getIdUsuario()).orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado"));
+
             PresentismoUsuario pu = new PresentismoUsuario();
-            Usuario u = new Usuario();
-            u.setIdUsuario(a.getIdUsuario());
             pu.setIdPresentismoUsuario(p.getIdPresentismo());
             pu.setUsuarioIdUsuario(u);
+            //LOGGER.info(pu.toString());
             presenUsuRepository.save(pu);
         }
         
     }
     
+    @Transactional
     public CursoAsistencia guardarCursoAsistencia(Curso c, Asistencia a){
+        Curso curso= cursoRepository.findById(c.getIdCurso())
+        .orElseThrow(() -> new CursoNotFound("Curso no encontrado"));
+        
         CursoAsistencia ca=new CursoAsistencia();
         ca.setAsistenciaIdAsistencia(a);
-        ca.setCursoIdCurso(c);
+        ca.setCursoIdCurso(curso);
+        //LOGGER.info(ca.toString());
         cursoARepository.save(ca);
         return ca;
     }

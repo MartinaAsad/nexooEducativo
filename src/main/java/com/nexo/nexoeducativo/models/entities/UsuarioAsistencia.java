@@ -5,6 +5,7 @@
 package com.nexo.nexoeducativo.models.entities;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,10 +20,6 @@ import java.io.Serializable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- *
- * @author Martina
- */
 @Entity
 @Table(name = "usuario_asistencia")
 @NamedQueries({
@@ -41,6 +38,6 @@ public class UsuarioAsistencia implements Serializable {
     @ManyToOne(optional = false)
     private Asistencia asistenciaIdAsistencia;
     @JoinColumn(name = "usuario_id_usuario", referencedColumnName = "id_usuario")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false) //lo de cascade es nuevo
     private Usuario usuarioIdUsuario;
 }

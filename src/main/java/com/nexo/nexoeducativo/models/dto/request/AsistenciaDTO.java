@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class AsistenciaDTO {
-    Date fechaAsistencia;
+   // Date fechaAsistencia;
     List<AlumnoAsistenciaDTO> alumnosCurso;
 }
