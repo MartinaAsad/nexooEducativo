@@ -24,6 +24,7 @@ import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
 import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Escuela;
+import com.nexo.nexoeducativo.models.entities.MateriaCurso;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.service.AsistenciaService;
 import com.nexo.nexoeducativo.service.CursoService;
@@ -362,11 +363,14 @@ public class UsuarioController {
     
     /*endpoint para metodo altaTarea*/
       @PreAuthorize("hasAuthority('profesor') ")
-    @DeleteMapping(value="/verCursoProfesor")
-    ResponseEntity<?> cursoProfesor(@Valid @RequestBody BorrarMateriaRequestDTO borrar){
-       return new ResponseEntity<>("la materia no fue borrada correctamente", HttpStatus.BAD_REQUEST);
-        
-       
+    @GetMapping(value="/verCursoProfesor")
+    ResponseEntity<?> cursoProfesor(Authentication auth) throws NoSuchFieldException{
+        //buscar el id del usuario ingresado
+        String mail=auth.getPrincipal().toString();
+        Usuario usuario=uService.buscarUsuario(mail);
+         List<MateriaCurso> obtenerCursos=uService.obtenerCursos(usuario);
+         List<verCursoView> verCursos=uService.verCursos(obtenerCursos);
+        return new ResponseEntity<>(verCursos, HttpStatus.OK);
     }
     
     

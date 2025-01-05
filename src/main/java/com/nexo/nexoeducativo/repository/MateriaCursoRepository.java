@@ -9,6 +9,7 @@ import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.MateriaCurso;
 import java.time.LocalDate;
 import com.nexo.nexoeducativo.models.dto.request.MateriaView;
+import com.nexo.nexoeducativo.models.entities.Usuario;
 import java.time.LocalTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -44,6 +45,7 @@ int deleteByCursoIdCursoAndMateriaIdMateria(Curso cursoIdCurso, Materia materiaI
         + " m.idMateria=mc.materiaIdMateria"
         + " WHERE mc.cursoIdCurso= :cursoIdCurso")
 List<String> verMaterias(Curso cursoIdCurso);
+List<MateriaCurso> findDistinctByProfesor (Usuario profesor);
 
 
 }

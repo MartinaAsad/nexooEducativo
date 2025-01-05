@@ -27,6 +27,8 @@ import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
+import com.nexo.nexoeducativo.models.dto.request.verCursoView;
+import com.nexo.nexoeducativo.models.entities.MateriaCurso;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.models.entities.UsuarioUsuario;
@@ -34,6 +36,7 @@ import com.nexo.nexoeducativo.repository.CursoRepository;
 import com.nexo.nexoeducativo.repository.CursoUsuarioRepository;
 import com.nexo.nexoeducativo.repository.EscuelaRepository;
 import com.nexo.nexoeducativo.repository.EscuelaUsuarioRepository;
+import com.nexo.nexoeducativo.repository.MateriaCursoRepository;
 import com.nexo.nexoeducativo.repository.RolRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import com.nexo.nexoeducativo.repository.UsuarioUsuarioRepository;
@@ -43,6 +46,7 @@ import jakarta.validation.Validator;
 import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +86,9 @@ public class UsuarioService {
     
     @Autowired
     private EscuelaUsuarioRepository escuelaUsuarioRepository;
+    
+    @Autowired
+    private MateriaCursoRepository matCursoRepository;
  
     @Autowired
     private Validator validator;
@@ -337,6 +344,31 @@ public class UsuarioService {
         List<NombreCompletoDTO> alumnosDelCurso = usuariorepository.tomarLista(curso);
         return alumnosDelCurso;
     }
+    
+    public List<MateriaCurso> obtenerCursos(Usuario u){
+        List<MateriaCurso> cursosProfe=matCursoRepository.findDistinctByProfesor(u); //obtengo todos los id de los cursos
+        
+        return cursosProfe;
+    }
+    
+    public List<verCursoView> verCursos(List<MateriaCurso> lista){
+        List<verCursoView> cursos=new ArrayList<>();
+        List<Integer> idCursos=new ArrayList<>();
+        verCursoView curso=null;
+        lista.forEach(
+        (c)->   //obtengo los id de cada curso de la lista del parametro
+                idCursos.add(c.getCursoIdCurso().getIdCurso()
+        ));
+        
+        for (int i = 0; i < idCursos.size(); i++) {
+           cursos=cursoRepository.verCursos(idCursos.get(i));
+        }
+        
+        return cursos;
+        
+    }
+    
+    
      
 }
      

@@ -121,6 +121,8 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
               + " WHERE cu.cursoIdCurso= :curso and u.activo=1 and u.rolidrol=7")
       
       List<NombreCompletoDTO> tomarLista(@Param("curso") Curso curso);
+      
+      
 
           
           
