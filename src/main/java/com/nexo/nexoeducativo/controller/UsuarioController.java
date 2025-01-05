@@ -340,8 +340,24 @@ public class UsuarioController {
     @PostMapping(value="/tomarAsistencia/{cursoIdCurso}")
     ResponseEntity<?> prueba152(@Valid @RequestBody AsistenciaDTO asistencia, @PathVariable("cursoIdCurso") Integer cursoIdCurso){
        asistenciaS.altaAsistencia(asistencia, cursoIdCurso);
-       asistenciaS.guardarPresentismo(asistencia.getAlumnosCurso());
-         return new ResponseEntity<>("texto", HttpStatus.CREATED);
+       //asistenciaS.guardarPresentismo(asistencia.getAlumnosCurso());
+         return new ResponseEntity<>("Asistencia creada correctamente", HttpStatus.CREATED);
+         /*{
+    "alumnosCurso": [
+    {
+        "idUsuario":7,
+        "asistio":1,
+        "mediaFalta":0,
+        "retiroAntes":0
+    },
+     {
+        "idUsuario":27,
+        "asistio":1,
+        "mediaFalta":0,
+        "retiroAntes":0
+    }
+    ]
+}*/
     }
     
     /*otros endpoints*/

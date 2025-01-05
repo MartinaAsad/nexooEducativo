@@ -25,6 +25,7 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.slf4j.Logger;
@@ -68,27 +69,31 @@ public class AsistenciaService {
          Asistencia a=new Asistencia();
          a.setFecha(fechaDate);
          
+          short asistio=0,retiro=0, mediaFalta=0;
          //registrar la asistencia de cada alumno         
-         List<UsuarioAsistencia> registro2=asistencia.getAlumnosCurso().stream()
-          .map(alumno ->{
-              
-              //para evitar error de persistencia
-              Usuario u=usuarioRepository.findById(
-              alumno.getIdUsuario()).orElseThrow(
-                      ()-> new UsuarioNotFoundException ("Usuario no encontrado "+alumno.getIdUsuario()));
-              
-             UsuarioAsistencia usuarioAsistencia = new UsuarioAsistencia();
-              usuarioAsistencia.setAsistenciaIdAsistencia(a);
-             usuarioAsistencia.setUsuarioIdUsuario(u);
-              a.setAsistio(alumno.getAsistio());
-            a.setMediaFalta(alumno.getMediaFalta());
-            a.setRetiroAntes(alumno.getRetiroAntes());
-            //LOGGER.info(usuarioAsistencia.toString());
-            return usuarioAsistencia;
-         })
-                 .toList();
+          List<UsuarioAsistencia> registro2 = new ArrayList<>();
+         for (AlumnoAsistenciaDTO alumno : asistencia.getAlumnosCurso()) {
+        Usuario u = usuarioRepository.findById(alumno.getIdUsuario())
+            .orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado " + alumno.getIdUsuario()));
+
+        UsuarioAsistencia usuarioAsistencia = new UsuarioAsistencia();
+        usuarioAsistencia.setAsistenciaIdAsistencia(a);
+        usuarioAsistencia.setUsuarioIdUsuario(u);
+
+        if (alumno.getAsistio() == 1) asistio++;
+        if (alumno.getMediaFalta() == 1) mediaFalta++;
+        if (alumno.getRetiroAntes() == 1) retiro++;
+
+        registro2.add(usuarioAsistencia);
+    }
+         a.setAsistio(asistio);
+         a.setMediaFalta(mediaFalta);
+         a.setRetiroAntes(retiro);
         a.setUsuarioAsistenciaList(registro2);
+        //LOGGER.info("esta es la lista "+registro2.toString());
+       // LOGGER.info("esto va a ser guardado: "+a.toString());
          asistRepository.save(a);  
+         //LOGGER.info("esto va a ser guardado: "+a.toString());
         
         //se obtiene info del curso
         Curso c=cursoRepository.findById(cursoIdCurso)
@@ -98,6 +103,7 @@ public class AsistenciaService {
         CursoAsistencia ca= guardarCursoAsistencia(c, a);
         //lista.add(ca);
         a.setCursoAsistenciaList(List.of(ca));
+        //LOGGER.info("esto va a ser guardado: "+a.toString());
              
     }
     
@@ -124,6 +130,7 @@ public class AsistenciaService {
             Presentismo p = new Presentismo();
             p.setCantAsistencia(asistCompleta+mediaFalta);
             p.setCantInasistencia(cantInasistencia);
+            //p.setPresentismoUsuarioList(presentismoUsuarioList);
             //LOGGER.info("Guardando Presentismo...");
             //Presentismo savedPresentismo = presenRepository.save(p);
             LOGGER.info("Presentismo guardado con ID: " + p.getIdPresentismo());
