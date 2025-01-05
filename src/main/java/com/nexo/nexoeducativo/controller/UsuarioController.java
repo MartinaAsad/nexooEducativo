@@ -360,6 +360,16 @@ public class UsuarioController {
 }*/
     }
     
+    /*endpoint para metodo altaTarea*/
+      @PreAuthorize("hasAuthority('profesor') ")
+    @DeleteMapping(value="/verCursoProfesor")
+    ResponseEntity<?> cursoProfesor(@Valid @RequestBody BorrarMateriaRequestDTO borrar){
+       return new ResponseEntity<>("la materia no fue borrada correctamente", HttpStatus.BAD_REQUEST);
+        
+       
+    }
+    
+    
     /*otros endpoints*/
     
     @PreAuthorize("hasAuthority('administrativo') ")
