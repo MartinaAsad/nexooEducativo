@@ -46,6 +46,10 @@ int deleteByCursoIdCursoAndMateriaIdMateria(Curso cursoIdCurso, Materia materiaI
         + " WHERE mc.cursoIdCurso= :cursoIdCurso")
 List<String> verMaterias(Curso cursoIdCurso);
 List<MateriaCurso> findDistinctByProfesor (Usuario profesor);
+List<MateriaCurso> findByCursoIdCursoAndProfesor (Curso cursoIdCurso, Usuario profesor);
+
+ @Query("SELECT m.nombre FROM Materia m JOIN m.materiaCursoList mc WHERE mc.cursoIdCurso = :curso AND mc.profesor = :profesor")
+    List<String> findNombresMateriasPorCursoYProfesor(@Param("curso") Curso curso, @Param("profesor") Usuario profesor);
 
 
 }

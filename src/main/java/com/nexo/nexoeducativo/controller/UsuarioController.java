@@ -373,6 +373,20 @@ public class UsuarioController {
         return new ResponseEntity<>(verCursos, HttpStatus.OK);
     }
     
+        
+      @PreAuthorize("hasAuthority('profesor') ")
+    @GetMapping(value="/selecMateriaProfesor/{cursoIdCurso}")
+    ResponseEntity<?> selecMateriaProfesor(@PathVariable("cursoIdCurso") Integer cursoIdCurso, Authentication auth) throws NoSuchFieldException{
+        //obtener el curso
+        Curso c=new Curso();
+        c.setIdCurso(cursoIdCurso);
+        //buscar el id del usuario ingresado
+        String mail=auth.getPrincipal().toString();
+        Usuario usuario=uService.buscarUsuario(mail);
+         List<String> materias=materiaService.mostrarMateriasProfe(c, usuario);
+        return new ResponseEntity<>(materias, HttpStatus.OK);
+    }   
+    
     
     /*otros endpoints*/
     

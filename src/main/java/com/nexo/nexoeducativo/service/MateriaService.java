@@ -131,4 +131,9 @@ public class MateriaService {
         return materias;
     }
     
+    public List<String> mostrarMateriasProfe(Curso cursoIdCurso, Usuario profesor){
+        List<String> materias= materiaCursoRepository.findNombresMateriasPorCursoYProfesor(cursoIdCurso, profesor);
+        return materias;
+    }
+    
 }
