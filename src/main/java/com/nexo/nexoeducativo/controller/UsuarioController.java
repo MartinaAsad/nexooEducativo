@@ -19,6 +19,7 @@ import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
 import com.nexo.nexoeducativo.models.dto.request.RolDTO;
+import com.nexo.nexoeducativo.models.dto.request.TareaDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
 import com.nexo.nexoeducativo.models.dto.request.verCursoView;
@@ -33,6 +34,7 @@ import com.nexo.nexoeducativo.service.EscuelaService;
 import com.nexo.nexoeducativo.service.MateriaService;
 import com.nexo.nexoeducativo.service.PlanService;
 import com.nexo.nexoeducativo.service.RolService;
+import com.nexo.nexoeducativo.service.TareaService;
 import com.nexo.nexoeducativo.service.UsuarioService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -83,6 +85,9 @@ public class UsuarioController {
     
     @Autowired
     private AsistenciaService asistenciaS;
+    
+    @Autowired
+    private TareaService tareaService;
     
     @PreAuthorize("hasAuthority('administrativo') "
             + "or hasAuthority('jefe colegio') "
@@ -385,7 +390,15 @@ public class UsuarioController {
         Usuario usuario=uService.buscarUsuario(mail);
          List<String> materias=materiaService.mostrarMateriasProfe(c, usuario);
         return new ResponseEntity<>(materias, HttpStatus.OK);
-    }   
+    }
+    
+     @PreAuthorize("hasAuthority('profesor') ")
+    @PostMapping(value="/altaTarea")
+    ResponseEntity<?> altaTarea(@Valid @RequestBody TareaDTO tarea) throws NoSuchFieldException{
+        return new ResponseEntity<>(tareaService.altaCalificacion(tarea), HttpStatus.CREATED);
+    }
+    
+    
     
     
     /*otros endpoints*/
