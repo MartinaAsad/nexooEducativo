@@ -14,4 +14,5 @@ public class verCursoView implements Serializable{
      private int numero;//numero del curso
     private Character division;
     private short activo;
+    private int idCurso;
 }

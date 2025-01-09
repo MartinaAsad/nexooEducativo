@@ -101,7 +101,7 @@ Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
          @Query("SELECT eu.escuelaIdEscuela FROM Usuario u INNER JOIN EscuelaUsuario eu ON u.idUsuario=eu.usuarioIdUsuario "
               + "WHERE u.rolidrol=3 and u.mail= :mail")
       Escuela obtenerIdEscuelaAdministrativo(@Param("mail") String mail);
-       @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.verCursoView (c.numero, c.division, c.activo)"
+       @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.verCursoView (c.numero, c.division, c.activo, c.idCurso)"
               + " FROM Curso c INNER JOIN CursoEscuela ce ON " +
 "ce.cursoIdCurso=c.idCurso " +
 "WHERE c.activo=1 and ce.escuelaIdEscuela= :escuelaIdEscuela")
