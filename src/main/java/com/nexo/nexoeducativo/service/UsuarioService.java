@@ -114,7 +114,7 @@ public class UsuarioService {
     }    
     
     
-     public void crearUsuario(UsuarioDTO uDTO) throws Exception{
+     public void crearUsuarioJefeColegio(UsuarioDTO uDTO) throws Exception{
          
          Rol r=new Rol();
          r.setIdRol(uDTO.getRol());//aca se inserta el id del rol segun la bbdd
@@ -209,9 +209,9 @@ public class UsuarioService {
         }
     }
 
-    public void crearAdministrativo(AdministrativoDTO a) {
+    public void crearUsuario(AdministrativoDTO a, int rol) {
        Rol r=new Rol();
-         r.setIdRol(3);//id segun lo asignado en bbdd
+         r.setIdRol(rol);//id segun lo asignado en bbdd
          
             Usuario u = new Usuario();
             u.setNombre(a.getNombre());

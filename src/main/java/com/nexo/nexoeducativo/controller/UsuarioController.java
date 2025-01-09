@@ -94,7 +94,7 @@ public class UsuarioController {
             + "or hasAuthority('super admin') ")
     @PostMapping("/saveUsuario")
     public ResponseEntity<?> prueba2(@Valid @RequestBody UsuarioDTO u ) throws Exception{
-        uService.crearUsuario(u);//buscar la manera de que en caso que no se haya creado, mostrar en el Postman un mensaje de error
+        uService.crearUsuarioJefeColegio(u);//buscar la manera de que en caso que no se haya creado, mostrar en el Postman un mensaje de error
         return new ResponseEntity<>("se guardo exitosamente el usuario creado", HttpStatus.OK);
         
         //cree esto como jefeColegio, ponerlo en el postman luego ejecutarlo
@@ -191,6 +191,8 @@ public class UsuarioController {
    "precio":200.5
 }*/
      }
+     
+     /*metodo saveAlumno*/
      //CHEQUEAR
      @PreAuthorize("hasAuthority('administrativo') ")
      @PostMapping("/saveAlumno")
@@ -209,6 +211,26 @@ public class UsuarioController {
    "idPadre":6
 }*/
      }
+     
+      @PreAuthorize("hasAuthority('administrativo') ")
+     @PostMapping("/obtenerPadres")
+     ResponseEntity<?> obtenerPadres(@Valid @RequestBody AlumnoDTO a){
+         uService.crearAlumno(a);
+          return new ResponseEntity<>("el alumno fue creado correctamente", HttpStatus.OK);
+         /*PONER ESTO EN POSTMAN:
+          {
+   "nombre": "alumno",
+   "apellido": "agua",
+   "dni":14852966,
+   "eMail":"alumnoprueba@gmail.com",
+   "telefono":43239965,
+   "activo":1,
+   "idCurso":3,
+   "idPadre":6
+}*/
+     }
+     
+     
      //chequear
      @PreAuthorize("hasAuthority('super admin') "
             + "or hasAuthority('jefe colegio') "
@@ -234,7 +256,7 @@ public class UsuarioController {
      @PreAuthorize("hasAuthority('jefe colegio') ")
      @PostMapping("/altaAdministrativo")
       ResponseEntity<?> prueba9(@Valid @RequestBody AdministrativoDTO a){
-         uService.crearAdministrativo(a);
+         uService.crearUsuario(a, 3);
           return new ResponseEntity<>("el administrativo fue creado correctamente", HttpStatus.OK);
           /*PONER ESTO EN POSTMAN:
           {
