@@ -368,6 +368,11 @@ public class UsuarioService {
         
     }
     
+    public List<NombreCompletoDTO> infoUsuarioSegunEscuela(Rol r, Escuela e){
+        List<NombreCompletoDTO> usuarios=usuariorepository.obtenerInfoUsuario(r, e);
+        return usuarios;
+    }
+    
     
      
 }

@@ -26,6 +26,7 @@ import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.MateriaCurso;
+import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.service.AsistenciaService;
 import com.nexo.nexoeducativo.service.CursoService;
@@ -213,21 +214,19 @@ public class UsuarioController {
      }
      
       @PreAuthorize("hasAuthority('administrativo') ")
-     @PostMapping("/obtenerPadres")
-     ResponseEntity<?> obtenerPadres(@Valid @RequestBody AlumnoDTO a){
-         uService.crearAlumno(a);
-          return new ResponseEntity<>("el alumno fue creado correctamente", HttpStatus.OK);
-         /*PONER ESTO EN POSTMAN:
-          {
-   "nombre": "alumno",
-   "apellido": "agua",
-   "dni":14852966,
-   "eMail":"alumnoprueba@gmail.com",
-   "telefono":43239965,
-   "activo":1,
-   "idCurso":3,
-   "idPadre":6
-}*/
+     @GetMapping("/obtenerPadres")
+     ResponseEntity<?> obtenerPadres(Authentication auth){
+         Rol r=new Rol();
+         r.setIdRol(6);
+         String mailUsuario=auth.getPrincipal().toString();
+         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+         List<NombreCompletoDTO> padres=uService.infoUsuarioSegunEscuela(r, e);
+         /*Usuario u=
+         escuelaService.obtenerIdEscuelaUsuario(usuarioIdUsuario);
+         Escuela e=new Escuela();
+         uService.infoUsuarioSegunEscuela(r, e);*/
+          return new ResponseEntity<>(padres, HttpStatus.OK);
+         
      }
      
      

@@ -1,17 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package com.nexo.nexoeducativo.repository;
 
-import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.EscuelaUsuario;
-import com.nexo.nexoeducativo.models.entities.Rol;
+import com.nexo.nexoeducativo.models.entities.Usuario;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 /**
  *
@@ -25,5 +18,7 @@ public interface EscuelaUsuarioRepository extends JpaRepository<EscuelaUsuario, 
     
     @Query(value="SELECT * FROM escuela_usuario eu INNER JOIN usuario u ON u.id_usuario=eu.usuario_id_usuario WHERE u.Rol_id_rol=:rolidrol and eu.escuela_id_escuela=:escuelaIdEscuela", nativeQuery = true)
     Optional<EscuelaUsuario> siHayJefeAsignado(int escuelaIdEscuela, int rolidrol);
+    
+    EscuelaUsuario findEscuelaIdEscuelaByUsuarioIdUsuario(Usuario usuarioIdUsuario);
 
 }

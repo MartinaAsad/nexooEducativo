@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.configuration.FailureHandler;
@@ -172,6 +168,13 @@ public class EscuelaService {
     Escuela actualizado= escuelaRepository.save(escuelaIngresada);
      //LOGGER.info("EL OBJETO ACTUALIZADO QUE SE VA A GUARDAR: "+actualizado.toString());
      return new EscuelaModificacionDTO (actualizado);
+    }
+    
+    public Escuela obtenerIdEscuela(String mail){
+        Usuario usuarioIdUsuario=usuarioRepository.findIdUsuarioByMail(mail);
+        EscuelaUsuario eu= escuelaUsuarioRepository.findEscuelaIdEscuelaByUsuarioIdUsuario(usuarioIdUsuario);
+        Escuela e=eu.getEscuelaIdEscuela();
+        return e;
     }
 
 }
