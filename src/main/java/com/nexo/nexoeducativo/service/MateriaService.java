@@ -6,6 +6,7 @@ import com.nexo.nexoeducativo.exception.HoraInvalidatedexception;
 import com.nexo.nexoeducativo.exception.MateriaExistingException;
 import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
+import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
 import com.nexo.nexoeducativo.models.dto.request.MateriaDTO;
 import com.nexo.nexoeducativo.models.dto.request.MateriaView;
 import com.nexo.nexoeducativo.models.entities.Curso;
@@ -131,8 +132,8 @@ public class MateriaService {
         return materias;
     }
     
-    public List<String> mostrarMateriasProfe(Curso cursoIdCurso, Usuario profesor){
-        List<String> materias= materiaCursoRepository.findNombresMateriasPorCursoYProfesor(cursoIdCurso, profesor);
+    public List<DesplegableMateriaView> mostrarMateriasProfe(Curso cursoIdCurso, Usuario profesor){
+        List<DesplegableMateriaView> materias= materiaCursoRepository.findNombresMateriasPorCursoYProfesor(cursoIdCurso, profesor);
         return materias;
     }
     

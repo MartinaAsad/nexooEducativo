@@ -9,6 +9,7 @@ import com.nexo.nexoeducativo.models.dto.request.AsignarPreceptorDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsistenciaDTO;
 import com.nexo.nexoeducativo.models.dto.request.BorrarMateriaRequestDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
+import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaView;
@@ -25,6 +26,7 @@ import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
 import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Escuela;
+import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.MateriaCurso;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Tarea;
@@ -424,7 +426,7 @@ public class UsuarioController {
         //buscar el id del usuario ingresado
         String mail=auth.getPrincipal().toString();
         Usuario usuario=uService.buscarUsuario(mail);
-         List<String> materias=materiaService.mostrarMateriasProfe(c, usuario);
+         List<DesplegableMateriaView> materias=materiaService.mostrarMateriasProfe(c, usuario);
         return new ResponseEntity<>(materias, HttpStatus.OK);
     }
     

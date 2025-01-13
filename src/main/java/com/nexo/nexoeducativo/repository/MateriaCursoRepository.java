@@ -4,6 +4,7 @@
  */
 package com.nexo.nexoeducativo.repository;
 
+import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.MateriaCurso;
@@ -48,8 +49,8 @@ List<String> verMaterias(Curso cursoIdCurso);
 List<MateriaCurso> findDistinctByProfesor (Usuario profesor);
 List<MateriaCurso> findByCursoIdCursoAndProfesor (Curso cursoIdCurso, Usuario profesor);
 
- @Query("SELECT m.nombre FROM Materia m JOIN m.materiaCursoList mc WHERE mc.cursoIdCurso = :curso AND mc.profesor = :profesor")
-    List<String> findNombresMateriasPorCursoYProfesor(@Param("curso") Curso curso, @Param("profesor") Usuario profesor);
+ @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView (m.idMateria, m.nombre) FROM Materia m JOIN m.materiaCursoList mc WHERE mc.cursoIdCurso = :curso AND mc.profesor = :profesor")
+    List<DesplegableMateriaView> findNombresMateriasPorCursoYProfesor(@Param("curso") Curso curso, @Param("profesor") Usuario profesor);
 
 
 }

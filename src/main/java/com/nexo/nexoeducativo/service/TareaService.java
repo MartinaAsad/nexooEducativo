@@ -66,6 +66,9 @@ public class TareaService {
     }
     
     public Calificacion altaCalificacion(TareaDTO tarea){
+        if(tarea.getCalificacion()==null){
+            tarea.setCalificacion("Tarea sin calificar");
+        }
         Calificacion c=new Calificacion();
         c.setNota(tarea.getCalificacion());
          String fechaNueva=hoy.format(formato);

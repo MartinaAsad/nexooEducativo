@@ -22,7 +22,7 @@ public class TareaDTO {
     
     private String archivo;//se coloca la url
     
-    @NotBlank (message="por favor, indicar una calificacion")
-    @Length(min=1, max=15, message="minimo 1 caracter y maximo 15 caracteres")
+    //@NotBlank (message="por favor, indicar una calificacion")
+    //@Length(min=1, max=15, message="minimo 1 caracter y maximo 15 caracteres")
     private String calificacion;
 }
