@@ -47,7 +47,7 @@ public class TareaService {
         
         Tarea t=new Tarea();
         t.setDescripcion(tarea.getDescripcion());
-        t.setArchivo(tarea.getArchivo());
+        t.setArchivo(null);
         t.setCalificacionIdCalificacion(c);
         
         Tarea tGuardada=tareaRepository.save(t);
@@ -74,11 +74,8 @@ public class TareaService {
     }
     
     public Calificacion altaCalificacion(TareaDTO tarea){
-        if(tarea.getCalificacion()==null){
-            tarea.setCalificacion("Tarea sin calificar");
-        }
         Calificacion c=new Calificacion();
-        c.setNota(tarea.getCalificacion());
+        c.setNota("Tarea sin calificar");
          String fechaNueva=hoy.format(formato);
          LocalDateTime actual=LocalDateTime.parse(fechaNueva, formato);
         Date fechaDate = Date.from(actual.atZone(ZoneId.systemDefault()).toInstant());
