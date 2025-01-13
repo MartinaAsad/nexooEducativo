@@ -128,6 +128,10 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
 "eu.usuarioIdUsuario=u.idUsuario " +
 "WHERE u.rolidrol= :rol and eu.escuelaIdEscuela= :escuela")
       List<NombreCompletoDTO> obtenerInfoUsuario(Rol rol, Escuela escuela);
+
+      @Query("SELECT u FROM Usuario u LEFT JOIN CursoUsuario cu ON cu.usuarioIdUsuario=u.idUsuario "
+              + "WHERE cu.cursoIdCurso= :c and u.rolidrol=7")
+    public List<Usuario> findByCurso(Curso c);
       
       
 

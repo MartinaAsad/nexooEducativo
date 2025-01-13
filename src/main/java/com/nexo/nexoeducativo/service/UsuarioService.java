@@ -360,9 +360,12 @@ public class UsuarioService {
                 idCursos.add(c.getCursoIdCurso().getIdCurso()
         ));
         
-        for (int i = 0; i < idCursos.size(); i++) {
-           cursos=cursoRepository.verCursos(idCursos.get(i));
+         for (Integer idCurso : idCursos) {
+        List<verCursoView> cursosPorId = cursoRepository.verCursos(idCurso);
+        if (cursosPorId != null) {
+            cursos.addAll(cursosPorId); // Agregar todos los resultados encontrados
         }
+    }
         
         return cursos;
         

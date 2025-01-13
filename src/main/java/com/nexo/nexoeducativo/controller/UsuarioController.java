@@ -27,6 +27,7 @@ import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.MateriaCurso;
 import com.nexo.nexoeducativo.models.entities.Rol;
+import com.nexo.nexoeducativo.models.entities.Tarea;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.service.AsistenciaService;
 import com.nexo.nexoeducativo.service.CursoService;
@@ -428,9 +429,11 @@ public class UsuarioController {
     }
     
      @PreAuthorize("hasAuthority('profesor') ")
-    @PostMapping(value="/altaTarea")
-    ResponseEntity<?> altaTarea(@Valid @RequestBody TareaDTO tarea) throws NoSuchFieldException{
-        return new ResponseEntity<>(tareaService.altaCalificacion(tarea), HttpStatus.CREATED);
+    @PostMapping(value="/altaTarea/{cursoIdCurso}")
+    ResponseEntity<?> altaTarea(@PathVariable("cursoIdCurso") Integer cursoIdCurso,@Valid @RequestBody TareaDTO tarea) throws NoSuchFieldException{
+        Tarea t=tareaService.altaTarea(tarea, cursoIdCurso);
+        
+        return new ResponseEntity<>(t, HttpStatus.CREATED);
     }
     
     

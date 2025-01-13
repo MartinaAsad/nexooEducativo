@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 public interface CursoRepository extends JpaRepository<Curso, Integer> {
     
     @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.verCursoView "
-            + "(c.numero, c.division, c.activo) FROM Curso c WHERE c.idCurso= :idCurso")
+            + "(c.numero, c.division, c.activo, c.idCurso) FROM Curso c WHERE c.idCurso= :idCurso")
     List<verCursoView> verCursos(Integer idCurso);
 
     
