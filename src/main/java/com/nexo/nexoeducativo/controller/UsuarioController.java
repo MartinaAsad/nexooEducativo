@@ -548,9 +548,11 @@ public class UsuarioController {
             + "or hasAuthority('jefe colegio') "
     + "or hasAuthority('administrativo') ")
     @GetMapping(value="/getUsuarios/{nombre}")
-    ResponseEntity<?> prueba19(@PathVariable(value = "nombre") String nombre){
-          List<InfoUsuarioSegunRolDTO> usuarios = new ArrayList<InfoUsuarioSegunRolDTO>();
-	uService.obtenerUsuarioSegunRol(nombre).forEach(usuarios::add);
+    ResponseEntity<?> prueba19(@PathVariable(value = "nombre") String nombre, Authentication auth){
+        String mailUsuario=auth.getPrincipal().toString();
+         Escuela escuelaIdEscuela=escuelaService.obtenerIdEscuela(mailUsuario);  
+        List<InfoUsuarioSegunRolDTO> usuarios = new ArrayList<InfoUsuarioSegunRolDTO>();
+	uService.obtenerUsuarioSegunRol(nombre, escuelaIdEscuela).forEach(usuarios::add);
 		
 		if(usuarios.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);

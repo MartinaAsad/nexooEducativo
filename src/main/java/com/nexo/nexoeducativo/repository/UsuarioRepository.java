@@ -65,8 +65,9 @@ Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
       Usuario getUsuarioByMail(String mail); 
       
       //para obtener todos los usuario segun el rol
-      @Query(value="SELECT new com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO(u.idUsuario, u.nombre, u.apellido, u.dni) FROM Usuario u INNER JOIN Rol r ON r.idRol=u.rolidrol WHERE r.nombre = :nombre")
-      List<InfoUsuarioSegunRolDTO>getUsuarioByRol(@PathVariable(value = "nombre") String nombre);
+      @Query(value="SELECT new com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO(u.idUsuario, u.nombre, u.apellido, u.dni) FROM Usuario"
+              + " u INNER JOIN Rol r ON r.idRol=u.rolidrol INNER JOIN EscuelaUsuario eu ON eu.usuarioIdUsuario=u.idUsuario WHERE r.nombre = :nombre AND eu.escuelaIdEscuela = :escuelaIdEscuela")
+      List<InfoUsuarioSegunRolDTO>getUsuarioByRol(@PathVariable(value = "nombre") String nombre,@PathVariable(value = "escuelaIdEscuela") Escuela escuelaIdEscuela );
        
       //para obtener nombre y apellido del usuario logueado
           @Query(value = "SELECT u.nombre, u.apellido FROM Usuario u WHERE mail = :mail", nativeQuery = true)

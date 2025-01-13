@@ -42,7 +42,7 @@ public class MateriaDTO implements Serializable{
     
     @NotNull(message = "la materia debe estar asociada a un curso")
     @Min(value = 1, message = "El valor debe ser igual o mayor a 1")
-    private int idProfesor;
+    private int idProfesor; //endpoint: verProfesAdministrativo
     
     @Pattern(regexp = "^[a-zA-Z]+$", message = "campo invalido")//solo acepta letras
     @NotBlank(message = "campo dia invalido")//notblank para string

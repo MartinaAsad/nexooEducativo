@@ -242,7 +242,7 @@ public class UsuarioService {
          usuariorepository.deleteById(idUsuario);
      }
      
-     public List<InfoUsuarioSegunRolDTO> obtenerUsuarioSegunRol(String nombre){
+     public List<InfoUsuarioSegunRolDTO> obtenerUsuarioSegunRol(String nombre,Escuela escuelaIdEscuela){
          //List<Usuario> usuarios = usuariorepository.getUsuarioByRol(nombre);
          /*List<InfoUsuarioSegunRolDTO> lista = new ArrayList<>();
          for (Usuario u : usuarios) {
@@ -250,7 +250,7 @@ public class UsuarioService {
         (u.getIdUsuario(),u.getNombre(), u.getApellido(), u.getDni());
              
          }*///chequeo
-         return usuariorepository.getUsuarioByRol(nombre);
+         return usuariorepository.getUsuarioByRol(nombre, escuelaIdEscuela);
      }
      
      public void validarElDto (JefeColegioModificacionDTO j){
