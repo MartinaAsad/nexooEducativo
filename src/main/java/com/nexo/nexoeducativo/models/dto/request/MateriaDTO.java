@@ -38,7 +38,7 @@ public class MateriaDTO implements Serializable{
 
     @NotNull(message = "la materia debe estar asociada a un curso")
     @Min(value = 1, message = "El valor debe ser igual o mayor a 1")
-    private int idCurso;
+    private int idCurso;    //endpoint: verCursoAdministrativo
     
     @NotNull(message = "la materia debe estar asociada a un curso")
     @Min(value = 1, message = "El valor debe ser igual o mayor a 1")

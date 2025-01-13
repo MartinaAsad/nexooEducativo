@@ -331,6 +331,21 @@ public class UsuarioController {
          return new ResponseEntity<>(listaCursos, HttpStatus.OK);
     }
     
+    @PreAuthorize("hasAuthority('administrativo')")
+    @GetMapping(value="/verProfesAdministrativo")
+    ResponseEntity<?> verProfesAdm(Authentication auth) throws NoSuchFieldException{
+        Rol r=new Rol();
+         r.setIdRol(5);
+         String mailUsuario=auth.getPrincipal().toString();
+         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+         List<NombreCompletoDTO> profes=uService.infoUsuarioSegunEscuela(r, e);
+         /*Usuario u=
+         escuelaService.obtenerIdEscuelaUsuario(usuarioIdUsuario);
+         Escuela e=new Escuela();
+         uService.infoUsuarioSegunEscuela(r, e);*/
+          return new ResponseEntity<>(profes, HttpStatus.OK);
+    }
+    
         
     @PreAuthorize("hasAuthority('administrativo')")
     @GetMapping(value="/verMaterias/{cursoIdCurso}")
