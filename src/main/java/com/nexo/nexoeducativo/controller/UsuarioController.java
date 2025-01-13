@@ -556,7 +556,12 @@ public class UsuarioController {
        
     
     @PreAuthorize("hasAuthority('super admin') "
-            + "or hasAuthority('administrativo') ")
+            + "or hasAuthority('jefe colegio') "
+            + "or hasAuthority('administrativo') "
+            + "or hasAuthority('preceptor')" 
+            + "or hasAuthority('padre')"
+            + "or hasAuthority('profesor')" 
+            + "or hasAuthority('alumno')" )
     @PatchMapping(value="/modificarUsuario/{id}")
     ResponseEntity<?> prueba21 (@PathVariable(value = "id") int id,  @Valid @RequestBody JefeColegioModificacionDTO jc){
      JefeColegioModificacionDTO s=uService.actualizarJefeColegio(id, jc);
