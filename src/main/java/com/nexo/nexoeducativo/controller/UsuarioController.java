@@ -90,10 +90,8 @@ public class UsuarioController {
     @Autowired
     private TareaService tareaService;
     
-    @PreAuthorize("hasAuthority('administrativo') "
-            + "or hasAuthority('jefe colegio') "
-            + "or hasAuthority('super admin') ")
-    @PostMapping("/saveUsuario")
+    @PreAuthorize(" hasAuthority('super admin') ")
+    @PostMapping("/saveUsuarioJefeColegio")
     public ResponseEntity<?> prueba2(@Valid @RequestBody UsuarioDTO u ) throws Exception{
         uService.crearUsuarioJefeColegio(u);//buscar la manera de que en caso que no se haya creado, mostrar en el Postman un mensaje de error
         return new ResponseEntity<>("se guardo exitosamente el usuario creado", HttpStatus.OK);
@@ -252,8 +250,9 @@ public class UsuarioController {
          
      }
      
-     @PreAuthorize("hasAuthority('jefe colegio') ")
-     @PostMapping("/altaAdministrativo")
+     @PreAuthorize("hasAuthority('jefe colegio') "
+      + "or hasAuthority('administrativo') ")
+     @PostMapping("/altaUsuario")
       ResponseEntity<?> prueba9(@Valid @RequestBody AdministrativoDTO a){
          uService.crearUsuario(a, 3);
           return new ResponseEntity<>("el administrativo fue creado correctamente", HttpStatus.OK);
