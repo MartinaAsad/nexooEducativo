@@ -9,6 +9,7 @@ import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.models.entities.UsuarioTarea;
 import com.nexo.nexoeducativo.repository.CalificacionRepository;
 import com.nexo.nexoeducativo.repository.CursoRepository;
+import com.nexo.nexoeducativo.repository.TareaRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import com.nexo.nexoeducativo.repository.UsuarioTareaRepository;
 import java.time.LocalDateTime;
@@ -37,19 +38,26 @@ public class TareaService {
     @Autowired
     private CursoRepository cursoRepository;
     
+    @Autowired
+    private TareaRepository tareaRepository;
+    
     @Transactional
     public Tarea altaTarea(TareaDTO tarea, Integer cursoIdCurso){
         Calificacion c=altaCalificacion(tarea);
+        
         Tarea t=new Tarea();
         t.setDescripcion(tarea.getDescripcion());
         t.setArchivo(tarea.getArchivo());
         t.setCalificacionIdCalificacion(c);
         
+        Tarea tGuardada=tareaRepository.save(t);
+        
         //asociar la tarea al curso
         Curso curso=cursoRepository.findById(cursoIdCurso)
                 .orElseThrow(()-> new CursoNotFound("El curso ingresado no existe"));
-        asociarTareaUsuario(t, curso);
-        return t;
+        asociarTareaUsuario(tGuardada, curso);
+        
+        return tGuardada;
         
     }
     public void asociarTareaUsuario(Tarea t, Curso c){
