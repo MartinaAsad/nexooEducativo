@@ -363,7 +363,7 @@ public class UsuarioController {
     
     /*endpoints necesarios para asistencia*/
      @PreAuthorize("hasAuthority('preceptor')")
-    @GetMapping(value="/verCursoPreceptor")
+    @GetMapping(value="/verCursoPreceptor") //este endpoint tambien es necesario para altaNota
     ResponseEntity<?> prueba151(Authentication auth) throws NoSuchFieldException{
        String mail=auth.getPrincipal().toString();//obtengo el mail del usuario logueado
         //Usuario obtenerUsuario=uService.buscarUsuario(mail);
@@ -372,7 +372,7 @@ public class UsuarioController {
     }
     
     @PreAuthorize("hasAuthority('preceptor')")
-    @GetMapping(value="/verAlumnosCurso/{cursoIdCurso}")
+    @GetMapping(value="/verAlumnosCurso/{cursoIdCurso}") //este endpoint tambien es necesario para altaNota
     ResponseEntity<?> prueba153(@PathVariable("cursoIdCurso") int cursoIdCurso){
         Curso curso=new Curso();
         curso.setIdCurso(cursoIdCurso);
@@ -436,6 +436,20 @@ public class UsuarioController {
         Tarea t=tareaService.altaTarea(tarea, cursoIdCurso);
         
         return new ResponseEntity<>(t, HttpStatus.CREATED);
+    }
+    
+    /*endpoints necesarios para altaCalificacion*/
+     @PreAuthorize("hasAuthority('profesor') ")
+    @GetMapping(value="/obtenerTareas/{cursoIdCurso}")
+    ResponseEntity<?> obtenerTareas(@PathVariable("cursoIdCurso") Integer cursoIdCurso, Authentication auth) throws NoSuchFieldException{
+        //obtener el curso
+        Curso c=new Curso();
+        c.setIdCurso(cursoIdCurso);
+        //buscar el id del usuario ingresado
+        String mail=auth.getPrincipal().toString();
+        Usuario usuario=uService.buscarUsuario(mail);
+         List<DesplegableMateriaView> materias=materiaService.mostrarMateriasProfe(c, usuario);
+        return new ResponseEntity<>(materias, HttpStatus.OK);
     }
     
     

@@ -83,4 +83,9 @@ public class TareaService {
         return califRepository.save(c);
     }
     
+    public List<String> obtenerTareas (Usuario idAlumno){
+        List<String> tareas=tareaRepository.descripcionTareas(idAlumno);
+        return tareas;
+    }
+    
 }
