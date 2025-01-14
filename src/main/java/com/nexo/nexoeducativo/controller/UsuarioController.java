@@ -256,7 +256,9 @@ public class UsuarioController {
      @PreAuthorize("hasAuthority('jefe colegio') "
       + "or hasAuthority('administrativo') ")
      @PostMapping("/altaUsuario")
-      ResponseEntity<?> prueba9(@Valid @RequestBody AdministrativoDTO a){
+      ResponseEntity<?> prueba9(@Valid @RequestBody AdministrativoDTO a, int idRol){
+          Rol r=new Rol();
+          r.setIdRol(idRol);
          uService.crearUsuario(a, 3);
           return new ResponseEntity<>("el administrativo fue creado correctamente", HttpStatus.OK);
           /*PONER ESTO EN POSTMAN:
@@ -322,6 +324,19 @@ public class UsuarioController {
         materiaService.crearMateria(m);
          return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.CREATED);
     }
+    
+      @PreAuthorize("hasAuthority('administrativo') ")
+     //@PreAuthorize("hasAuthority('super admin') ")
+    @GetMapping(value="/verMaterias")
+    ResponseEntity<?> prueba14(Authentication auth){
+        String mailUsuario=auth.getPrincipal().toString();
+         Escuela escuelaIdEscuela=escuelaService.obtenerIdEscuela(mailUsuario);
+       List<String> materias= materiaService.verMateriasEscuela(escuelaIdEscuela);
+         return new ResponseEntity<>(materias, HttpStatus.OK);
+    }
+    
+    
+    
     
     /*endpoint a partir de aca y el de abajo para metodo bajaMateria*/
     @PreAuthorize("hasAuthority('administrativo')")

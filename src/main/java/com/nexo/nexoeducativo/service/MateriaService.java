@@ -137,4 +137,9 @@ public class MateriaService {
         return materias;
     }
     
+    public List<String> verMateriasEscuela (Escuela escuelaIdEscuela){
+        List<String> verMateriasEscuela=materiaEscuelaRepository.materiasSegunEscuela(escuelaIdEscuela);
+        return verMateriasEscuela;
+    }
+    
 }
