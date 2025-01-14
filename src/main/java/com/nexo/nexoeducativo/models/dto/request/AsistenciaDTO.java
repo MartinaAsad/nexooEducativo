@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 public class AsistenciaDTO {
    // Date fechaAsistencia;
     List<AlumnoAsistenciaDTO> alumnosCurso;
+    //linea 365 a 388 endpoints necesarios para este metodo
 }

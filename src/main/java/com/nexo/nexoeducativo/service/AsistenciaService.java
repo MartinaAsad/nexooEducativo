@@ -104,6 +104,7 @@ public class AsistenciaService {
         //lista.add(ca);
         a.setCursoAsistenciaList(List.of(ca));
         //LOGGER.info("esto va a ser guardado: "+a.toString());
+         guardarPresentismo(asistencia.getAlumnosCurso());
              
     }
     
@@ -123,28 +124,26 @@ public class AsistenciaService {
         for (AlumnoAsistenciaDTO a : lista) {
             
             //si asistio=1 y mediafalta=1, se computa asistencia
-            asistCompleta += (a.getAsistio() == 1 && a.getMediaFalta() == 0) ? 1 : 0;
-            mediaFalta += (a.getAsistio() == 0 && a.getMediaFalta() == 1) ? 1 : 0;
+            asistCompleta += (a.getAsistio() == 1 && a.getMediaFalta() == 0 && a.getRetiroAntes()==0) ? 1 : 0;
+            mediaFalta += (a.getAsistio() == 0 && a.getMediaFalta() == 1 || a.getAsistio() == 0 && a.getRetiroAntes()==1 ) ? 1 : 0;
             cantInasistencia += (asistCompleta == 0 && mediaFalta == 0) ? 1 : 0;
             
             Presentismo p = new Presentismo();
             p.setCantAsistencia(asistCompleta+mediaFalta);
             p.setCantInasistencia(cantInasistencia);
-            //p.setPresentismoUsuarioList(presentismoUsuarioList);
-            //LOGGER.info("Guardando Presentismo...");
-            //Presentismo savedPresentismo = presenRepository.save(p);
-            LOGGER.info("Presentismo guardado con ID: " + p.getIdPresentismo());
-
             presenRepository.save(p);
+            
+              Presentismo persistido= presenRepository.save(p);
+              //LOGGER.info("Presentismo guardado con ID: " + persistido.getIdPresentismo());
 
             Usuario u = usuarioRepository.findById(
                     a.getIdUsuario()).orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado"));
 
             PresentismoUsuario pu = new PresentismoUsuario();
-            pu.setIdPresentismoUsuario(p.getIdPresentismo());
+            pu.setPresentismoIdPresentismo(persistido);
             pu.setUsuarioIdUsuario(u);
             //LOGGER.info(pu.toString());
-            presenUsuRepository.save(pu);
+            presenUsuRepository.save(pu); //aca esta el problema segun consola de spring
         }
         
     }
