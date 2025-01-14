@@ -256,9 +256,9 @@ public class UsuarioController {
      @PreAuthorize("hasAuthority('jefe colegio') "
       + "or hasAuthority('administrativo') ")
      @PostMapping("/altaUsuario")
-      ResponseEntity<?> prueba9(@Valid @RequestBody AdministrativoDTO a, int idRol){
+      ResponseEntity<?> prueba9(@Valid @RequestBody AdministrativoDTO a){
           Rol r=new Rol();
-          r.setIdRol(idRol);
+          r.setIdRol(a.getRol());
          uService.crearUsuario(a, 3);
           return new ResponseEntity<>("el administrativo fue creado correctamente", HttpStatus.OK);
           /*PONER ESTO EN POSTMAN:
@@ -266,10 +266,11 @@ public class UsuarioController {
    "nombre": "administrativo",
    "apellido": "agua",
    "dni":12358800,
-   "eMail":"adminsprueba@gmail.com",
+   "mail":"adminsprueba@gmail.com",
    "clave":"prueba",
    "telefono":43239965,
    "activo":1,
+    "rol":2,
    "idEscuela":4
 }*/
      }
