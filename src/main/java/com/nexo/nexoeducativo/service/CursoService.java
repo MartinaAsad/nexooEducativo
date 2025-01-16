@@ -66,7 +66,7 @@ public class CursoService {
     
 }
     //PROBAR NUEVAMENTE
-    public void crearCurso(CursoDTO c){
+    public void crearCurso(CursoDTO c,Escuela e){
         Curso curso=new Curso();
         curso.setNumero(c.getNumero());
         curso.setDivision(c.getDivision());
@@ -74,8 +74,6 @@ public class CursoService {
         int numero=curso.getNumero();
         Character division=curso.getDivision();
         
-        Escuela e=new Escuela();
-        e.setIdEscuela(c.getEscuela());//se almacena el id de la escuela
         int escuelaId=e.getIdEscuela();
         
         CursoEscuela ce=new CursoEscuela();//tabla intermedia donde se va a guardar a que escuela esta asociado ese curso

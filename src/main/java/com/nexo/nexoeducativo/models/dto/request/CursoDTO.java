@@ -36,14 +36,14 @@ public class CursoDTO implements Serializable {
         @Max(value = 1, message = "El valor debe ser 0 o 1")
         private short activo;
         
-        @NotNull(message="campo activo no puede estar vacio")
+        /*@NotNull(message="campo activo no puede estar vacio")
         @Min(value = 1, message = "El valor debe ser igual o mayor a 1")
-        private int escuela;
+        private int escuela;*/
 
-    public CursoDTO(int numero, Character division, int escuela) {
+    public CursoDTO(int numero, Character division) {
         this.numero = numero;
         this.division = division;
-        this.escuela = escuela;
+        //this.escuela = escuela;
     }
         
         

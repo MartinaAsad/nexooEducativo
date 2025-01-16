@@ -44,9 +44,9 @@ private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticatio
          String email = authentication.getName();
         String password = authentication.getCredentials().toString();
         
-        System.out.println("Mail recibido: " + email);
+       /* System.out.println("Mail recibido: " + email);
         System.out.println("Largo de la contraseña recibida: " + password.length());
-        System.out.println("objeto authentication"+ authentication.toString());
+        System.out.println("objeto authentication"+ authentication.toString());*/
 
         try {
             Usuario user = usuarioRepository.findByMail(email)
@@ -56,23 +56,23 @@ private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticatio
                 });
 
             String hashedPassword = convertirSHA256(password);
-            System.out.println("⭐ COMPARANDO CONTRAS...");
+            /*System.out.println("⭐ COMPARANDO CONTRAS...");
             System.out.println("Largo de la contra hasheada: " + hashedPassword.length());
             System.out.println("Contrasena hasheada proveniente del objeto: " + user.getClave());
-            System.out.println("contra hasheada segun lo recibido: " + hashedPassword);
+            System.out.println("contra hasheada segun lo recibido: " + hashedPassword);*/
 
             if (user.getClave().equals(hashedPassword)) {
-                System.out.println("siii todo bien: " + email);
+                //System.out.println("siii todo bien: " + email);
                 List<GrantedAuthority> authorities = List.of(
                     new SimpleGrantedAuthority(user.getRolidrol().getNombre())
                 );
                 return new InfoUsuarioDTO(email, password, authorities, user.getNombre(), user.getApellido());
             } else {
-                System.out.println("contra incorrecta: " + email);
+                //System.out.println("contra incorrecta: " + email);
                 throw new BadCredentialsException("Contraseña inválida");
             }
         } catch (Exception e) {
-            System.out.println("error en la autenticacion desd eauthenticate: " + e.getMessage());
+            //System.out.println("error en la autenticacion desd eauthenticate: " + e.getMessage());
             throw e;
         }
     }

@@ -45,6 +45,8 @@ import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -92,6 +94,7 @@ public class UsuarioController {
     
     @Autowired
     private TareaService tareaService;
+     private static final Logger LOGGER = LoggerFactory.getLogger(UsuarioController.class);
     
     @PreAuthorize(" hasAuthority('super admin') ")
     @PostMapping("/saveUsuarioJefeColegio")
@@ -163,9 +166,10 @@ public class UsuarioController {
             + "or hasAuthority('preceptor') "+
              "or hasAuthority('super admin') ") //despues sacar este permiso mas adelante
      @PostMapping("/saveCurso")
-     public ResponseEntity<?> prueba5(@Valid @RequestBody CursoDTO r){
-         
-         cursoService.crearCurso(r);//buscar la manera de que en caso que no se haya creado, mostrar en el Postman un mensaje de error
+     public ResponseEntity<?> prueba5(@Valid @RequestBody CursoDTO r, Authentication auth){
+         String mailUsuario=auth.getPrincipal().toString();
+         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+         cursoService.crearCurso(r, e);//buscar la manera de que en caso que no se haya creado, mostrar en el Postman un mensaje de error
           return new ResponseEntity<>("el curso fue creado correctamente", HttpStatus.OK);
           
           //cree esto como curso, ponelo en el postman y ejecutalo
