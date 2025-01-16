@@ -127,8 +127,8 @@ public class MateriaService {
         return seBorroCorrectamente;
     }
     
-    public List<String> verMaterias (Curso cursoIdCurso){
-        List<String> materias=materiaCursoRepository.verMaterias(cursoIdCurso);
+    public List<DesplegableMateriaView> verMaterias (Curso cursoIdCurso){
+        List<DesplegableMateriaView> materias=materiaCursoRepository.verMaterias(cursoIdCurso);
         return materias;
     }
     

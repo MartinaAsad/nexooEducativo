@@ -377,7 +377,7 @@ public class UsuarioController {
         }
         Curso c=new Curso();
         c.setIdCurso(cursoIdCurso);
-        List<String> materias=materiaService.verMaterias(c);
+        List<DesplegableMateriaView> materias=materiaService.verMaterias(c);
          return new ResponseEntity<>(materias, HttpStatus.OK);
     }
     
