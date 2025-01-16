@@ -382,7 +382,8 @@ public class UsuarioController {
     }
     
     /*endpoints necesarios para asistencia*/
-     @PreAuthorize("hasAuthority('preceptor')")
+     @PreAuthorize("hasAuthority('preceptor')"
+             + "or hasAuthority('profesor') ")
     @GetMapping(value="/verCursoPreceptor") //este endpoint tambien es necesario para altaNota
     ResponseEntity<?> prueba151(Authentication auth) throws NoSuchFieldException{
        String mail=auth.getPrincipal().toString();//obtengo el mail del usuario logueado
@@ -391,7 +392,8 @@ public class UsuarioController {
          return new ResponseEntity<>(listaCursos, HttpStatus.OK);
     }
     
-    @PreAuthorize("hasAuthority('preceptor')")
+    @PreAuthorize("hasAuthority('preceptor')"
+    + "or hasAuthority('administrativo') ")
     @GetMapping(value="/verAlumnosCurso/{cursoIdCurso}") //este endpoint tambien es necesario para altaNota
     ResponseEntity<?> prueba153(@PathVariable("cursoIdCurso") int cursoIdCurso){
         Curso curso=new Curso();

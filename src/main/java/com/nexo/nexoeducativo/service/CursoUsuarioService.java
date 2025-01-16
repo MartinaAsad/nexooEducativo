@@ -34,7 +34,7 @@ public class CursoUsuarioService {
         c.setIdCurso(ap.getCurso());
            
         Usuario u=new Usuario();
-        u.setIdUsuario(ap.getPreceptor());
+        u.setDni(ap.getPreceptor());
         u.setRolidrol(rolPreceptor);
         
         Optional<CursoUsuario> verSiYaFueAsignado=cuRepository.siYaFueAsignado(c.getIdCurso());    //aca hay un problema

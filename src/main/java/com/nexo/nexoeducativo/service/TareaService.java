@@ -1,6 +1,8 @@
 package com.nexo.nexoeducativo.service;
 
+import com.nexo.nexoeducativo.exception.CalificacionWrongException;
 import com.nexo.nexoeducativo.exception.CursoNotFound;
+import com.nexo.nexoeducativo.models.dto.request.NotaDTO;
 import com.nexo.nexoeducativo.models.dto.request.TareaDTO;
 import com.nexo.nexoeducativo.models.entities.Calificacion;
 import com.nexo.nexoeducativo.models.entities.Curso;
@@ -81,6 +83,19 @@ public class TareaService {
         Date fechaDate = Date.from(actual.atZone(ZoneId.systemDefault()).toInstant());
         c.setFecha(fechaDate);
         return califRepository.save(c);
+    }
+    
+    public void validarNota(String calificacion){
+        
+        boolean cantCaracteres=calificacion.length()>=1 && calificacion.length()<=28;
+        if(!cantCaracteres){
+            throw new CalificacionWrongException("La calificacion debe tener entre 1 y 28 caracteres");
+        }
+    }
+    
+    @Transactional
+    public void editarCalificacion (NotaDTO n){
+        //VER COMO HACER PARA ASIGNAR UNA CALIFICACION A CADA USUARIO SEGUN LA TAREA
     }
     
     public List<String> obtenerTareas (Usuario idAlumno){

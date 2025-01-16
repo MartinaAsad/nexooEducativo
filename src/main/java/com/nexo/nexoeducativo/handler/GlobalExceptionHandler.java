@@ -4,6 +4,7 @@
  */
 package com.nexo.nexoeducativo.handler;
 
+import com.nexo.nexoeducativo.exception.CalificacionWrongException;
 import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.EscuelaExistingException;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
@@ -91,6 +92,11 @@ public class GlobalExceptionHandler {
     
      @ExceptionHandler(HoraInvalidatedexception.class)
     public ResponseEntity<String>handleHoraInvalidatedexception(HoraInvalidatedexception e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(CalificacionWrongException.class)
+     public ResponseEntity<String>handleCalificacionWrongExceptionException(CalificacionWrongException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
     
