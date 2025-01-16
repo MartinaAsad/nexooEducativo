@@ -95,7 +95,7 @@ public class TareaService {
     
     @Transactional
     public void editarCalificacion (NotaDTO n){
-        //VER COMO HACER PARA ASIGNAR UNA CALIFICACION A CADA USUARIO SEGUN LA TAREA
+      
     }
     
     public List<String> obtenerTareas (Usuario idAlumno){
