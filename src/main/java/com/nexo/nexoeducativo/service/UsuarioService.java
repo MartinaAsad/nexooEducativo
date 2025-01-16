@@ -1,8 +1,4 @@
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.nexo.nexoeducativo.service;
 
 
@@ -230,8 +226,15 @@ public class UsuarioService {
             eu.setUsuarioIdUsuario(u);
             eu.setEscuelaIdEscuela(e);
             
-            this.usuariorepository.save(u);
-            this.escuelaUsuarioRepository.save(eu);
+             if(!usuariorepository.existsByDni(u.getDni())&&
+        !usuariorepository.existsByMail(u.getMail())){
+             this.usuariorepository.save(u);//solo lo guarda si el dni y mail ingresado NO existen
+             this.escuelaUsuarioRepository.save(eu);
+        }else{
+            throw new UsuarioExistingException("dni o mail ya registrado previamente");
+        }
+          
+            
     }
 
      public List<NombreCompletoDTO> jefeColegioSinAsignar(){

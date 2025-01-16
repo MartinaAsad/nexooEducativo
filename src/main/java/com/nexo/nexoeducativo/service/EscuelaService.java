@@ -172,8 +172,10 @@ public class EscuelaService {
     
     public Escuela obtenerIdEscuela(String mail){
         Usuario usuarioIdUsuario=usuarioRepository.findIdUsuarioByMail(mail);
+        //LOGGER.info("id usuario logueado: "+usuarioIdUsuario.getIdUsuario());
         EscuelaUsuario eu= escuelaUsuarioRepository.findEscuelaIdEscuelaByUsuarioIdUsuario(usuarioIdUsuario);
         Escuela e=eu.getEscuelaIdEscuela();
+        //LOGGER.info("id escuela del usuario logueado: "+e.getIdEscuela());
         return e;
     }
 

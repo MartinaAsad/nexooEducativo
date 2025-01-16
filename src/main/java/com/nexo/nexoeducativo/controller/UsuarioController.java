@@ -256,10 +256,14 @@ public class UsuarioController {
      @PreAuthorize("hasAuthority('jefe colegio') "
       + "or hasAuthority('administrativo') ")
      @PostMapping("/altaUsuario")
-      ResponseEntity<?> prueba9(@Valid @RequestBody AdministrativoDTO a){
+      ResponseEntity<?> prueba9(@Valid @RequestBody AdministrativoDTO a, Authentication auth){
           Rol r=new Rol();
           r.setIdRol(a.getRol());
-         uService.crearUsuario(a, 3);
+          String mailUsuario=auth.getPrincipal().toString();
+          Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+          //setear la escuela del usuario logueado
+          a.setIdEscuela(e.getIdEscuela());
+         uService.crearUsuario(a, r.getIdRol());
           return new ResponseEntity<>("el administrativo fue creado correctamente", HttpStatus.OK);
           /*PONER ESTO EN POSTMAN:
           {
@@ -585,6 +589,7 @@ public class UsuarioController {
     @GetMapping(value="/getUsuarios/{nombre}")
     ResponseEntity<?> prueba19(@PathVariable(value = "nombre") String nombre, Authentication auth){
         String mailUsuario=auth.getPrincipal().toString();
+        Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
          Escuela escuelaIdEscuela=escuelaService.obtenerIdEscuela(mailUsuario);  
         List<InfoUsuarioSegunRolDTO> usuarios = new ArrayList<InfoUsuarioSegunRolDTO>();
 	uService.obtenerUsuarioSegunRol(nombre, escuelaIdEscuela).forEach(usuarios::add);
