@@ -74,7 +74,7 @@ public class CursoService {
         int numero=curso.getNumero();
         Character division=curso.getDivision();
         
-        int escuelaId=e.getIdEscuela();
+        //int escuelaId=e.getIdEscuela();
         
         CursoEscuela ce=new CursoEscuela();//tabla intermedia donde se va a guardar a que escuela esta asociado ese curso
         ce.setCursoIdCurso(curso);//se guarda el id del curso creado
@@ -87,7 +87,7 @@ public class CursoService {
 //luego valida que el caracter ingresado sea una minuscula nomas
             throw new IllegalArgumentException("El campo division solo puede una letra minuscula");
         }
-        
+       /* 
         //para que se guarde el curso, el id del colegio,el numero y division ingresada (la combinacion) NO debe existir previamente en la base
         if (!siYaExisteCombinacion(escuelaId,numero, division)) {
             this.cursoRepository.save(curso);//se guarda el curso
@@ -95,7 +95,7 @@ public class CursoService {
          }else{
              throw new IllegalArgumentException("El curso ya existe en la escuela!");
         }
-
+*/
     }
     
     public List<CursoView> seleccionarCurso (int idCurso){

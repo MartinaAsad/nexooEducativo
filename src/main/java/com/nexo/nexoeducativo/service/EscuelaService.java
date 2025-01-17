@@ -61,21 +61,21 @@ public class EscuelaService {
         if (!planRepository.existsById(e.getIdPlan())) {
             throw new IllegalArgumentException("El plan seleccionado no existe: " + e.getIdPlan());
         }
-
+/*
         Escuela escuela = new Escuela();
         escuela.setNombre(e.getNombre());
         escuela.setDireccion(e.getDireccion());
         escuela.setActivo(e.getActivo());
         escuela.setPlanIdPlan(planRepository.findById(e.getIdPlan()).orElseThrow());
-
+*/
         Usuario jefeColegio = new Usuario();
         jefeColegio.setIdUsuario(e.getJefeColegio());
 
         EscuelaUsuario escuelaUsuario = new EscuelaUsuario();
-        escuelaUsuario.setEscuelaIdEscuela(escuela);
+        //escuelaUsuario.setEscuelaIdEscuela(escuela);
         escuelaUsuario.setUsuarioIdUsuario(jefeColegio);
 
-        escuelaRepository.save(escuela);
+        //escuelaRepository.save(escuela);
         escuelaUsuarioRepository.save(escuelaUsuario);
     }
 
@@ -94,7 +94,7 @@ public class EscuelaService {
         }
         
     }
-       
+       /*
        public void actualizarCampos( EscuelaModificacionDTO dto, Escuela e, Plan p,int idEscuela){
          if (dto.getNombre() != null) {
              e.setNombre(dto.getNombre());
@@ -169,7 +169,7 @@ public class EscuelaService {
      //LOGGER.info("EL OBJETO ACTUALIZADO QUE SE VA A GUARDAR: "+actualizado.toString());
      return new EscuelaModificacionDTO (actualizado);
     }
-    
+    */
     public Escuela obtenerIdEscuela(String mail){
         Usuario usuarioIdUsuario=usuarioRepository.findIdUsuarioByMail(mail);
         //LOGGER.info("id usuario logueado: "+usuarioIdUsuario.getIdUsuario());
