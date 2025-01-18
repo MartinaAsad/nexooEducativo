@@ -13,12 +13,24 @@ import com.nexo.nexoeducativo.repository.MateriaCursoMaterialRepository;
 import com.nexo.nexoeducativo.repository.MateriaCursoRepository;
 import com.nexo.nexoeducativo.repository.MateriaRepository;
 import com.nexo.nexoeducativo.repository.MaterialRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author Martina
  */
+@Service
 public class MaterialService {
     
     @Autowired
@@ -36,10 +48,13 @@ public class MaterialService {
     @Autowired
     private MateriaCursoMaterialRepository mcmRepository;
     
-    public void altaMaterial(MaterialDTO m){
+    private final String url = "subirArchivo/";
+    
+    public void altaMaterial(MaterialDTO m) throws IOException{
         
         Material material=new Material();
-        material.setArchivo(m.getUrlArchivo());
+        String urlArchivo=saveUpload(m.getUrlArchivo());
+        material.setArchivo(urlArchivo);
         material.setDescripcion(m.getDescripcion());
         materRepository.save(material);
         
@@ -60,5 +75,20 @@ public class MaterialService {
         mcm.setMaterialIdMaterial(material);
         mcmRepository.save(mcm);    
     }
+    
+     public String saveUpload(MultipartFile file) throws IOException {
+     if (!file.isEmpty()){
+         byte [] bytes = file.getBytes();
+         // Codificar el nombre del archivo
+         String encodedFileName = URLEncoder.encode(Objects.requireNonNull(file.getOriginalFilename()), StandardCharsets.UTF_8);
+         Path path = Paths.get(url + encodedFileName);
+         Files.write(path, bytes);
+         return encodedFileName;
+     }
+     return null;
+ }
+    
+        
+    
     
 }

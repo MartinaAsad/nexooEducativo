@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
@@ -20,6 +21,6 @@ public class MaterialDTO {
     private String descripcion;
 
     @NotBlank(message = "por favor, colocar un archivo")
-    private String urlArchivo;
+    private MultipartFile urlArchivo;
 
 }

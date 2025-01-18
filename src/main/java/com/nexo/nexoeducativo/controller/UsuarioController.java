@@ -44,6 +44,7 @@ import com.nexo.nexoeducativo.service.TareaService;
 import com.nexo.nexoeducativo.service.UsuarioService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -450,7 +451,7 @@ public class UsuarioController {
     /*endpoint para altaMaterial*/
       @PreAuthorize("hasAuthority('profesor') ")
     @GetMapping(value="/altaMaterial")
-    ResponseEntity<?> altaMaterial(@Valid @RequestBody MaterialDTO m) {
+    ResponseEntity<?> altaMaterial(@Valid @RequestBody MaterialDTO m) throws IOException {
         //buscar el id del usuario ingresado
         materialService.altaMaterial(m);
         return new ResponseEntity<>("Material publicado exitosamente", HttpStatus.OK);
