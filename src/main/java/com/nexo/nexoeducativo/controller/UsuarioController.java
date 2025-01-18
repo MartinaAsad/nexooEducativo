@@ -532,6 +532,18 @@ public class UsuarioController {
         return new ResponseEntity<>("usuario borrado exitosamente", HttpStatus.OK);
     }
     
+    /*endpoint necesario para bajaAlumno.js*/
+     @PreAuthorize("hasAuthority('preceptor')"
+    + "or hasAuthority('administrativo') ")
+    @GetMapping(value="/verAlumnos")
+    ResponseEntity<?> verAlumnos(Authentication auth){
+        String mailUsuario=auth.getPrincipal().toString();
+        Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+         Escuela escuelaIdEscuela=escuelaService.obtenerIdEscuela(mailUsuario);  
+       List<NombreCompletoDTO> alumnosDelCurso=uService.obtenerAlumnos(escuelaIdEscuela);
+         return new ResponseEntity<>(alumnosDelCurso, HttpStatus.OK);
+    }
+    
     @PreAuthorize("hasAuthority('administrativo')")
     @PostMapping(value="/crearMateria")
     ResponseEntity<?> prueba16(@Valid @RequestBody MateriaDTO m){

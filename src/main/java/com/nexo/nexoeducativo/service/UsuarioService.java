@@ -354,6 +354,11 @@ public class UsuarioService {
         return cursosProfe;
     }
     
+    public List<NombreCompletoDTO> obtenerAlumnos (Escuela escuelaIdEscuela){
+        List<NombreCompletoDTO> alumnos=usuariorepository.obtenerAlumnos(escuelaIdEscuela);
+        return alumnos;
+    }
+    
     public List<verCursoView> verCursos(List<MateriaCurso> lista){
         List<verCursoView> cursos=new ArrayList<>();
         List<Integer> idCursos=new ArrayList<>();
