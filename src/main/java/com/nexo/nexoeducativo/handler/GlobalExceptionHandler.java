@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.nexo.nexoeducativo.handler;
 
 import com.nexo.nexoeducativo.exception.CalificacionWrongException;
@@ -10,6 +6,7 @@ import com.nexo.nexoeducativo.exception.EscuelaExistingException;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.exception.HoraInvalidatedexception;
 import com.nexo.nexoeducativo.exception.MateriaExistingException;
+import com.nexo.nexoeducativo.exception.MateriaNotFoundException;
 import com.nexo.nexoeducativo.exception.RolNotFound;
 import com.nexo.nexoeducativo.exception.UsuarioAssignedException;
 import com.nexo.nexoeducativo.exception.UsuarioExistingException;
@@ -98,6 +95,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CalificacionWrongException.class)
      public ResponseEntity<String>handleCalificacionWrongExceptionException(CalificacionWrongException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+     
+    @ExceptionHandler(MateriaNotFoundException.class)
+     public ResponseEntity<String>handleMateriaNotFoundException(MateriaNotFoundException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
     
    

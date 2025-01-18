@@ -16,6 +16,7 @@ import com.nexo.nexoeducativo.models.dto.request.EscuelaView;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.MateriaDTO;
+import com.nexo.nexoeducativo.models.dto.request.MaterialDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
@@ -36,6 +37,7 @@ import com.nexo.nexoeducativo.service.CursoService;
 import com.nexo.nexoeducativo.service.CursoUsuarioService;
 import com.nexo.nexoeducativo.service.EscuelaService;
 import com.nexo.nexoeducativo.service.MateriaService;
+import com.nexo.nexoeducativo.service.MaterialService;
 import com.nexo.nexoeducativo.service.PlanService;
 import com.nexo.nexoeducativo.service.RolService;
 import com.nexo.nexoeducativo.service.TareaService;
@@ -94,6 +96,9 @@ public class UsuarioController {
     
     @Autowired
     private TareaService tareaService;
+    
+    @Autowired
+    private MaterialService materialService;
      private static final Logger LOGGER = LoggerFactory.getLogger(UsuarioController.class);
     
     @PreAuthorize(" hasAuthority('super admin') ")
@@ -440,6 +445,15 @@ public class UsuarioController {
          List<MateriaCurso> obtenerCursos=uService.obtenerCursos(usuario);
          List<verCursoView> verCursos=uService.verCursos(obtenerCursos);
         return new ResponseEntity<>(verCursos, HttpStatus.OK);
+    }
+    
+    /*endpoint para altaMaterial*/
+      @PreAuthorize("hasAuthority('profesor') ")
+    @GetMapping(value="/altaMaterial")
+    ResponseEntity<?> altaMaterial(@Valid @RequestBody MaterialDTO m) {
+        //buscar el id del usuario ingresado
+        materialService.altaMaterial(m);
+        return new ResponseEntity<>("Material publicado exitosamente", HttpStatus.OK);
     }
     
         
