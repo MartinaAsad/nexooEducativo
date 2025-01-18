@@ -88,7 +88,8 @@ public class MateriaService {
         //mc.setMateriaCursoMaterialList(materiaCursoMaterialList); DUDOSO DE SI VA O NO
 
         //si el curso esta inactivo
-        /*if (cursoEscuelaRepository.existsByCursoIdCursoAndEscuelaIdEscuela(c.getIdCurso(), e.getIdEscuela()) == 0) {
+        //VER PROBLEMAS EN LOS IF
+        if (cursoEscuelaRepository.existsByCursoIdCursoAndEscuelaIdEscuela(c.getIdCurso(), e.getIdEscuela()) == 0) {
             //excepcion de ejemplo, solo para comporobar si efectivamente funciona la query
             throw new CursoNotFound("el curso o escuela esta inactivo");
         }
@@ -113,7 +114,7 @@ public class MateriaService {
         }else{
             throw new UsuarioNotAuthorizedException("El usuario que se desea ingresar no es un profesor");
         }
-*/
+
     }
     
     @Transactional 

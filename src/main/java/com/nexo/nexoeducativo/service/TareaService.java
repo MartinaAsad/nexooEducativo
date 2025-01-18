@@ -48,7 +48,8 @@ public class TareaService {
         Calificacion c=altaCalificacion(tarea);
         
         Tarea t=new Tarea();
-        //t.setDescripcion(tarea.getDescripcion());
+        //VER PROBLEMA CON LA DESCRIPCION
+        t.setDescripcion(tarea.getDescripcion());
         t.setArchivo(null);
         t.setCalificacionIdCalificacion(c);
         

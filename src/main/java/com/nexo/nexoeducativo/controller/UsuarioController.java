@@ -266,7 +266,7 @@ public class UsuarioController {
           String mailUsuario=auth.getPrincipal().toString();
           Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
           //setear la escuela del usuario logueado
-         // a.setIdEscuela(e.getIdEscuela());
+          a.setIdEscuela(e.getIdEscuela()); //VER QUE ERROR HAY ACA
          uService.crearUsuario(a, r.getIdRol());
           return new ResponseEntity<>("el administrativo fue creado correctamente", HttpStatus.OK);
           /*PONER ESTO EN POSTMAN:
@@ -630,15 +630,15 @@ public class UsuarioController {
         
         return new ResponseEntity<>(s,HttpStatus.OK);   
     }
-    /*
+    
     @PreAuthorize("hasAuthority('super admin')")
     @PatchMapping(value="/modificarEscuela/{id}")
      ResponseEntity<?> prueba22 (@PathVariable(value = "id") int id,  @Valid @RequestBody EscuelaModificacionDTO em){
           EscuelaModificacionDTO s=escuelaService.actualizarEscuela(id, em);
-          
+          //ver problema aca
            return new ResponseEntity<>(s,HttpStatus.OK);   
     }
-    */
+    
     @PreAuthorize("hasAuthority('administrativo')") //asignado como ejemplo, despues cambiar a administrativo
     @PostMapping(value="/asignarPreceptor")
      ResponseEntity<?> prueba23 ( @Valid @RequestBody AsignarPreceptorDTO em){
