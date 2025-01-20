@@ -48,19 +48,18 @@ public class MaterialService {
     @Autowired
     private MateriaCursoMaterialRepository mcmRepository;
     
-    private final String url = "subirArchivo/";
     
-    public void altaMaterial(MaterialDTO m) throws IOException{
+    public void altaMaterial(MultipartFile file,MaterialDTO m) throws IOException{//endpooint altaMaterial
         
         Material material=new Material();
-        String urlArchivo=saveUpload(m.getUrlArchivo());
-        material.setArchivo(urlArchivo);
+        guardarImagen(file, material);
+        //material.setArchivo(urlArchivo);
         material.setDescripcion(m.getDescripcion());
         materRepository.save(material);
         
         //entidades necesarias para asociar el material a un curso
         Curso c=cursoRepository.findById(m.getIdCurso())
-                .orElseThrow(()-> new CursoNotFound("No existe el curso ingresado"));
+                .orElseThrow(()-> new CursoNotFound("No existe el curso ingresado" +m.getIdCurso()));
         
         Materia materia = materiaRepository.findById(m.getIdMateria()).orElseThrow(
                 ()->new MateriaNotFoundException("La materia ingresada no existe"));
@@ -76,17 +75,12 @@ public class MaterialService {
         mcmRepository.save(mcm);    
     }
     
-     public String saveUpload(MultipartFile file) throws IOException {
-     if (!file.isEmpty()){
-         byte [] bytes = file.getBytes();
-         // Codificar el nombre del archivo
-         String encodedFileName = URLEncoder.encode(Objects.requireNonNull(file.getOriginalFilename()), StandardCharsets.UTF_8);
-         Path path = Paths.get(url + encodedFileName);
-         Files.write(path, bytes);
-         return encodedFileName;
-     }
-     return null;
- }
+    
+    public void guardarImagen(MultipartFile file, Material material) throws IOException {
+         material.setArchivo(file.getBytes()); // Convertir a byte[]
+    }
+    
+   
     
         
     
