@@ -46,6 +46,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -53,6 +54,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -454,16 +456,25 @@ public class UsuarioController {
     
     /*endpoint para altaMaterial*/
       @PreAuthorize("hasAuthority('profesor') ")
-    @PostMapping(value="/altaMaterial")
-    ResponseEntity<?> altaMaterial(@RequestPart MultipartFile urlArchivo,@Valid @ModelAttribute MaterialDTO m) throws IOException {
-        //buscar el id del usuario ingresado
-        m.setUrlArchivo(urlArchivo);
-         try {
-             materialService.altaMaterial(urlArchivo,m);
+    @PostMapping(value="/altaMaterial", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<?> altaMaterial(@RequestPart ("urlArchivo") MultipartFile urlArchivo,@RequestPart("material")@Valid MaterialDTO material, Authentication auth) throws IOException {
+        String mail=auth.getPrincipal().toString();
+        Usuario usuario=uService.buscarUsuario(mail); 
+        try {
+             materialService.altaMaterial(urlArchivo,material, usuario);
+             return ResponseEntity.ok()
+                .body( "Material publicado exitosamente"  
+                );
+
          } catch (IOException ex) {
              java.util.logging.Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new HashMap<String, String>() {{
+                    put("error", "Error processing file upload: " + ex.getMessage());
+                }});
+
          }
-        return new ResponseEntity<>("Material publicado exitosamente", HttpStatus.OK);
+        //return new ResponseEntity<>("Material publicado exitosamente", HttpStatus.OK);
     }
     
         

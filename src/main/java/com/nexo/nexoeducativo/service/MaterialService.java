@@ -8,6 +8,7 @@ import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.MateriaCurso;
 import com.nexo.nexoeducativo.models.entities.MateriaCursoMaterial;
 import com.nexo.nexoeducativo.models.entities.Material;
+import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.repository.CursoRepository;
 import com.nexo.nexoeducativo.repository.MateriaCursoMaterialRepository;
 import com.nexo.nexoeducativo.repository.MateriaCursoRepository;
@@ -25,12 +26,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author Martina
  */
 @Service
+@Transactional
 public class MaterialService {
     
     @Autowired
@@ -49,7 +52,7 @@ public class MaterialService {
     private MateriaCursoMaterialRepository mcmRepository;
     
     
-    public void altaMaterial(MultipartFile file,MaterialDTO m) throws IOException{//endpooint altaMaterial
+    public void altaMaterial(MultipartFile file,MaterialDTO m, Usuario profesor) throws IOException{//endpooint altaMaterial
         
         Material material=new Material();
         guardarImagen(file, material);
@@ -67,6 +70,7 @@ public class MaterialService {
         MateriaCurso mc=new MateriaCurso();
         mc.setCursoIdCurso(c);
         mc.setMateriaIdMateria(materia);
+        mc.setProfesor(profesor);
         mcRepository.save(mc);
         
         MateriaCursoMaterial mcm=new MateriaCursoMaterial();
