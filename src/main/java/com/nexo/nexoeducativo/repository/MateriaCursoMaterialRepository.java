@@ -1,6 +1,7 @@
 package com.nexo.nexoeducativo.repository;
 
 import com.nexo.nexoeducativo.models.entities.MateriaCursoMaterial;
+import com.nexo.nexoeducativo.models.entities.Material;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +11,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface MateriaCursoMaterialRepository extends JpaRepository<MateriaCursoMaterial, Integer>{
+    boolean deleteByMaterialIdMaterial(Material materialIdMaterial);
     
 }

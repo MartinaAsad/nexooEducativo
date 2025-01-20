@@ -84,6 +84,15 @@ public class MaterialService {
          material.setArchivo(file.getBytes()); // Convertir a byte[]
     }
     
+    public void borrarMaterial( Material materialIdMaterial, Curso cursoIdCurso, Materia materiaIdMateria){//MISMOS ENDPPOINTS QUE MATERIALDTO
+        MateriaCurso mc=new MateriaCurso();
+        mc.setCursoIdCurso(cursoIdCurso);
+        mc.setMateriaIdMateria(materiaIdMateria);
+        mc.setProfesor(null);
+        materRepository.deleteById(Integer.SIZE);
+        mcmRepository.deleteByMaterialIdMaterial(materialIdMaterial);
+    }
+    
    
     
         
