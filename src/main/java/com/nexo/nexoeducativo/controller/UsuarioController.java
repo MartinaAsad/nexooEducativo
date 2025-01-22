@@ -490,10 +490,10 @@ public class UsuarioController {
      }
     
      @PreAuthorize("hasAuthority('profesor') ")
-     @DeleteMapping(value="borrarMaterial")
-     ResponseEntity<?> bajaMaterial(@RequestParam Integer cursoIdCurso, @RequestParam Integer materiaIdMateria,@RequestParam Integer materialIdMaterial){
-         materialService.borrarMaterial(materialIdMaterial, materiaIdMateria);
-         return new ResponseEntity<>("", HttpStatus.OK);
+     @DeleteMapping(value="borrarMaterial/{materialIdMaterial}")
+     ResponseEntity<?> bajaMaterial(@PathVariable("materialIdMaterial") Integer materialIdMaterial){
+         materialService.borrarMaterial(materialIdMaterial);
+         return new ResponseEntity<>("Material borrado exitosamente", HttpStatus.OK);
      }
      
     
