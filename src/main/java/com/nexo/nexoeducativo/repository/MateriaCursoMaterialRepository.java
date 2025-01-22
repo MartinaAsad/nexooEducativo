@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface MateriaCursoMaterialRepository extends JpaRepository<MateriaCursoMaterial, Integer>{
-    boolean deleteByMaterialIdMaterial(Material materialIdMaterial);
+    int deleteByMaterialIdMaterial(Material materialIdMaterial);
     MateriaCursoMaterial findIdMateriaCursoMaterialByMateriaCursoIdMateriaCurso (MateriaCurso MateriaCursoIdMateriaCurso);
     
 }

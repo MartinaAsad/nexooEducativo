@@ -97,7 +97,7 @@ public class MaterialService {
         return buscarMaterial;
     }//utilizar endpoint /selecMaterialProfesor
     
-    public void borrarMaterial(Integer material){//MISMOS ENDPPOINTS QUE MATERIALDTO Y VER CONTROLADOR LINEA 484 MAS QUE NADA PARA VER QUE ES LO QUE SE DEBE MOSTRAR AL USUARIO APARTE DE LOS ENDPOOINTS DEL DTO
+    public boolean borrarMaterial(Integer material){//MISMOS ENDPPOINTS QUE MATERIALDTO Y VER CONTROLADOR LINEA 484 MAS QUE NADA PARA VER QUE ES LO QUE SE DEBE MOSTRAR AL USUARIO APARTE DE LOS ENDPOOINTS DEL DTO
         
         Material materialIdMaterial=materRepository.findById(material).orElseThrow(()->
         new MaterialNotFoundException("No existe el material seleccionado"));
@@ -113,7 +113,9 @@ public class MaterialService {
         mc.setMateriaIdMateria(materia);
         mc.setProfesor(null);*/
         materRepository.deleteById(material);
-        mcmRepository.deleteByMaterialIdMaterial(materialIdMaterial);
+        int siBorro=mcmRepository.deleteByMaterialIdMaterial(materialIdMaterial);
+        
+        return siBorro>0;
     }
     
    
