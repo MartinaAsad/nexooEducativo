@@ -49,6 +49,7 @@ List<MateriaCurso> findByCursoIdCursoAndProfesor (Curso cursoIdCurso, Usuario pr
  @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView (m.idMateria, m.nombre) FROM Materia m JOIN m.materiaCursoList mc WHERE mc.cursoIdCurso = :curso AND mc.profesor = :profesor")
     List<DesplegableMateriaView> findNombresMateriasPorCursoYProfesor(@Param("curso") Curso curso, @Param("profesor") Usuario profesor);
 
-    MateriaCurso findIdMateriaCursoByCursoIdCursoAndMateriaIdMateria(Curso cursoIdCurso, Materia materiaIdMateria);
+    List<MateriaCurso> findIdMateriaCursoByCursoIdCursoAndMateriaIdMateria(Curso cursoIdCurso, Materia materiaIdMateria);
+    //findIdMateriaCursoByCursoIdCursoAndMateriaIdMateria
 
 }

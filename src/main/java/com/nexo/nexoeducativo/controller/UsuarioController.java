@@ -21,6 +21,7 @@ import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
 import com.nexo.nexoeducativo.models.dto.request.RolDTO;
+import com.nexo.nexoeducativo.models.dto.request.SeleccionarMaterialView;
 import com.nexo.nexoeducativo.models.dto.request.TareaDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
@@ -68,6 +69,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -476,6 +478,24 @@ public class UsuarioController {
          }
         //return new ResponseEntity<>("Material publicado exitosamente", HttpStatus.OK);
     }
+    
+    /*endpoints para bajaMaterial*/
+    @PreAuthorize("hasAuthority('profesor') ")
+    @GetMapping(value="/selecMaterialProfesor")
+      ResponseEntity<?> selectMaterial(@RequestParam Integer cursoIdCurso, @RequestParam Integer materiaIdMateria){
+         List<SeleccionarMaterialView>materiales=materialService.seleccionarMaterial(cursoIdCurso, materiaIdMateria);
+         return new ResponseEntity<>(materiales, HttpStatus.OK);
+         /*request que puse en Postman para que funcione RECREARLA EN EL FRONT, los numeros son de ejemplo: 
+         http://localhost:8080/api/usuario/selecMaterialProfesor?cursoIdCurso=3&materiaIdMateria=1*/
+     }
+    
+     @PreAuthorize("hasAuthority('profesor') ")
+     @DeleteMapping(value="borrarMaterial")
+     ResponseEntity<?> bajaMaterial(@RequestParam Integer cursoIdCurso, @RequestParam Integer materiaIdMateria,@RequestParam Integer materialIdMaterial){
+         materialService.borrarMaterial(materialIdMaterial, materiaIdMateria);
+         return new ResponseEntity<>("", HttpStatus.OK);
+     }
+     
     
         
       @PreAuthorize("hasAuthority('profesor') ")

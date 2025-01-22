@@ -7,6 +7,7 @@ import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.exception.HoraInvalidatedexception;
 import com.nexo.nexoeducativo.exception.MateriaExistingException;
 import com.nexo.nexoeducativo.exception.MateriaNotFoundException;
+import com.nexo.nexoeducativo.exception.MaterialNotFoundException;
 import com.nexo.nexoeducativo.exception.RolNotFound;
 import com.nexo.nexoeducativo.exception.UsuarioAssignedException;
 import com.nexo.nexoeducativo.exception.UsuarioExistingException;
@@ -101,6 +102,12 @@ public class GlobalExceptionHandler {
      public ResponseEntity<String>handleMateriaNotFoundException(MateriaNotFoundException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
+     
+     @ExceptionHandler(MaterialNotFoundException.class)
+     public ResponseEntity<String>handleMaterialNotFoundException(MaterialNotFoundException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+     
     
    
 }

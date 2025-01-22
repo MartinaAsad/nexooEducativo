@@ -2,7 +2,9 @@ package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.MateriaNotFoundException;
+import com.nexo.nexoeducativo.exception.MaterialNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.MaterialDTO;
+import com.nexo.nexoeducativo.models.dto.request.SeleccionarMaterialView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.MateriaCurso;
@@ -24,9 +26,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -84,13 +89,31 @@ public class MaterialService {
          material.setArchivo(file.getBytes()); // Convertir a byte[]
     }
     
-    public void borrarMaterial( Material materialIdMaterial, Curso cursoIdCurso, Materia materiaIdMateria){//MISMOS ENDPPOINTS QUE MATERIALDTO
-        MateriaCurso mc=new MateriaCurso();
-        mc.setCursoIdCurso(cursoIdCurso);
-        mc.setMateriaIdMateria(materiaIdMateria);
-        mc.setProfesor(null);
-        materRepository.deleteById(Integer.SIZE);
-        mcmRepository.deleteByMaterialIdMaterial(materialIdMaterial);
+    public List<SeleccionarMaterialView> seleccionarMaterial( Integer curso, Integer materia){
+        Curso cursoIdCurso=cursoRepository.findById(curso).orElseThrow(()-> new CursoNotFound("No se encunetra el curso seleccionado"));
+        Materia materiaIdMateria=materiaRepository.findById(materia).orElseThrow(()-> new MateriaNotFoundException("No existe la materia seleccionada"));
+        List<SeleccionarMaterialView> buscarMaterial=materRepository.buscarMaterial(cursoIdCurso, materiaIdMateria);
+        //List<String> descripcion=new ArrayList<>();
+        return buscarMaterial;
+    }//utilizar endpoint /selecMaterialProfesor
+    
+    public void borrarMaterial( Integer materialIdMaterial, /*Integer cursoIdCurso,*/ Integer materiaIdMateria){//MISMOS ENDPPOINTS QUE MATERIALDTO
+        
+        Material m=materRepository.findById(materialIdMaterial).orElseThrow(()->
+        new MaterialNotFoundException("No existe el material seleccionado"));
+        
+        /*Curso c=cursoRepository.findById(cursoIdCurso).orElseThrow(()->
+        new CursoNotFound("No existe el curso seleccionado"));*/
+        
+        Materia materia=materiaRepository.findById(materiaIdMateria).orElseThrow(
+        ()-> new MateriaNotFoundException("No existe la materia seleccionada"));
+        
+        /*MateriaCurso mc=new MateriaCurso();
+        mc.setCursoIdCurso(c);
+        mc.setMateriaIdMateria(materia);
+        mc.setProfesor(null);*/
+        materRepository.deleteById(materialIdMaterial);
+        mcmRepository.deleteByMaterialIdMaterial(m);
     }
     
    
