@@ -128,22 +128,31 @@ public class MaterialService {
         
         Material materialIdMaterial=materRepository.findById(material).orElseThrow(()->
         new MaterialNotFoundException("No existe el material seleccionado"));
-        
-        /*Curso c=cursoRepository.findById(cursoIdCurso).orElseThrow(()->
-        new CursoNotFound("No existe el curso seleccionado"));*/
-        
-       /* Materia materia=materiaRepository.findById(materiaIdMateria).orElseThrow(
-        ()-> new MateriaNotFoundException("No existe la materia seleccionada"));*/
-        
-        /*MateriaCurso mc=new MateriaCurso();
-        mc.setCursoIdCurso(c);
-        mc.setMateriaIdMateria(materia);
-        mc.setProfesor(null);*/
         materRepository.deleteById(material);
         int siBorro=mcmRepository.deleteByMaterialIdMaterial(materialIdMaterial);
         
         return siBorro>0;
     }
+    
+     @Transactional
+    public Material modificarMaterial (Integer material, MaterialDTO m, MultipartFile urlArchivo) throws IOException{
+        //obtener el material que se desea modificar
+        Material materialIdMaterial=materRepository.findById(material).orElseThrow(()->
+        new MaterialNotFoundException("No existe el material seleccionado"));
+        
+        //ver las modificaciones realizadas
+        if(m.getDescripcion() != null){
+            materialIdMaterial.setDescripcion(m.getDescripcion());
+        }
+         //byte[] archivo=guardarImagen(urlArchivo, materialIdMaterial);
+        if(!(urlArchivo.isEmpty())){
+            guardarImagen(urlArchivo, materialIdMaterial);
+        }
+        
+        Material actualizado= materRepository.save(materialIdMaterial);
+        return actualizado;
+    }
+   
     
    
     

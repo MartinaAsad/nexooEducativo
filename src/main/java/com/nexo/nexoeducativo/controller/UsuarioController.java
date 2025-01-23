@@ -511,6 +511,31 @@ public class UsuarioController {
         return new ResponseEntity<>(materias, HttpStatus.OK);
     }
     
+    //endppint para modificarMaterial: ademas de usar los de la lineas 449, 484, 502 usar el de aca
+          @PreAuthorize("hasAuthority('profesor') ")
+    @PostMapping(value="/modificarMaterial", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<?> modificarMaterial(@RequestPart ("urlArchivo") MultipartFile urlArchivo,
+            @RequestPart("material")@Valid MaterialDTO material) throws IOException {
+        //String mail=auth.getPrincipal().toString();
+        //Usuario usuario=uService.buscarUsuario(mail); 
+        /*try {
+             materialService.altaMaterial(urlArchivo,material, usuario);
+             return ResponseEntity.ok()
+                .body( "Material publicado exitosamente"  
+                );
+
+         } catch (IOException ex) {
+             java.util.logging.Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new HashMap<String, String>() {{
+                    put("error", "Error processing file upload: " + ex.getMessage());
+                }});
+
+         }*/
+        return new ResponseEntity<>("Material publicado exitosamente", HttpStatus.OK);
+    }
+    
+    
      @PreAuthorize("hasAuthority('profesor') ")
     @PostMapping(value="/altaTarea/{cursoIdCurso}")
     ResponseEntity<?> altaTarea(@PathVariable("cursoIdCurso") Integer cursoIdCurso,@Valid @RequestBody TareaDTO tarea) throws NoSuchFieldException{
