@@ -93,11 +93,11 @@ public class MaterialService {
     
     
     public void guardarImagen(MultipartFile file, Material material) throws IOException {
-        String[] formatosValidos = {"application/pdf", "application/msword",
+       /* String[] formatosValidos = {"application/pdf", "application/msword",
             "image/png", "image/jpeg",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             "application/zip",
-            "application/vnd.openxmlformats-officedocument.presentationml.presentation"};
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation"};*/
 
         // Check file size
         if (file.getSize() > 12 * 1024 * 1024) {
@@ -105,12 +105,12 @@ public class MaterialService {
         }
 
         // Check file format
-        boolean formatoValido = Arrays.stream(formatosValidos)
+       /* boolean formatoValido = Arrays.stream(formatosValidos)
                 .anyMatch(formato -> formato.equals(file.getContentType()));
 
         if (!formatoValido) {
             throw new FormatoIncorrectoException("Los archivos validos son: pdf, doc, jpeg, png, zip y pptx");
-        }
+        }*/
 
         material.setArchivo(file.getBytes());
     }
@@ -141,8 +141,10 @@ public class MaterialService {
         new MaterialNotFoundException("No existe el material seleccionado"));
         
         //ver las modificaciones realizadas
-        if(m.getDescripcion() != null){
+        if(m!=null){
+         if(m.getDescripcion() != null){
             materialIdMaterial.setDescripcion(m.getDescripcion());
+        }   
         }
          //byte[] archivo=guardarImagen(urlArchivo, materialIdMaterial);
         if(urlArchivo !=null){
