@@ -513,26 +513,14 @@ public class UsuarioController {
     
     //endppint para modificarMaterial: ademas de usar los de la lineas 449, 484, 502 usar el de aca
           @PreAuthorize("hasAuthority('profesor') ")
-    @PostMapping(value="/modificarMaterial", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> modificarMaterial(@RequestPart ("urlArchivo") MultipartFile urlArchivo,
-            @RequestPart("material")@Valid MaterialDTO material) throws IOException {
-        //String mail=auth.getPrincipal().toString();
-        //Usuario usuario=uService.buscarUsuario(mail); 
-        /*try {
-             materialService.altaMaterial(urlArchivo,material, usuario);
-             return ResponseEntity.ok()
-                .body( "Material publicado exitosamente"  
-                );
-
-         } catch (IOException ex) {
-             java.util.logging.Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
-             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new HashMap<String, String>() {{
-                    put("error", "Error processing file upload: " + ex.getMessage());
-                }});
-
-         }*/
-        return new ResponseEntity<>("Material publicado exitosamente", HttpStatus.OK);
+    @PatchMapping(value="/modificarMaterial/{materialIdMaterial}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<?> modificarMaterial(@PathVariable("materialIdMaterial") Integer materialIdMaterial,
+            @RequestPart (value="urlArchivo", required=false) MultipartFile urlArchivo,
+            @RequestPart(value="material", required=false)@Valid MaterialDTO material) throws IOException {
+        materialService.modificarMaterial(materialIdMaterial, material, urlArchivo);
+        //lo que utilice en Postman para que funcione
+        /**/
+        return new ResponseEntity<>("Material editado exitosamente", HttpStatus.OK);
     }
     
     

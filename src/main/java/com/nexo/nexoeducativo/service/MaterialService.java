@@ -145,7 +145,7 @@ public class MaterialService {
             materialIdMaterial.setDescripcion(m.getDescripcion());
         }
          //byte[] archivo=guardarImagen(urlArchivo, materialIdMaterial);
-        if(!(urlArchivo.isEmpty())){
+        if(urlArchivo !=null){
             guardarImagen(urlArchivo, materialIdMaterial);
         }
         
