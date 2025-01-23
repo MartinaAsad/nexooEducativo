@@ -1,8 +1,10 @@
 package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.exception.CursoNotFound;
+import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.MateriaNotFoundException;
 import com.nexo.nexoeducativo.exception.MaterialNotFoundException;
+import com.nexo.nexoeducativo.exception.TamanoIncorrectoException;
 import com.nexo.nexoeducativo.models.dto.request.MaterialDTO;
 import com.nexo.nexoeducativo.models.dto.request.SeleccionarMaterialView;
 import com.nexo.nexoeducativo.models.entities.Curso;
@@ -27,8 +29,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,6 +60,8 @@ public class MaterialService {
     
     @Autowired
     private MateriaCursoMaterialRepository mcmRepository;
+      private static final Logger LOGGER = LoggerFactory.getLogger(MaterialService.class);
+
     
     
     public void altaMaterial(MultipartFile file,MaterialDTO m, Usuario profesor) throws IOException{//endpooint altaMaterial
@@ -86,8 +93,28 @@ public class MaterialService {
     
     
     public void guardarImagen(MultipartFile file, Material material) throws IOException {
-         material.setArchivo(file.getBytes()); // Convertir a byte[]
+        String[] formatosValidos = {"application/pdf", "application/msword",
+            "image/png", "image/jpeg",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/zip",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation"};
+
+        // Check file size
+        if (file.getSize() > 12 * 1024 * 1024) {
+            throw new TamanoIncorrectoException("El archivo puede pesar hasta 12 mb");
+        }
+
+        // Check file format
+        boolean formatoValido = Arrays.stream(formatosValidos)
+                .anyMatch(formato -> formato.equals(file.getContentType()));
+
+        if (!formatoValido) {
+            throw new FormatoIncorrectoException("Los archivos validos son: pdf, doc, jpeg, png, zip y pptx");
+        }
+
+        material.setArchivo(file.getBytes());
     }
+            
     
     public List<SeleccionarMaterialView> seleccionarMaterial( Integer curso, Integer materia){
         Curso cursoIdCurso=cursoRepository.findById(curso).orElseThrow(()-> new CursoNotFound("No se encunetra el curso seleccionado"));

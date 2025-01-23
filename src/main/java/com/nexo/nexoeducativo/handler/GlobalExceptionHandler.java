@@ -4,11 +4,13 @@ import com.nexo.nexoeducativo.exception.CalificacionWrongException;
 import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.EscuelaExistingException;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
+import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.HoraInvalidatedexception;
 import com.nexo.nexoeducativo.exception.MateriaExistingException;
 import com.nexo.nexoeducativo.exception.MateriaNotFoundException;
 import com.nexo.nexoeducativo.exception.MaterialNotFoundException;
 import com.nexo.nexoeducativo.exception.RolNotFound;
+import com.nexo.nexoeducativo.exception.TamanoIncorrectoException;
 import com.nexo.nexoeducativo.exception.UsuarioAssignedException;
 import com.nexo.nexoeducativo.exception.UsuarioExistingException;
 import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
@@ -106,6 +108,16 @@ public class GlobalExceptionHandler {
      @ExceptionHandler(MaterialNotFoundException.class)
      public ResponseEntity<String>handleMaterialNotFoundException(MaterialNotFoundException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+     
+     @ExceptionHandler(TamanoIncorrectoException.class)
+     public ResponseEntity<String>handleTamanoIncorrectoException(TamanoIncorrectoException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+     
+     @ExceptionHandler(FormatoIncorrectoException.class)
+     public ResponseEntity<String>handleFormatoIncorrectoException(FormatoIncorrectoException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
      
     
