@@ -91,6 +91,9 @@ public class UsuarioService {
    //para saber info del usuario logueado
     private Usuario usuario;
     
+    @Autowired 
+    private UsuarioUsuarioRepository uuRepository;
+    
     
     private static final Logger LOGGER = LoggerFactory.getLogger(UsuarioService.class);
     
@@ -382,6 +385,11 @@ public class UsuarioService {
     public List<NombreCompletoDTO> infoUsuarioSegunEscuela(Rol r, Escuela e){
         List<NombreCompletoDTO> usuarios=usuariorepository.obtenerInfoUsuario(r, e);
         return usuarios;
+    }
+    
+    public List<UsuarioView> obtenerHijos(Usuario padre){
+        List<UsuarioView> obtenerHijos= uuRepository.obtenerHijos(padre);
+        return obtenerHijos;
     }
     
     

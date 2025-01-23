@@ -134,25 +134,22 @@ public class MaterialService {
         return siBorro>0;
     }
     
-     @Transactional
     public Material modificarMaterial (Integer material, MaterialDTO m, MultipartFile urlArchivo) throws IOException{
         //obtener el material que se desea modificar
         Material materialIdMaterial=materRepository.findById(material).orElseThrow(()->
         new MaterialNotFoundException("No existe el material seleccionado"));
         
         //ver las modificaciones realizadas
-        if(m!=null){
-         if(m.getDescripcion() != null){
+        if(m!=null && m.getDescripcion() != null){
             materialIdMaterial.setDescripcion(m.getDescripcion());
-        }   
         }
          //byte[] archivo=guardarImagen(urlArchivo, materialIdMaterial);
         if(urlArchivo !=null){
             guardarImagen(urlArchivo, materialIdMaterial);
         }
         
-        Material actualizado= materRepository.save(materialIdMaterial);
-        return actualizado;
+        return materRepository.save(materialIdMaterial);
+       
     }
    
     

@@ -727,6 +727,15 @@ public class UsuarioController {
            return new ResponseEntity<>(HttpStatus.OK);   
     }   
     
+     /*endpoints necesarios para que un padre vea las notas de cada hijo*/
+     @PreAuthorize("hasAuthority('padre')") //asignado como ejemplo, despues cambiar a administrativo
+    @GetMapping(value="/verHijos")
+     ResponseEntity<?> prueba23 (Authentication auth){
+         String mailUsuario=auth.getPrincipal().toString();
+         Usuario padre=uService.buscarUsuario(mailUsuario);
+         List<UsuarioView> lista=uService.obtenerHijos(padre);
+           return new ResponseEntity<>(lista,HttpStatus.OK);   
+    }   
     
     
 }
