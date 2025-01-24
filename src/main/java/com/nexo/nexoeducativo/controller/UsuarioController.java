@@ -16,6 +16,7 @@ import com.nexo.nexoeducativo.models.dto.request.EscuelaView;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.MateriaDTO;
+import com.nexo.nexoeducativo.models.dto.request.MateriaView;
 import com.nexo.nexoeducativo.models.dto.request.MaterialDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
@@ -728,7 +729,7 @@ public class UsuarioController {
     }   
     
      /*endpoints necesarios para que un padre vea las notas de cada hijo*/
-     @PreAuthorize("hasAuthority('padre')") //asignado como ejemplo, despues cambiar a administrativo
+     @PreAuthorize("hasAuthority('padre')")
     @GetMapping(value="/verHijos")
      ResponseEntity<?> prueba23 (Authentication auth){
          String mailUsuario=auth.getPrincipal().toString();
@@ -736,6 +737,13 @@ public class UsuarioController {
          List<UsuarioView> lista=uService.obtenerHijos(padre);
            return new ResponseEntity<>(lista,HttpStatus.OK);   
     }   
+     
+      @PreAuthorize("hasAuthority('padre')") 
+    @GetMapping(value="/seleccionarMateria/{hijo}")
+     ResponseEntity<?> selectMateriaHijo (@PathVariable(value="hijo") Integer hijo){
+         List<DesplegableMateriaView>lista=materiaService.verMateriasSegunHijo(hijo);
+           return new ResponseEntity<>(lista,HttpStatus.OK);   
+    }    
     
     
 }

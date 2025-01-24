@@ -143,4 +143,11 @@ public class MateriaService {
         return verMateriasEscuela;
     }
     
+    public List<DesplegableMateriaView> verMateriasSegunHijo(Integer id){
+        Usuario usuarioIdUsuario=usuarioRepository.findById(id).orElseThrow(
+        ()-> new UsuarioNotFoundException("No existe el hijo seleccionado"));
+        List<DesplegableMateriaView> verMaterias=materiaRepository.materiasSegunHijo(usuarioIdUsuario);
+        return verMaterias;
+    }
+    
 }
