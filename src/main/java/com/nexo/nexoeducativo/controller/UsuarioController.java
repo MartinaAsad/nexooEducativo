@@ -188,7 +188,7 @@ public class UsuarioController {
             + "or hasAuthority('preceptor') "+
              "or hasAuthority('super admin') ") //despues sacar este permiso mas adelante
      @PostMapping("/saveCurso")
-     public ResponseEntity<?> prueba5(@Valid @RequestBody CursoDTO r, Authentication auth){
+     public ResponseEntity<?> prueba5(@Valid @RequestBody CursoDTO r, Authentication auth, @RequestBody MateriaDTO m){
          String mailUsuario=auth.getPrincipal().toString();
          Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
          cursoService.crearCurso(r, e);//buscar la manera de que en caso que no se haya creado, mostrar en el Postman un mensaje de error
@@ -350,9 +350,11 @@ public class UsuarioController {
     
      @PreAuthorize("hasAuthority('administrativo') ")
      //@PreAuthorize("hasAuthority('super admin') ")
-    @PostMapping(value="/saveMateria")
-    ResponseEntity<?> prueba14(@Valid @RequestBody MateriaDTO m){
-        materiaService.crearMateria(m);
+    @PostMapping(value="/saveMateria/{nombre}")
+    ResponseEntity<?> prueba14(Authentication auth,@PathVariable("nombre") String nombre){
+        String mailUsuario=auth.getPrincipal().toString();
+         Escuela escuelaIdEscuela=escuelaService.obtenerIdEscuela(mailUsuario);
+        materiaService.crearMateria(nombre, escuelaIdEscuela);
          return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.CREATED);
     }
     
@@ -623,7 +625,7 @@ public class UsuarioController {
     @PreAuthorize("hasAuthority('administrativo')")
     @PostMapping(value="/crearMateria")
     ResponseEntity<?> prueba16(@Valid @RequestBody MateriaDTO m){
-        materiaService.crearMateria(m);
+        //materiaService.crearMateria(m);
         return new ResponseEntity<>("se creo una materia", HttpStatus.OK);
         /*PONER ESTO EN EL POSTMAN:
         */

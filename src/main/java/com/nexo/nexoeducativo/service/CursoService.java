@@ -88,6 +88,8 @@ public class CursoService {
             throw new IllegalArgumentException("El campo division solo puede una letra minuscula");
         }
         
+        //agregar las materias
+        
         //para que se guarde el curso, el id del colegio,el numero y division ingresada (la combinacion) NO debe existir previamente en la base
         //VER QUE PROBLEMA HAY ACA
         if (!siYaExisteCombinacion(escuelaId,numero, division)) {
