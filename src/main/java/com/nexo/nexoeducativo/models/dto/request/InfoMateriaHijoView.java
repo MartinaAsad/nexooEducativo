@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class InfoMateriaHijoView {
-    private String nombreProfesor;
+    //private String nombreProfesor;
     private HashMap<String, String> nota; //calificacion y descripcion de la tarea correspondiente
-    private List<EventosView> eventos;   
+    private List<EventosDTO> eventos;   
     
 }

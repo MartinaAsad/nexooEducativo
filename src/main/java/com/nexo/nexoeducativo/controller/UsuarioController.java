@@ -13,6 +13,7 @@ import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaView;
+import com.nexo.nexoeducativo.models.dto.request.EventosView;
 import com.nexo.nexoeducativo.models.dto.request.InfoMateriaHijoView;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
@@ -39,6 +40,7 @@ import com.nexo.nexoeducativo.service.AsistenciaService;
 import com.nexo.nexoeducativo.service.CursoService;
 import com.nexo.nexoeducativo.service.CursoUsuarioService;
 import com.nexo.nexoeducativo.service.EscuelaService;
+import com.nexo.nexoeducativo.service.EventoService;
 import com.nexo.nexoeducativo.service.MateriaService;
 import com.nexo.nexoeducativo.service.MaterialService;
 import com.nexo.nexoeducativo.service.PlanService;
@@ -110,6 +112,10 @@ public class UsuarioController {
     
     @Autowired
     private MaterialService materialService;
+    
+    @Autowired
+    private EventoService eventoService;
+    
      private static final Logger LOGGER = LoggerFactory.getLogger(UsuarioController.class);
     
     @PreAuthorize(" hasAuthority('super admin') ")
@@ -750,8 +756,8 @@ public class UsuarioController {
     @GetMapping(value="/verInfoHijo/{hijo}")
      ResponseEntity<?> verInfoHijo (@PathVariable(value="hijo") Integer hijo/*,
             @RequestPart("materia") Integer materia*/){
-         List<InfoMateriaHijoView>lista=tareaService.obtenerInformacion(hijo);
-           return new ResponseEntity<>(lista,HttpStatus.OK);   
+         List<InfoMateriaHijoView> obtenerEventosPosteriores=tareaService.obtenerInformacion(hijo);
+           return new ResponseEntity<>(obtenerEventosPosteriores,HttpStatus.OK);   
     }    
     
     

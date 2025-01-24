@@ -3,6 +3,7 @@ package com.nexo.nexoeducativo.service;
 import com.nexo.nexoeducativo.exception.CalificacionWrongException;
 import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
+import com.nexo.nexoeducativo.models.dto.request.EventosDTO;
 import com.nexo.nexoeducativo.models.dto.request.EventosView;
 import com.nexo.nexoeducativo.models.dto.request.InfoMateriaHijoView;
 import com.nexo.nexoeducativo.models.dto.request.NotaDTO;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,12 +138,26 @@ public class TareaService {
        HashMap<String, String> nota=agregarInfo(tareas);
        
        //luego, obtengo los proximos eventos
-        List<EventosView> eventos;
-        //
+        List<EventosView> eventos=eventoRepository.obtenerEventosPosteriores(usuarioIdUsuario); 
         
+        //cambio el formato de las fechas que llegan
+          List<EventosDTO> eventosDTO = eventos.stream()
+                  .map(evento -> {
+                      String fecha="";
+                     if (evento.getFecha() != null) {
+                LocalDateTime localDateTime = evento.getFecha().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime();
+                fecha = localDateTime.format(formato);
+            }
+            return new EventosDTO(evento.getDescripcion(), fecha);
+                  })
+                  .collect(Collectors.toList());
         
+        //almaceno toda esta info aqui
         InfoMateriaHijoView infor=new InfoMateriaHijoView();
         infor.setNota(nota);
+        infor.setEventos(eventosDTO);
         List<InfoMateriaHijoView> info=new ArrayList<>();
         info.add(infor);
        

@@ -2,6 +2,7 @@ package com.nexo.nexoeducativo.repository;
 
 import com.nexo.nexoeducativo.models.dto.request.EventosView;
 import com.nexo.nexoeducativo.models.entities.Evento;
+import com.nexo.nexoeducativo.models.entities.Usuario;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,7 +19,7 @@ public interface EventoRepository extends JpaRepository<Evento, Integer>{
 "ceu.eventoIdEvento=e.idEvento " +
 "INNER JOIN CursoUsuario cu ON " +
 "cu.idCursoUsuario=ceu.cursoUsuarioIdCursoUsuario " +
-"WHERE cu.usuarioIdUsuario.idUsuario= :idUsuario and e.fecha >= CURDATE()")
-    List<EventosView> obtenerEventosPosteriores (Integer idUsuario);
+"WHERE cu.usuarioIdUsuario= :usuarioIdUsuario and e.fecha >= CURDATE()")
+    List<EventosView> obtenerEventosPosteriores (Usuario usuarioIdUsuario);
     
 }
