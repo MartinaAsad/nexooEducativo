@@ -19,6 +19,8 @@ import com.nexo.nexoeducativo.exception.UsuarioExistingException;
 import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.exception.UsuarioWithPadreException;
+import com.nexo.nexoeducativo.models.dto.request.EventosView;
+import com.nexo.nexoeducativo.models.dto.request.InfoMateriaHijoView;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
@@ -44,6 +46,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -85,6 +88,7 @@ public class UsuarioService {
     
     @Autowired
     private MateriaCursoRepository matCursoRepository;
+    
  
     @Autowired
     private Validator validator;
@@ -391,6 +395,8 @@ public class UsuarioService {
         List<UsuarioView> obtenerHijos= uuRepository.obtenerHijos(padre);
         return obtenerHijos;
     }
+    
+  
     
     
      

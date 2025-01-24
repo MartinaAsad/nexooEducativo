@@ -13,6 +13,7 @@ import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaView;
+import com.nexo.nexoeducativo.models.dto.request.InfoMateriaHijoView;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.MateriaDTO;
@@ -738,10 +739,18 @@ public class UsuarioController {
            return new ResponseEntity<>(lista,HttpStatus.OK);   
     }   
      
-      @PreAuthorize("hasAuthority('padre')") 
+      @PreAuthorize("hasAuthority('padre')") //NO SIRVE ESTE ENDPPOINT
     @GetMapping(value="/seleccionarMateria/{hijo}")
      ResponseEntity<?> selectMateriaHijo (@PathVariable(value="hijo") Integer hijo){
          List<DesplegableMateriaView>lista=materiaService.verMateriasSegunHijo(hijo);
+           return new ResponseEntity<>(lista,HttpStatus.OK);   
+    }
+     
+     @PreAuthorize("hasAuthority('padre')") 
+    @GetMapping(value="/verInfoHijo/{hijo}")
+     ResponseEntity<?> verInfoHijo (@PathVariable(value="hijo") Integer hijo/*,
+            @RequestPart("materia") Integer materia*/){
+         List<InfoMateriaHijoView>lista=tareaService.obtenerInformacion(hijo);
            return new ResponseEntity<>(lista,HttpStatus.OK);   
     }    
     

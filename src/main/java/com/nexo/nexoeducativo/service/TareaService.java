@@ -2,6 +2,9 @@ package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.exception.CalificacionWrongException;
 import com.nexo.nexoeducativo.exception.CursoNotFound;
+import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
+import com.nexo.nexoeducativo.models.dto.request.EventosView;
+import com.nexo.nexoeducativo.models.dto.request.InfoMateriaHijoView;
 import com.nexo.nexoeducativo.models.dto.request.NotaDTO;
 import com.nexo.nexoeducativo.models.dto.request.TareaDTO;
 import com.nexo.nexoeducativo.models.entities.Calificacion;
@@ -11,14 +14,19 @@ import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.models.entities.UsuarioTarea;
 import com.nexo.nexoeducativo.repository.CalificacionRepository;
 import com.nexo.nexoeducativo.repository.CursoRepository;
+import com.nexo.nexoeducativo.repository.EventoRepository;
 import com.nexo.nexoeducativo.repository.TareaRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import com.nexo.nexoeducativo.repository.UsuarioTareaRepository;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +50,10 @@ public class TareaService {
     
     @Autowired
     private TareaRepository tareaRepository;
+    
+    @Autowired
+    private EventoRepository eventoRepository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(TareaService.class);
     
     @Transactional
     public Tarea altaTarea(TareaDTO tarea, Integer cursoIdCurso){
@@ -102,6 +114,40 @@ public class TareaService {
     public List<String> obtenerTareas (Usuario idAlumno){
         List<String> tareas=tareaRepository.descripcionTareas(idAlumno);
         return tareas;
+    }
+    
+    public HashMap<String, String> agregarInfo (List<Object[]> tareas){
+         HashMap<String, String> info=new HashMap<>();
+        for (Object[] fila : tareas) {
+            String key = (String) fila[0];  
+            String value = (String) fila[1];
+            info.put(key, value);            
+        }
+        return info;
+    }
+    
+    
+      public List<InfoMateriaHijoView> obtenerInformacion (Integer hijo){
+        //primero, obtengo todas las calificaciones 
+        Usuario usuarioIdUsuario=usuarioRepository.findById(hijo)
+            .orElseThrow(() -> new UsuarioNotFoundException("El usuario que se desea modificar no existe")); 
+        
+        List<Object[]> tareas=tareaRepository.obtenerCalificaciones(usuarioIdUsuario);
+       HashMap<String, String> nota=agregarInfo(tareas);
+       
+       //luego, obtengo los proximos eventos
+        List<EventosView> eventos;
+        //
+        
+        
+        InfoMateriaHijoView infor=new InfoMateriaHijoView();
+        infor.setNota(nota);
+        List<InfoMateriaHijoView> info=new ArrayList<>();
+        info.add(infor);
+       
+        
+        return info;
+        
     }
     
 }

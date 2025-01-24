@@ -15,4 +15,13 @@ public interface TareaRepository extends JpaRepository<Tarea, Integer> {
 "t.idTarea=ut.tareaIdTarea " +
 "WHERE ut.usuarioIdUsuario= :usuarioIdUsuario")
     List<String> descripcionTareas (Usuario usuarioIdUsuario);
+    
+    @Query("SELECT t.descripcion, c.nota FROM Tarea t " +
+"INNER JOIN UsuarioTarea ut ON " +
+"ut.tareaIdTarea=t.idTarea " +
+"INNER JOIN Calificacion c ON " +
+"c.idCalificacion=t.calificacionIdCalificacion " +
+"WHERE ut.usuarioIdUsuario= :usuarioIdUsuario")
+    
+    List<Object[]> obtenerCalificaciones (Usuario usuarioIdUsuario);
 }
