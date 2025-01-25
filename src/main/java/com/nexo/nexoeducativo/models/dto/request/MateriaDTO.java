@@ -29,7 +29,7 @@ public class MateriaDTO implements Serializable{
     @Length(min = 3, max = 30, message="minimo 3 caracteres y maximo 30") //min: cantidad minima, max: cantidad maxima (de caracteres), LENGTH ES PARA STRING NOMAS
     private String nombre;
 
-    @NotNull(message = "la materia debe estar asociada a una escuela")
+    /*@NotNull(message = "la materia debe estar asociada a una escuela")
     @Min(value = 1, message = "El valor debe ser igual o mayor a 1")
     private int idEscuela;
 
@@ -50,6 +50,6 @@ public class MateriaDTO implements Serializable{
     private LocalTime horaInicio;
     
      @NotNull(message = "campo fecha fin invalido")//notblank para string
-    private LocalTime horaFin;
+    private LocalTime horaFin;*/
     
 }

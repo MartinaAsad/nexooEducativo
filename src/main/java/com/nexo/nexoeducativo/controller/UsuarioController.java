@@ -350,11 +350,11 @@ public class UsuarioController {
     
      @PreAuthorize("hasAuthority('administrativo') ")
      //@PreAuthorize("hasAuthority('super admin') ")
-    @PostMapping(value="/saveMateria/{nombre}")
-    ResponseEntity<?> prueba14(Authentication auth,@PathVariable("nombre") String nombre){
+    @PostMapping(value="/saveMateria")
+    ResponseEntity<?> prueba14(Authentication auth, @Valid @RequestBody MateriaDTO m){
         String mailUsuario=auth.getPrincipal().toString();
          Escuela escuelaIdEscuela=escuelaService.obtenerIdEscuela(mailUsuario);
-        materiaService.crearMateria(nombre, escuelaIdEscuela);
+        materiaService.crearMateria(m, escuelaIdEscuela);
          return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.CREATED);
     }
     
@@ -622,14 +622,14 @@ public class UsuarioController {
          return new ResponseEntity<>(alumnosDelCurso, HttpStatus.OK);
     }
     
-    @PreAuthorize("hasAuthority('administrativo')")
+    /*@PreAuthorize("hasAuthority('administrativo')")
     @PostMapping(value="/crearMateria")
     ResponseEntity<?> prueba16(@Valid @RequestBody MateriaDTO m){
         //materiaService.crearMateria(m);
         return new ResponseEntity<>("se creo una materia", HttpStatus.OK);
         /*PONER ESTO EN EL POSTMAN:
         */
-    }
+    
     
          @PreAuthorize("hasAuthority('super admin') "
             + "or hasAuthority('jefe colegio') "

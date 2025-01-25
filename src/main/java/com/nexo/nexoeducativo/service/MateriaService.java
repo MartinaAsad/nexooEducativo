@@ -55,54 +55,28 @@ public class MateriaService {
     private CursoEscuelaRepository cursoEscuelaRepository;
       private static final Logger LOGGER = LoggerFactory.getLogger(MateriaService.class);
     
-    public void crearMateria(String nombre, Escuela e) {
+    public void crearMateria(MateriaDTO m, Escuela e) {
         //inserto lo ingresado en el dto en las entidades correspondientes
-        /*Curso c = cursoRepository.findById(m.getIdCurso())
-                .orElseThrow(() -> new CursoNotFound("El curso no existe"));
-
-        Escuela e = escuelaRepository.findById(m.getIdEscuela())
-                .orElseThrow(() -> new EscuelaNotFoundException("La escuela no existe"));
-        
-        Usuario u=usuarioRepository.findById(m.getIdProfesor()).
-                orElseThrow(() -> new UsuarioNotFoundException("El profesor no existe"));
-        u.setIdUsuario(m.getIdProfesor());
-        
-        Rol rol = usuarioRepository.findRolidrolByIdUsuario(u.getIdUsuario());*/
 
         Materia materia = new Materia();
-        materia.setNombre(nombre);
-        //materia.setMateriaCursoList(materiaCursoList); FALTA ESTO
-        //materia.setMateriaEscuelaList(materiaEscuelaList); FALTA ESTO
+        materia.setNombre(m.getNombre());
 
         MateriaEscuela me = new MateriaEscuela();
         me.setMateriaIdMateria(materia);
         me.setEscuelaIdEscuela(e);
-
-       /* MateriaCurso mc = new MateriaCurso();
-        mc.setCursoIdCurso(c);
-        mc.setDia(m.getDia());
-        mc.setHoraFin(m.getHoraFin());
-        mc.setHoraInicio(m.getHoraInicio());
-        mc.setMateriaIdMateria(materia);
-        mc.setProfesor(u);*/
-        //mc.setMateriaCursoMaterialList(materiaCursoMaterialList); DUDOSO DE SI VA O NO
-
         //ver si ya existe la materia a ingresar en esa escuela
+        if(materiaEscuelaRepository.siExisteMateria(m.getNombre(), e)){
+            throw new MateriaExistingException("Ya existe la materia "+m+" en esa escuela");
+        }
         
         //si la escuela esta inactica
         if (cursoEscuelaRepository.existsByCursoIdCursoAndEscuelaIdEscuela(e.getIdEscuela()) == 0) {
             //excepcion de ejemplo, solo para comporobar si efectivamente funciona la query
             throw new CursoNotFound("La escuela esta inactiva");
         }
-        
-        //si el usuario es profesor
-       
-            //validar si ya existe una materia en ese mismo horario o que no se suponga. Ejemplo: biologia 1 12:00 - 13:00 2b lunes y jueves
-        //NO ES VALIDO: biologia 1 12:30 a 13:30 2b lunes y jueves
    
                 materiaRepository.save(materia);
                 materiaEscuelaRepository.save(me);
-                //materiaCursoRepository.save(mc);
             }
 
     

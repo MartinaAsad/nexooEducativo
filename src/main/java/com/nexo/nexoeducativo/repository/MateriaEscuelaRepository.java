@@ -23,5 +23,11 @@ public interface MateriaEscuelaRepository extends JpaRepository<MateriaEscuela, 
            + "m.idMateria=me.materiaIdMateria "
            + "WHERE me.escuelaIdEscuela= :escuelaIdEscuela")
    List<String> materiasSegunEscuela(Escuela escuelaIdEscuela);
+   
+   @Query("SELECT COUNT(*) > 0 AS existe " +
+"FROM MateriaEscuela me " +
+"INNER JOIN Materia m ON me.materiaIdMateria = m.idMateria " +
+"WHERE m.nombre = :nombre AND me.escuelaIdEscuela = :escuela")
+   boolean siExisteMateria (String nombre, Escuela escuela);
 
 }
