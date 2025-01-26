@@ -198,11 +198,27 @@ public class UsuarioController {
           //cree esto como curso, ponelo en el postman y ejecutalo
           /*
           {
-   "numero":2,
-   "division":"c",
-   "activo":1,
-   "escuela":4
-
+  "r": {
+    "numero": 1,
+    "division": "c",
+    "activo": 1
+  },
+  "m": [
+    {
+      "idMateria": 6,
+      "idProfesor": 28,
+      "dia": "Lunes",
+      "horaInicio": "08:00:00",
+      "horaFin": "10:00:00"
+    },
+    {
+      "idMateria": 7,
+      "idProfesor": 28,
+      "dia": "Martes",
+      "horaInicio": "10:00:00",
+      "horaFin": "12:00:00"
+    }
+  ]
 }*/
           
           
@@ -763,6 +779,14 @@ public class UsuarioController {
            return new ResponseEntity<>(obtenerEventosPosteriores,HttpStatus.OK);   
     }    
     
+     @PreAuthorize("hasAuthority('alumno')" ) 
+    @GetMapping(value="/verInfoAlumno")
+     ResponseEntity<?> verInfoAlumno (Authentication auth){
+          String mailUsuario=auth.getPrincipal().toString();
+          Usuario alumno=uService.buscarUsuario(mailUsuario);
+         List<InfoMateriaHijoView> obtenerEventosPosteriores=tareaService.obtenerInformacion(alumno.getIdUsuario());
+           return new ResponseEntity<>(obtenerEventosPosteriores,HttpStatus.OK);   
+    }    
     
 }
 
