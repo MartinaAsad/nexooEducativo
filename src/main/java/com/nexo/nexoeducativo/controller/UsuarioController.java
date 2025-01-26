@@ -6,6 +6,7 @@ import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AgregarInfoMateriaDTO;
+import com.nexo.nexoeducativo.models.dto.request.AlumnoModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsignarPreceptorDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsistenciaDTO;
 import com.nexo.nexoeducativo.models.dto.request.BorrarMateriaRequestDTO;
@@ -788,6 +789,12 @@ public class UsuarioController {
            return new ResponseEntity<>(obtenerEventosPosteriores,HttpStatus.OK);   
     }    
     
+       @PreAuthorize("hasAuthority('administrativo') ")
+    @PatchMapping("modificarAlumno/{idUsuario}")
+    ResponseEntity<?> modificarAlumno(@PathVariable(value = "idUsuario") int idUsuario, @Valid @RequestBody AlumnoModificacionDTO alumno){
+        uService.eliminarUsuario(idUsuario);
+        return new ResponseEntity<>("usuario borrado exitosamente", HttpStatus.OK);
+    }
 }
 
      

@@ -19,6 +19,7 @@ import com.nexo.nexoeducativo.exception.UsuarioExistingException;
 import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.exception.UsuarioWithPadreException;
+import com.nexo.nexoeducativo.models.dto.request.AlumnoModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.EventosView;
 import com.nexo.nexoeducativo.models.dto.request.InfoMateriaHijoView;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
@@ -271,7 +272,15 @@ public class UsuarioService {
      //LOGGER.info("EL DTO A VALIDAR TIENE LAS SIGUIENTES PROPIEDADES: "+j.toString());
      }
      
-     public void actualizarCampos( JefeColegioModificacionDTO dto, Usuario u){
+      public void validarElAlumnoDto (AlumnoModificacionDTO j){
+    Set<ConstraintViolation<AlumnoModificacionDTO>> violaciones = validator.validate(j);
+    if (!violaciones.isEmpty()) {
+        throw new ConstraintViolationException(violaciones);
+    }
+     //LOGGER.info("EL DTO A VALIDAR TIENE LAS SIGUIENTES PROPIEDADES: "+j.toString());
+     } 
+      
+      public void actualizarCampos( JefeColegioModificacionDTO dto, Usuario u){
          if (dto.getNombre() != null) {
              u.setNombre(dto.getNombre());
          }
@@ -312,6 +321,68 @@ public class UsuarioService {
          
          
      }
+      
+     public void actualizarCamposAlumno( AlumnoModificacionDTO dto, Usuario u){
+         CursoUsuario cu=new CursoUsuario();
+         cu.setUsuarioIdUsuario(u);
+         
+         UsuarioUsuario uu=new UsuarioUsuario();
+         uu.setIdUsuarioUsuario(u.getIdUsuario());
+         
+         
+         if (dto.getNombre() != null) {
+             u.setNombre(dto.getNombre());
+         }
+         if (dto.getApellido() != null) {
+             u.setApellido(dto.getApellido());
+         }
+         
+         
+         if (dto.getDni() != null) {
+             int casteo=Integer.parseInt(dto.getDni());
+             if(!usuariorepository.existsByDni(casteo)){
+                 u.setDni(casteo); //PARA EVITAR QUE EL DNI ACTUALIZADO COINCIDA CON UNO PREVIAMENTE EXISTENTE
+             }else{
+                  throw new UsuarioExistingException("El dni ingresado ya esta asociado a otro usuario");
+                 
+             }
+         }
+                                        //PARA EVITAR QUE EL MAIL ACTUALIZADO COINCIDA CON UNO PREVIAMENTE EXISTENTE
+        if (dto.getMail() != null) { // Solo intentamos actualizar si hay un mail en el DTO
+    if (!usuariorepository.existsByMail(dto.getMail())) {
+        u.setMail(dto.getMail());
+    } else {
+        throw new UsuarioExistingException("El mail ingresado ya está asociado a otro usuario: " + dto.getMail());
+    }
+}
+
+         if (dto.getClave() != null) {
+             u.setClave(convertirSHA256(dto.getClave()));
+         }
+         if (dto.getTelefono() != null) {
+             u.setTelefono(dto.getTelefono());
+         }
+         if (dto.getActivo() != 0) {
+             u.setActivo(dto.getActivo());
+         }
+         
+         if(dto.getIdCurso() !=null){
+             Curso cursoIdCurso=new Curso();
+             cursoIdCurso.setIdCurso(dto.getIdCurso());
+             cu.setCursoIdCurso(cursoIdCurso);
+         }
+         
+         if(dto.getIdPadre() !=null){
+             Usuario padre=usuariorepository.findById(dto.getIdPadre()).orElseThrow(
+                     ()-> new UsuarioNotAuthorizedException("El usuario ingresado como padre no es un padre"));
+             uu.setUsuarioIdUsuario1(padre);
+             
+         }
+         
+         //LOGGER.info("el nuevo objeto contiene: "+u.toString());
+         
+         
+     }
      
      @Transactional
     public JefeColegioModificacionDTO actualizarJefeColegio(int id, JefeColegioModificacionDTO j) {
@@ -325,6 +396,51 @@ public class UsuarioService {
      return new JefeColegioModificacionDTO (actualizado);
     }
 
+     @Transactional
+    public AlumnoModificacionDTO actualizarAlumno(int id, AlumnoModificacionDTO j) {
+    Usuario usuarioIngresado = usuariorepository.findById(id)
+            .orElseThrow(() -> new UsuarioNotFoundException("El usuario que se desea modificar no existe"));
+
+        validarElAlumnoDto(j);
+        actualizarCamposAlumno(j,usuarioIngresado);
+    Usuario actualizado= usuariorepository.save(usuarioIngresado);
+     //LOGGER.info("EL OBJETO ACTUALIZADO QUE SE VA A GUARDAR: "+actualizado.toString());
+     // Si el alumno tiene un nuevo curso, actualizar la relación CursoUsuario
+    if (j.getIdCurso() != null) {
+        Curso curso = cursoRepository.findById(j.getIdCurso())
+                .orElseThrow(() -> new RuntimeException("El curso no existe")); // Puedes lanzar una excepción específica
+
+        CursoUsuario cursoUsuario = cursoUsuarioRepository.findByUsuarioIdUsuario(usuarioIngresado)
+                .orElse(new CursoUsuario()); // Si no existe, crear uno nuevo
+
+        cursoUsuario.setUsuarioIdUsuario(usuarioIngresado);
+        cursoUsuario.setCursoIdCurso(curso);
+
+        cursoUsuarioRepository.save(cursoUsuario);
+    }
+
+    // Si el alumno tiene un nuevo padre, actualizar la relación UsuarioUsuario
+     if (j.getIdPadre() != null) {
+        if (j.getIdPadre() > 0) { // Validar que no sea 0
+            Usuario padre = usuariorepository.findById(j.getIdPadre())
+                    .orElseThrow(() -> new UsuarioNotAuthorizedException("El usuario ingresado como padre no es un padre"));
+
+            UsuarioUsuario usuarioUsuario = uuRepository.findByUsuarioIdUsuario(usuarioIngresado)
+                    .orElse(new UsuarioUsuario());
+
+            usuarioUsuario.setUsuarioIdUsuario(usuarioIngresado);
+            usuarioUsuario.setUsuarioIdUsuario1(padre);
+            uuRepository.save(usuarioUsuario);
+        } else {
+            // Si el ID del padre es 0, eliminar la relación UsuarioUsuario
+            uuRepository.deleteById(usuarioIngresado.getIdUsuario());
+        }
+        
+        
+    }
+     return new AlumnoModificacionDTO();
+    }
+    
     
     @Transactional
      public JefeColegioModificacionDTO getUsuarioPorID (int id){
@@ -398,7 +514,7 @@ public class UsuarioService {
     
   
     
-    
+
      
 }
      

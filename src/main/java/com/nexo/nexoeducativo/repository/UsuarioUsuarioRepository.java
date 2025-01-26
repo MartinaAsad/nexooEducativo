@@ -4,6 +4,7 @@ import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.models.entities.UsuarioUsuario;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,5 +24,7 @@ public interface UsuarioUsuarioRepository extends JpaRepository<UsuarioUsuario, 
             + "INNER JOIN UsuarioUsuario uu ON u.idUsuario=uu.usuarioIdUsuario "
             + "WHERE uu.usuarioIdUsuario.rolidrol=7 AND uu.usuarioIdUsuario1= :usuarioIdUsuario1 AND uu.usuarioIdUsuario1.rolidrol=6")
     List<UsuarioView> obtenerHijos (Usuario usuarioIdUsuario1);
+    
+    Optional<UsuarioUsuario> findByUsuarioIdUsuario (Usuario usuarioIdUsuario);
     
 }

@@ -35,5 +35,7 @@ public interface CursoUsuarioRepository extends JpaRepository<CursoUsuario, Inte
                  WHERE r.nombre='preceptor' and cu.curso_id_curso= :idCurso""", nativeQuery=true)
     CursoUsuario findNumeroAndDivisionByIdCurso (@Param("idCurso") Integer idCurso);
     
+    Optional<CursoUsuario> findByUsuarioIdUsuario (Usuario usuarioIdUsuario);
+    
    
 }
