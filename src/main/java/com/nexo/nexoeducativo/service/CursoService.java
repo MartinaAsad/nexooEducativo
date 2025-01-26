@@ -1,12 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
+import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
+import com.nexo.nexoeducativo.exception.HoraInvalidatedexception;
+import com.nexo.nexoeducativo.exception.MateriaExistingException;
+import com.nexo.nexoeducativo.exception.MateriaNotFoundException;
+import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
+import com.nexo.nexoeducativo.models.dto.request.AgregarInfoMateriaDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoView;
 import com.nexo.nexoeducativo.models.dto.request.MateriaView;
@@ -16,12 +19,18 @@ import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.CursoEscuela;
 import com.nexo.nexoeducativo.models.entities.CursoUsuario;
 import com.nexo.nexoeducativo.models.entities.Escuela;
+import com.nexo.nexoeducativo.models.entities.Materia;
+import com.nexo.nexoeducativo.models.entities.MateriaCurso;
+import com.nexo.nexoeducativo.models.entities.MateriaEscuela;
+import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.repository.CursoEscuelaRepository;
 import com.nexo.nexoeducativo.repository.CursoRepository;
 import com.nexo.nexoeducativo.repository.CursoUsuarioRepository;
 import com.nexo.nexoeducativo.repository.EscuelaRepository;
 import com.nexo.nexoeducativo.repository.MateriaCursoRepository;
+import com.nexo.nexoeducativo.repository.MateriaEscuelaRepository;
+import com.nexo.nexoeducativo.repository.MateriaRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -58,6 +67,12 @@ public class CursoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
     
+    @Autowired
+    private MateriaRepository materiaRepository;
+    
+    @Autowired
+    private MateriaEscuelaRepository meRepository;
+    
         
     private static final Logger LOGGER = LoggerFactory.getLogger(CursoService.class);
     
@@ -66,7 +81,7 @@ public class CursoService {
     
 }
     //PROBAR NUEVAMENTE
-    public void crearCurso(CursoDTO c,Escuela e){
+    public void crearCurso(CursoDTO c,Escuela e,List<AgregarInfoMateriaDTO> infoMaterias){
         Curso curso=new Curso();
         curso.setNumero(c.getNumero());
         curso.setDivision(c.getDivision());
@@ -82,10 +97,10 @@ public class CursoService {
         
         //valida que la division ingresada sea solo una letra
         if(!Character.isLetter(c.getDivision())){
-            throw new IllegalArgumentException("La división debe ser un carácter alfabético");
+            throw new FormatoIncorrectoException("La división debe ser un carácter alfabético");
         }else if (!Character.toString(curso.getDivision()).matches("^[a-z]$")){
 //luego valida que el caracter ingresado sea una minuscula nomas
-            throw new IllegalArgumentException("El campo division solo puede una letra minuscula");
+            throw new FormatoIncorrectoException("El campo division solo puede tener una letra minuscula");
         }
         
         //agregar las materias
@@ -95,8 +110,9 @@ public class CursoService {
         if (!siYaExisteCombinacion(escuelaId,numero, division)) {
             this.cursoRepository.save(curso);//se guarda el curso
             this.cursoEscuelaRepository.save(ce);//se guarda la info en la tabla intermedia
+            agregarMaterias(infoMaterias, e, c);
          }else{
-             throw new IllegalArgumentException("El curso ya existe en la escuela!");
+             throw new CursoNotFound("El curso ya existe en la escuela!");
         }
 
     }
@@ -157,5 +173,59 @@ public class CursoService {
         
         
         return cursos;
+    }
+       
+    public List<MateriaCurso> agregarMaterias(List<AgregarInfoMateriaDTO> infoMaterias, Escuela e,CursoDTO c) {
+         List<MateriaCurso> materiasCurso = new ArrayList<>();
+
+        //primero, seteo la materia en el curso creado
+        Curso curso=new Curso();
+        curso.setIdCurso(cursoEscuelaRepository.obtenerIdCursoCreado(e, c.getNumero(), c.getDivision()));
+                
+        
+        for (AgregarInfoMateriaDTO info : infoMaterias) {
+            Materia m = materiaRepository.findById(info.getIdMateria()).orElseThrow(()
+                -> new MateriaNotFoundException("No existe la materia"));
+        /*Curso c = cursoRepository.findById(info.getIdCurso()).orElseThrow(()
+                -> new CursoNotFound("El curso no existe"));*/
+
+        Usuario profesor = usuarioRepository.findById(info.getIdProfesor()).orElseThrow(()
+                -> new UsuarioNotFoundException("El profesor ingresado no existe"));
+
+        Rol rol = usuarioRepository.findRolidrolByIdUsuario(info.getIdProfesor());
+        
+          MateriaCurso mc = new MateriaCurso();
+        mc.setCursoIdCurso(curso);
+        mc.setDia(info.getDia());
+        mc.setHoraFin(info.getHoraFin());
+        mc.setHoraInicio(info.getHoraInicio());
+        mc.setMateriaIdMateria(m);
+        mc.setProfesor(profesor);
+
+        //si el usuario es profesor
+        if (rol.getIdRol() == 5) {
+            //validar si ya existe una materia en ese mismo horario o que no se suponga. Ejemplo: biologia 1 12:00 - 13:00 2b lunes y jueves
+            //NO ES VALIDO: biologia 1 12:30 a 13:30 2b lunes y jueves
+            if (materiaCursoRepository.verSiYaExisteEsaMateria(curso, info.getDia(), info.getHoraInicio(), info.getHoraFin())) {
+                throw new MateriaExistingException("Ya existe esa materia entre esos horarios en ese curso");
+            } else {
+                //LOGGER.info("primera validacion resultado: "+verSiYaExisteEsaMateria(m.getIdCurso(), m.getDia(), m.getHoraInicio(), m.getHoraFin()));
+                if (info.getHoraFin().isBefore(info.getHoraInicio())) {
+                    throw new HoraInvalidatedexception("La hora de finalizacion es inferior a la hora de inicio");
+
+                } else {
+                    materiaRepository.save(m);
+                    materiaCursoRepository.save(mc);
+                }
+            }
+
+        } else {
+            throw new UsuarioNotAuthorizedException("El usuario que se desea ingresar no es un profesor");
+        }
+
+        }
+        
+        
+        return materiasCurso;
     }
 }

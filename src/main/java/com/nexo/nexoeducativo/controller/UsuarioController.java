@@ -5,10 +5,12 @@ import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
+import com.nexo.nexoeducativo.models.dto.request.AgregarInfoMateriaDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsignarPreceptorDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsistenciaDTO;
 import com.nexo.nexoeducativo.models.dto.request.BorrarMateriaRequestDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
+import com.nexo.nexoeducativo.models.dto.request.CursoRequest;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaModificacionDTO;
@@ -185,14 +187,13 @@ public class UsuarioController {
           return new ResponseEntity<>("Rol guardado exitosamente", HttpStatus.OK);
      }
      @PreAuthorize("hasAuthority('administrativo') "
-            + "or hasAuthority('preceptor') "+
-             "or hasAuthority('super admin') ") //despues sacar este permiso mas adelante
+            + "or hasAuthority('preceptor') ") //despues sacar este permiso mas adelante
      @PostMapping("/saveCurso")
-     public ResponseEntity<?> prueba5(@Valid @RequestBody CursoDTO r, Authentication auth, @RequestBody MateriaDTO m){
+     public ResponseEntity<?> prueba5(@Valid @RequestBody CursoRequest cr , Authentication auth){
          String mailUsuario=auth.getPrincipal().toString();
          Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
-         cursoService.crearCurso(r, e);//buscar la manera de que en caso que no se haya creado, mostrar en el Postman un mensaje de error
-          return new ResponseEntity<>("el curso fue creado correctamente", HttpStatus.OK);
+         cursoService.crearCurso(cr.getR(), e, cr.getM());//buscar la manera de que en caso que no se haya creado, mostrar en el Postman un mensaje de error
+          return new ResponseEntity<>("el curso fue creado correctamente", HttpStatus.CREATED);
           
           //cree esto como curso, ponelo en el postman y ejecutalo
           /*

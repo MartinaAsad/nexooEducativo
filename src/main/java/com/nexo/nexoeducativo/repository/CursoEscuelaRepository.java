@@ -15,4 +15,10 @@ public interface CursoEscuelaRepository extends JpaRepository<CursoEscuela, Inte
     @Query(value="SELECT count(*) FROM curso c LEFT JOIN curso_escuela ce ON c.id_curso=ce.curso_id_curso WHERE ce.escuela_id_escuela=? AND c.activo=1;", nativeQuery = true)
     int existsByCursoIdCursoAndEscuelaIdEscuela (Integer escuelaIdEscuela );
     
+    @Query("SELECT ce.cursoIdCurso.idCurso FROM CursoEscuela ce JOIN Curso c ON "
+            + "c.idCurso=ce.cursoIdCurso WHERE ce.escuelaIdEscuela= :escuelaIdEscuela "
+            + "AND c.numero= :numero AND c.division= :division")
+    Integer obtenerIdCursoCreado(Escuela escuelaIdEscuela, int numero, Character division);
+    
+    
 }
