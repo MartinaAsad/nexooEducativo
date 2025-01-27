@@ -731,7 +731,7 @@ public class UsuarioController {
             + "or hasAuthority('preceptor')" 
             + "or hasAuthority('padre')"
             + "or hasAuthority('profesor')" 
-            + "or hasAuthority('alumno')" )
+            )
     @PatchMapping(value="/modificarUsuario/{id}")
     ResponseEntity<?> prueba21 (@PathVariable(value = "id") int id,  @Valid @RequestBody JefeColegioModificacionDTO jc){
      JefeColegioModificacionDTO s=uService.actualizarJefeColegio(id, jc);
@@ -789,11 +789,12 @@ public class UsuarioController {
            return new ResponseEntity<>(obtenerEventosPosteriores,HttpStatus.OK);   
     }    
     
-       @PreAuthorize("hasAuthority('administrativo') ")
-    @PatchMapping("modificarAlumno/{idUsuario}")
-    ResponseEntity<?> modificarAlumno(@PathVariable(value = "idUsuario") int idUsuario, @Valid @RequestBody AlumnoModificacionDTO alumno){
-        uService.eliminarUsuario(idUsuario);
-        return new ResponseEntity<>("usuario borrado exitosamente", HttpStatus.OK);
+      @PreAuthorize("hasAuthority('administrativo') ")
+    @PatchMapping(value="/modificarAlumno/{id}")
+    ResponseEntity<?> prueba21 (@PathVariable(value = "id") int id,  @Valid @RequestBody AlumnoModificacionDTO jc){
+     AlumnoModificacionDTO s=uService.actualizarAlumno(id, jc);
+        
+        return new ResponseEntity<>(s,HttpStatus.OK);   
     }
 }
 

@@ -438,7 +438,7 @@ public class UsuarioService {
         
         
     }
-     return new AlumnoModificacionDTO();
+     return new AlumnoModificacionDTO(j.getNombre(), j.getApellido(), j.getDni(),j.getMail(), j.getClave(),j.getTelefono(), j.getActivo(), j.getIdCurso(), j.getIdPadre());
     }
     
     
