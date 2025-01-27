@@ -6,6 +6,7 @@ import com.nexo.nexoeducativo.models.dto.request.MateriaView;
 import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -26,4 +27,5 @@ public interface MateriaRepository extends JpaRepository<Materia, Integer> {
 "WHERE cu.usuarioIdUsuario= :usuarioIdUsuario")
     List<DesplegableMateriaView> materiasSegunHijo(Usuario usuarioIdUsuario);
     
+    //Optional<Materia> findByIdMateria (Integer idMateria);
 }

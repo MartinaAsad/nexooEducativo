@@ -62,6 +62,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -795,6 +796,22 @@ public class UsuarioController {
      AlumnoModificacionDTO s=uService.actualizarAlumno(id, jc);
         
         return new ResponseEntity<>(s,HttpStatus.OK);   
+    }
+    
+        @PreAuthorize("hasAuthority('administrativo') ")
+    @PatchMapping(value="/modificarMateria/{id}")
+    ResponseEntity<?> modificarMateria (@PathVariable(value = "id") int id,  @Valid @RequestBody MateriaDTO jc, Authentication auth){
+     String mailUsuario=auth.getPrincipal().toString();
+        Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+        materiaService.modificarMateria(id, jc, e);
+        return new ResponseEntity<>("algo", HttpStatus.OK);
+        /*if(resultado){
+            return new ResponseEntity<>("La materia se modifico correctamente",HttpStatus.OK);   
+        }else{
+            return new ResponseEntity<>("No pudo realizarse la modificacion",HttpStatus.BAD_REQUEST);   
+        }*/
+        
+        
     }
 }
 

@@ -4,6 +4,7 @@ import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.exception.HoraInvalidatedexception;
 import com.nexo.nexoeducativo.exception.MateriaExistingException;
+import com.nexo.nexoeducativo.exception.MateriaNotFoundException;
 import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
@@ -25,6 +26,7 @@ import com.nexo.nexoeducativo.repository.MateriaRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +114,31 @@ public class MateriaService {
         ()-> new UsuarioNotFoundException("No existe el hijo seleccionado"));
         List<DesplegableMateriaView> verMaterias=materiaRepository.materiasSegunHijo(usuarioIdUsuario);
         return verMaterias;
+    }
+    
+    public void modificarMateria(int idMateria, MateriaDTO nombre, Escuela e){
+        //boolean modifico=false;
+        Materia materia=materiaRepository.findById(idMateria).orElseThrow(
+        ()-> new MateriaNotFoundException("La materia ingresada no existe"));
+           
+        Escuela escuela=escuelaRepository.findById(idMateria).orElseThrow(()->
+        new EscuelaNotFoundException("No existe la escuela ingresada"));
+        
+        //en caso de que exista la materia, chequear si el nombre a modificar NO existe
+        if(materia!=null &&materiaEscuelaRepository.siExisteMateria(nombre.getNombre(), escuela)){
+           Materia existente=materia;
+           existente.setNombre(nombre.getNombre());
+           
+           //guardo los cambios
+            materiaRepository.save(existente);
+            //modifico=false;
+        }else{
+            throw new MateriaExistingException("La materia ingresada ya existe");
+            
+        }
+        
+        //return modifico;
+        
     }
     
 }
