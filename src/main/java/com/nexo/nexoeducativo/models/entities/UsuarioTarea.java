@@ -42,5 +42,10 @@ public class UsuarioTarea implements Serializable {
     private Tarea tareaIdTarea;
     @JoinColumn(name = "usuario_id_usuario", referencedColumnName = "id_usuario")
     @ManyToOne(optional = false)
-    private Usuario usuarioIdUsuario;    
+    private Usuario usuarioIdUsuario; 
+    @JoinColumn(name = "calificacion_id_calificacion", referencedColumnName = "id_calificacion")
+    @ManyToOne(optional = false)
+    private Calificacion calificacionIdCalificacion; 
+    
+    
 }

@@ -60,6 +60,10 @@ public class MateriaCurso implements Serializable {
     @JoinColumn(name = "materia_id_materia", referencedColumnName = "id_materia")
     @ManyToOne(optional = false)
     private Materia materiaIdMateria;
+    
+    //nuevo campo
+     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTarea")
+    private List<Tarea> tareaList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "materiaCursoIdMateriaCurso")
     private List<MateriaCursoMaterial> materiaCursoMaterialList;
     

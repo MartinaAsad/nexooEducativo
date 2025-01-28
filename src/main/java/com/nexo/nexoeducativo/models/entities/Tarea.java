@@ -45,6 +45,11 @@ public class Tarea implements Serializable {
     private String descripcion;
     @Column(name = "archivo")
     private String archivo;
+    
+    //relacion con la materia
+     @ManyToOne(optional = false)
+    @JoinColumn(name = "materia_id_materia", referencedColumnName = "id_materia")
+    private Materia materiaIdMateria; 
     @JoinColumn(name = "calificacion_id_calificacion", referencedColumnName = "id_calificacion")
     @ManyToOne(optional = false)
     private Calificacion calificacionIdCalificacion;
