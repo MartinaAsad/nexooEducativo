@@ -2,6 +2,7 @@ package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.exception.CalificacionWrongException;
 import com.nexo.nexoeducativo.exception.CursoNotFound;
+import com.nexo.nexoeducativo.exception.MateriaNotFoundException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.EventosDTO;
 import com.nexo.nexoeducativo.models.dto.request.EventosView;
@@ -12,10 +13,12 @@ import com.nexo.nexoeducativo.models.entities.Calificacion;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Tarea;
 import com.nexo.nexoeducativo.models.entities.Usuario;
+import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.UsuarioTarea;
 import com.nexo.nexoeducativo.repository.CalificacionRepository;
 import com.nexo.nexoeducativo.repository.CursoRepository;
 import com.nexo.nexoeducativo.repository.EventoRepository;
+import com.nexo.nexoeducativo.repository.MateriaRepository;
 import com.nexo.nexoeducativo.repository.TareaRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import com.nexo.nexoeducativo.repository.UsuarioTareaRepository;
@@ -51,6 +54,9 @@ public class TareaService {
     private CursoRepository cursoRepository;
     
     @Autowired
+    private MateriaRepository materiaRepository;
+    
+    @Autowired
     private TareaRepository tareaRepository;
     
     @Autowired
@@ -61,30 +67,41 @@ public class TareaService {
     public Tarea altaTarea(TareaDTO tarea, Integer cursoIdCurso){
         Calificacion c=altaCalificacion(tarea);
         
-        Tarea t=new Tarea();
+        Materia m=materiaRepository.findById(tarea.getIdMateria()).orElseThrow(
+        ()-> new MateriaNotFoundException("No existe la materia ingresada"));
+        
+;        Tarea t=new Tarea();
         //VER PROBLEMA CON LA DESCRIPCION
         t.setDescripcion(tarea.getDescripcion());
         t.setArchivo(null);
         t.setCalificacionIdCalificacion(c);
+        t.setMateriaIdMateria(m);
         
+        LOGGER.info("Calificacion a guardar: "+t.getCalificacionIdCalificacion());
         Tarea tGuardada=tareaRepository.save(t);
         
         //asociar la tarea al curso
         Curso curso=cursoRepository.findById(cursoIdCurso)
                 .orElseThrow(()-> new CursoNotFound("El curso ingresado no existe"));
-        asociarTareaUsuario(tGuardada, curso);
+        asociarTareaUsuario(tGuardada, curso, tarea);//error aca
         
         return tGuardada;
         
     }
-    public void asociarTareaUsuario(Tarea t, Curso c){
+    public void asociarTareaUsuario(Tarea t, Curso c, TareaDTO tarea){
         //obtengo la lista de alumnos de un curso
         List<Usuario> alumnos=usuarioRepository.findByCurso(c);
+        //obtengo la materia en donde se agrega esa materia
+        Materia m=materiaRepository.findById(tarea.getIdMateria()).orElseThrow(
+        ()-> new MateriaNotFoundException("No existe la materia ingresada"));
+        Calificacion calif=altaCalificacion(tarea);
         for(Usuario u: alumnos){
             UsuarioTarea ut=new UsuarioTarea();
             ut.setTareaIdTarea(t); 
             ut.setUsuarioIdUsuario(u);
-            usuarioTRepository.save(ut);
+            ut.setCalificacionIdCalificacion(calif);
+            ut.setMateriaIdMateria(m);
+            usuarioTRepository.save(ut);//error aca
         }
         
         

@@ -557,6 +557,8 @@ public class UsuarioController {
     @PostMapping(value="/altaTarea/{cursoIdCurso}")
     ResponseEntity<?> altaTarea(@PathVariable("cursoIdCurso") Integer cursoIdCurso,@Valid @RequestBody TareaDTO tarea) throws NoSuchFieldException{
         Tarea t=tareaService.altaTarea(tarea, cursoIdCurso);
+        /*poner esto en el Postman:
+        */
         
         return new ResponseEntity<>(t, HttpStatus.CREATED);
     }
