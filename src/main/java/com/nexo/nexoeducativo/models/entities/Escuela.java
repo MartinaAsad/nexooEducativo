@@ -55,7 +55,10 @@ public class Escuela implements Serializable {
     @JoinColumn(name = "plan_id_plan", referencedColumnName = "id_plan")
     @JsonIgnore
     @ManyToOne(optional = false)
-    private Plan planIdPlan;
+    private Plan planIdPlan;  
+    @ManyToOne(optional = false) // Relación N:1 (muchas escuelas pueden compartir una cuota)
+    @JoinColumn(name = "cuota_idCuota", referencedColumnName = "id_cuota") // Clave foránea
+    private Cuota cuotaIdCuota;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "escuelaIdEscuela")
     private List<EscuelaComprobantePago> escuelaComprobantePagoList;
