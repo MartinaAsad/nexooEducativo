@@ -4,6 +4,7 @@ import com.nexo.nexoeducativo.exception.CalificacionWrongException;
 import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.MateriaNotFoundException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
+import com.nexo.nexoeducativo.models.dto.request.CalificacionesHijoView;
 import com.nexo.nexoeducativo.models.dto.request.EventosDTO;
 import com.nexo.nexoeducativo.models.dto.request.EventosView;
 import com.nexo.nexoeducativo.models.dto.request.InfoMateriaHijoView;
@@ -138,7 +139,8 @@ public class TareaService {
     public HashMap<String, String> agregarInfo (List<Object[]> tareas){
          HashMap<String, String> info=new HashMap<>();
         for (Object[] fila : tareas) {
-            String key = (String) fila[0];  
+            String key = (String) fila[0];
+            LOGGER.info("la key: "+key);
             String value = (String) fila[1];
             info.put(key, value);            
         }
@@ -149,10 +151,11 @@ public class TareaService {
       public List<InfoMateriaHijoView> obtenerInformacion (Integer hijo){
         //primero, obtengo todas las calificaciones 
         Usuario usuarioIdUsuario=usuarioRepository.findById(hijo)
-            .orElseThrow(() -> new UsuarioNotFoundException("El usuario que se desea modificar no existe")); 
+            .orElseThrow(() -> new UsuarioNotFoundException("El usuario que se desea ver no existe")); 
         
-        List<Object[]> tareas=tareaRepository.obtenerCalificaciones(usuarioIdUsuario);
-       HashMap<String, String> nota=agregarInfo(tareas);
+        List<CalificacionesHijoView> tareas=tareaRepository.obtenerCalificaciones(usuarioIdUsuario);
+       //HashMap<String, String> nota=agregarInfo(tareas);
+       LOGGER.info("lista:"+tareas);
        
        //luego, obtengo los proximos eventos
         List<EventosView> eventos=eventoRepository.obtenerEventosPosteriores(usuarioIdUsuario); 
@@ -173,7 +176,7 @@ public class TareaService {
         
         //almaceno toda esta info aqui
         InfoMateriaHijoView infor=new InfoMateriaHijoView();
-        infor.setNota(nota);
+        infor.setNotas(tareas);
         infor.setEventos(eventosDTO);
         List<InfoMateriaHijoView> info=new ArrayList<>();
         info.add(infor);
