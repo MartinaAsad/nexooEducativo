@@ -116,21 +116,18 @@ public class MateriaService {
         return verMaterias;
     }
     
+    @Transactional 
     public void modificarMateria(int idMateria, MateriaDTO nombre, Escuela e){
         //boolean modifico=false;
         Materia materia=materiaRepository.findById(idMateria).orElseThrow(
         ()-> new MateriaNotFoundException("La materia ingresada no existe"));
-           
-        Escuela escuela=escuelaRepository.findById(idMateria).orElseThrow(()->
-        new EscuelaNotFoundException("No existe la escuela ingresada"));
         
         //en caso de que exista la materia, chequear si el nombre a modificar NO existe
-        if(materia!=null &&materiaEscuelaRepository.siExisteMateria(nombre.getNombre(), escuela)){
-           Materia existente=materia;
-           existente.setNombre(nombre.getNombre());
+        if(materia!=null && !materiaEscuelaRepository.siExisteMateria(nombre.getNombre(), e)){
+           materiaRepository.updateMateria(nombre.getNombre(), idMateria);
            
            //guardo los cambios
-            materiaRepository.save(existente);
+            //materiaRepository.save(existente);
             //modifico=false;
         }else{
             throw new MateriaExistingException("La materia ingresada ya existe");

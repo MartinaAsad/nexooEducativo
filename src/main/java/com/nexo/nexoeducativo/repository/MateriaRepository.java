@@ -8,7 +8,9 @@ import com.nexo.nexoeducativo.models.entities.Usuario;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -27,5 +29,8 @@ public interface MateriaRepository extends JpaRepository<Materia, Integer> {
 "WHERE cu.usuarioIdUsuario= :usuarioIdUsuario")
     List<DesplegableMateriaView> materiasSegunHijo(Usuario usuarioIdUsuario);
     
+    @Modifying
+    @Query("UPDATE Materia m SET m.nombre= :nombre WHERE m.idMateria = :idMateria")
+    public void updateMateria(@Param("nombre") String nombre, @Param("idMateria") Integer idMateria);
     //Optional<Materia> findByIdMateria (Integer idMateria);
 }

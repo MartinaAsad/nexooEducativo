@@ -806,7 +806,7 @@ public class UsuarioController {
      String mailUsuario=auth.getPrincipal().toString();
         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
         materiaService.modificarMateria(id, jc, e);
-        return new ResponseEntity<>("algo", HttpStatus.OK);
+        return new ResponseEntity<>("Materia modificada exitosamente", HttpStatus.OK);
         /*if(resultado){
             return new ResponseEntity<>("La materia se modifico correctamente",HttpStatus.OK);   
         }else{
