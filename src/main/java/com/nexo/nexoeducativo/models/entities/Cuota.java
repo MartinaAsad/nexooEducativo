@@ -30,12 +30,9 @@ public class Cuota implements Serializable {
     @Id
     @Basic(optional = false)
     @NotNull
-    @Column(name = "idCuota")
+    @Column(name = "id_cuota")
     private Integer idCuota;
     @Column(name = "importe")
     private Double importe;
-     @OneToMany(mappedBy = "cuotaIdCuota") // Relación inversa con Escuela
-    private List<Escuela> escuelas;
-
-    
+   
 }

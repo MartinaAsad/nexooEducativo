@@ -73,3 +73,4 @@ public class Escuela implements Serializable {
     private List<EscuelaUsuario> escuelaUsuarioList;
     
 }
+
