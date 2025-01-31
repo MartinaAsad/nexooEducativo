@@ -26,4 +26,6 @@ public interface MaterialRepository extends JpaRepository<Material, Integer>{
 "WHERE mc.cursoIdCurso= :cursoIdCurso AND mc.materiaIdMateria= :materiaIdMateria")
     List<SeleccionarMaterialView> buscarMaterial(Curso cursoIdCurso, Materia materiaIdMateria);
     
+    
+    
 }

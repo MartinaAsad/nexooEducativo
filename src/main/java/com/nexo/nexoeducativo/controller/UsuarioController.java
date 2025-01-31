@@ -25,6 +25,7 @@ import com.nexo.nexoeducativo.models.dto.request.MateriaView;
 import com.nexo.nexoeducativo.models.dto.request.MaterialDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
+import com.nexo.nexoeducativo.models.dto.request.NotaDTO;
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
 import com.nexo.nexoeducativo.models.dto.request.RolDTO;
 import com.nexo.nexoeducativo.models.dto.request.SeleccionarMaterialView;
@@ -552,6 +553,32 @@ public class UsuarioController {
         return new ResponseEntity<>("Material editado exitosamente", HttpStatus.OK);
     }
     
+           @PreAuthorize("hasAuthority('profesor') ")
+    @PatchMapping(value="/modificarTarea/{idTarea}")
+    ResponseEntity<?> modificarTarea(@PathVariable("idTarea") Integer idTarea,
+          @Valid @RequestBody NotaDTO tarea, @RequestParam(value="descripcion", required=false) String descripcion) throws IOException, Exception {
+        
+        tareaService.editarTarea(tarea, descripcion);
+        /*LO QUE PUSE SI SOLO QUIERO EDITAR LA CALIFICACION:
+        http://localhost:8080/api/usuario/modificarTarea/1
+        {
+  "idCurso":3,
+  "idTarea":1,
+  "idAlumno":7,
+  "calificacion":"8"
+}
+        PARA MODIFICAR CALIFICACION Y DESCRIPCION DESPUES DEL 1 en la url: ?descripcion=tareita editada LO DE LAS LLAVES ES IGUAL
+        SI SOLO QUIERO MODIFICAR LA DESCRIPCION, url http://localhost:8080/api/usuario/modificarTarea/1 DESPUES DEL 1 en la url: ?descripcion=tareita editada :
+        {
+  "idCurso":3,
+  "idTarea":1,
+  "idAlumno":7,
+  "calificacion":""
+}
+        */
+        return new ResponseEntity<>("Tarea editada exitosamente", HttpStatus.OK);
+    }
+    
     
      @PreAuthorize("hasAuthority('profesor') ")
     @PostMapping(value="/altaTarea/{cursoIdCurso}")
@@ -811,9 +838,7 @@ public class UsuarioController {
             return new ResponseEntity<>("La materia se modifico correctamente",HttpStatus.OK);   
         }else{
             return new ResponseEntity<>("No pudo realizarse la modificacion",HttpStatus.BAD_REQUEST);   
-        }*/
-        
-        
+        }*/   
     }
 }
 

@@ -5,7 +5,9 @@ import com.nexo.nexoeducativo.models.entities.Tarea;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -31,4 +33,8 @@ public interface TareaRepository extends JpaRepository<Tarea, Integer> {
 "WHERE ut.usuarioIdUsuario= :usuarioIdUsuario")
     
     List<CalificacionesHijoView> obtenerCalificaciones (Usuario usuarioIdUsuario);
+    
+    @Modifying
+    @Query("UPDATE Tarea t SET t.descripcion= :descripcion WHERE t.idTarea= :idTarea")
+    void updateDescripcionByIdMateria(@Param("descripcion") String descripcion, @Param("idTarea") Integer idTarea);
 }

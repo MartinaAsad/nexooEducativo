@@ -2,7 +2,9 @@ package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.exception.CalificacionWrongException;
 import com.nexo.nexoeducativo.exception.CursoNotFound;
+import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.MateriaNotFoundException;
+import com.nexo.nexoeducativo.exception.MaterialNotFoundException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.CalificacionesHijoView;
 import com.nexo.nexoeducativo.models.dto.request.EventosDTO;
@@ -118,16 +120,36 @@ public class TareaService {
         return califRepository.save(c);
     }
     
-    public void validarNota(String calificacion){
-        
-        boolean cantCaracteres=calificacion.length()>=1 && calificacion.length()<=28;
-        if(!cantCaracteres){
-            throw new CalificacionWrongException("La calificacion debe tener entre 1 y 28 caracteres");
-        }
-    }
-    
     @Transactional
-    public void editarCalificacion (NotaDTO n){
+    public void editarTarea (NotaDTO n, String descripcion){
+   
+            //obtener la calificacion de la tarea a editar
+          Tarea t = tareaRepository.findById(n.getIdTarea()).orElseThrow(
+                () -> new MaterialNotFoundException("No existe la tarea a editar"));
+
+        //actualizar la calificacion SOLO SI VINO EN EL DTO
+        if (!n.getCalificacion().isEmpty()) {
+            if (n.getCalificacion().length() >= 1 && n.getCalificacion().length() <= 28) {
+                String nota = n.getCalificacion();
+                Calificacion c = t.getCalificacionIdCalificacion();
+                Integer idCalificacion = c.getIdCalificacion();
+                califRepository.updateNotaByIdCalificacion(nota, idCalificacion);
+            }
+        }
+
+        //acualizar la descripcion SOLO SI VINO EN EL DTO
+        if (!descripcion.isBlank()) {
+            //chequear el largo
+            if (descripcion.length() >= 5 && descripcion.length() <= 255) {
+                Integer idTarea = t.getIdTarea();
+                tareaRepository.updateDescripcionByIdMateria(descripcion, idTarea);
+            } else {
+                throw new FormatoIncorrectoException("Minimo 5 caracteres y maximo 255 en la descripcion");
+            }
+
+        }
+
+        
       
     }
     
