@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,7 @@ public class MaterialService {
 
     
     
-    public void altaMaterial(MultipartFile file,MaterialDTO m, Usuario profesor) throws IOException{//endpooint altaMaterial
+    public void altaMaterial(MultipartFile file,MaterialDTO m, Usuario profesor) throws IOException, Exception{//endpooint altaMaterial
         
         Material material=new Material();
         guardarImagen(file, material);
@@ -92,27 +93,45 @@ public class MaterialService {
     }
     
     
-    public void guardarImagen(MultipartFile file, Material material) throws IOException {
-       /* String[] formatosValidos = {"application/pdf", "application/msword",
-            "image/png", "image/jpeg",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            "application/zip",
-            "application/vnd.openxmlformats-officedocument.presentationml.presentation"};*/
-
-        // Check file size
-        if (file.getSize() > 12 * 1024 * 1024) {
+    public void guardarImagen(MultipartFile file, Material material) throws IOException, Exception {
+      //para no sobreescribir archivos con nombres iguales
+      try{  
+      String id=UUID.randomUUID().toString();
+        byte[] bytes = file.getBytes();
+        String nombreOriginal=file.getOriginalFilename();
+        
+        long tamano=file.getSize();
+        long maximo=12*1024*1024;
+        if (tamano > maximo) {
             throw new TamanoIncorrectoException("El archivo puede pesar hasta 12 mb");
         }
+        
+        //chequear el tipo de archivo
+        if(!nombreOriginal.endsWith(".pdf")
+          && !nombreOriginal.endsWith(".docx")
+          && !nombreOriginal.endsWith(".png")
+          && !nombreOriginal.endsWith(".jpg")
+          && !nombreOriginal.endsWith(".jpeg")
+          && !nombreOriginal.endsWith(".png")
+          && !nombreOriginal.endsWith(".xls")
+          && !nombreOriginal.endsWith(".pptx")
+                ){
+            throw new FormatoIncorrectoException("Los formatos admitidos son pdf, docx, png, jpg, jpeg, png, xls y pptx");        
+        }
+        
+        String obtenerTipoArchivo=nombreOriginal.substring(nombreOriginal.lastIndexOf("."));
+        String nuevoNombre=nombreOriginal+obtenerTipoArchivo;
+        
+         material.setArchivo(file.getBytes());
+        material.setNombreArchivo(nuevoNombre);
+        material.setTipoArchivo(obtenerTipoArchivo);
+      
+      }catch(Exception e){
+          throw new Exception(e.getMessage());
+      }
+        
 
-        // Check file format
-       /* boolean formatoValido = Arrays.stream(formatosValidos)
-                .anyMatch(formato -> formato.equals(file.getContentType()));
-
-        if (!formatoValido) {
-            throw new FormatoIncorrectoException("Los archivos validos son: pdf, doc, jpeg, png, zip y pptx");
-        }*/
-
-        material.setArchivo(file.getBytes());
+       
     }
             
     
@@ -134,7 +153,7 @@ public class MaterialService {
         return siBorro>0;
     }
     
-    public Material modificarMaterial (Integer material, MaterialDTO m, MultipartFile urlArchivo) throws IOException{
+    public Material modificarMaterial (Integer material, MaterialDTO m, MultipartFile urlArchivo) throws IOException, Exception{
         //obtener el material que se desea modificar
         Material materialIdMaterial=materRepository.findById(material).orElseThrow(()->
         new MaterialNotFoundException("No existe el material seleccionado"));

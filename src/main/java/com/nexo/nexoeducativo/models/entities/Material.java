@@ -39,10 +39,14 @@ public class Material implements Serializable {
     @Basic(optional = false)
     @Column(name = "id_material")
     private Integer idMaterial;
-    @Basic(optional = false)
+    @Basic(optional = true)
     @Column(name = "archivo")
     @Lob  // Indica que es un campo grande (BLOB)
     private byte[] archivo;
+    @Column(name = "nombre_archivo")
+    private String nombreArchivo;
+    @Column(name = "tipo_archivo")
+    private String tipoArchivo;
     @Column(name = "descripcion")
     private String descripcion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "materialIdMaterial")

@@ -488,7 +488,7 @@ public class UsuarioController {
     /*endpoint para altaMaterial*/
       @PreAuthorize("hasAuthority('profesor') ")
     @PostMapping(value="/altaMaterial", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> altaMaterial(@RequestPart ("urlArchivo") MultipartFile urlArchivo,@RequestPart("material")@Valid MaterialDTO material, Authentication auth) throws IOException {
+    ResponseEntity<?> altaMaterial(@RequestPart ("urlArchivo") MultipartFile urlArchivo,@RequestPart("material")@Valid MaterialDTO material, Authentication auth) throws IOException, Exception {
         String mail=auth.getPrincipal().toString();
         Usuario usuario=uService.buscarUsuario(mail); 
         try {
@@ -501,7 +501,7 @@ public class UsuarioController {
              java.util.logging.Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new HashMap<String, String>() {{
-                    put("error", "Error processing file upload: " + ex.getMessage());
+                    put("error", "Error al subir el archivo: " + ex.getMessage());
                 }});
 
          }
@@ -545,7 +545,7 @@ public class UsuarioController {
     @PatchMapping(value="/modificarMaterial/{materialIdMaterial}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> modificarMaterial(@PathVariable("materialIdMaterial") Integer materialIdMaterial,
             @RequestPart (value="urlArchivo", required=false) MultipartFile urlArchivo,
-            @RequestPart(value="material", required=false)@Valid MaterialDTO material) throws IOException {
+            @RequestPart(value="material", required=false)@Valid MaterialDTO material) throws IOException, Exception {
         materialService.modificarMaterial(materialIdMaterial, material, urlArchivo);
         //lo que utilice en Postman para que funcione
         /**/
