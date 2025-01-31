@@ -26,6 +26,7 @@ import com.nexo.nexoeducativo.models.dto.request.MaterialDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.NotaDTO;
+import com.nexo.nexoeducativo.models.dto.request.ObtenerTareaView;
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
 import com.nexo.nexoeducativo.models.dto.request.RolDTO;
 import com.nexo.nexoeducativo.models.dto.request.SeleccionarMaterialView;
@@ -592,15 +593,20 @@ public class UsuarioController {
     
     /*endpoints necesarios para altaCalificacion*/
      @PreAuthorize("hasAuthority('profesor') ")
-    @GetMapping(value="/obtenerTareas/{cursoIdCurso}")
-    ResponseEntity<?> obtenerTareas(@PathVariable("cursoIdCurso") Integer cursoIdCurso, Authentication auth) throws NoSuchFieldException{
+    @GetMapping(value="/obtenerTareas")
+    ResponseEntity<?> obtenerTareas(@RequestParam(value="cursoIdCurso", required=true) Integer cursoIdCurso,
+            @RequestParam(value="idMateria", required=true) Integer idMateria, Authentication auth) throws NoSuchFieldException{
         //obtener el curso
         Curso c=new Curso();
         c.setIdCurso(cursoIdCurso);
+        
+        //obtener la materia
+        Materia m=new Materia();
+        m.setIdMateria(idMateria);
         //buscar el id del usuario ingresado
         String mail=auth.getPrincipal().toString();
         Usuario usuario=uService.buscarUsuario(mail);
-         List<DesplegableMateriaView> materias=materiaService.mostrarMateriasProfe(c, usuario);
+         List<ObtenerTareaView> materias=tareaService.obtenerTareasProfe(c,usuario, m);
         return new ResponseEntity<>(materias, HttpStatus.OK);
     }
     

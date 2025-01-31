@@ -1,6 +1,9 @@
 package com.nexo.nexoeducativo.repository;
 
 import com.nexo.nexoeducativo.models.dto.request.CalificacionesHijoView;
+import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
+import com.nexo.nexoeducativo.models.dto.request.ObtenerTareaView;
+import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.Tarea;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import java.util.List;
@@ -18,6 +21,12 @@ public interface TareaRepository extends JpaRepository<Tarea, Integer> {
 "t.idTarea=ut.tareaIdTarea " +
 "WHERE ut.usuarioIdUsuario= :usuarioIdUsuario")
     List<String> descripcionTareas (Usuario usuarioIdUsuario);
+    
+    @Query("SELECT DISTINCT new com.nexo.nexoeducativo.models.dto.request.ObtenerTareaView (t.idTarea, t.descripcion) FROM Tarea t " +
+"LEFT JOIN UsuarioTarea ut ON " +
+"t.idTarea=ut.tareaIdTarea " +
+"WHERE ut.usuarioIdUsuario.idUsuario= :idUsuario AND ut.materiaIdMateria.idMateria= :idMateria")
+    List<ObtenerTareaView> descripcionTareasProfe (Integer idUsuario, Integer idMateria);
     
     @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.CalificacionesHijoView "
             + "(t.descripcion as descripcion, c.nota as nota, m.nombre as nombre, u.nombre as nombreP, u.apellido as apellidoP) FROM Tarea t " +

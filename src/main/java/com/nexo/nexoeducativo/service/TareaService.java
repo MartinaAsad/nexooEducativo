@@ -7,10 +7,12 @@ import com.nexo.nexoeducativo.exception.MateriaNotFoundException;
 import com.nexo.nexoeducativo.exception.MaterialNotFoundException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.CalificacionesHijoView;
+import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
 import com.nexo.nexoeducativo.models.dto.request.EventosDTO;
 import com.nexo.nexoeducativo.models.dto.request.EventosView;
 import com.nexo.nexoeducativo.models.dto.request.InfoMateriaHijoView;
 import com.nexo.nexoeducativo.models.dto.request.NotaDTO;
+import com.nexo.nexoeducativo.models.dto.request.ObtenerTareaView;
 import com.nexo.nexoeducativo.models.dto.request.TareaDTO;
 import com.nexo.nexoeducativo.models.entities.Calificacion;
 import com.nexo.nexoeducativo.models.entities.Curso;
@@ -155,6 +157,11 @@ public class TareaService {
     
     public List<String> obtenerTareas (Usuario idAlumno){
         List<String> tareas=tareaRepository.descripcionTareas(idAlumno);
+        return tareas;
+    }
+    
+      public List<ObtenerTareaView> obtenerTareasProfe (Curso c,Usuario usuarioIdUsuario, Materia materiaIdMateria ){
+        List<ObtenerTareaView> tareas=tareaRepository.descripcionTareasProfe(usuarioIdUsuario.getIdUsuario(), materiaIdMateria.getIdMateria());
         return tareas;
     }
     

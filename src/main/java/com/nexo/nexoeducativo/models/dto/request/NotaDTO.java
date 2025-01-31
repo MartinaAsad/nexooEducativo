@@ -14,7 +14,7 @@ public class NotaDTO {
     @NotNull
     private int idCurso;    //endpoint /verCursoProfesor
     @NotNull
-    private int idTarea;    //endpoint /obtenerTareas/{cursoIdCurso}
+    private int idTarea;    //endpoint /obtenerTareas
     @NotNull
     private int idAlumno;   ///verAlumnosCurso/{cursoIdCurso}
    
