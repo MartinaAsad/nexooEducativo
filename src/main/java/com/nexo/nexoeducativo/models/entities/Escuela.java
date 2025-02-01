@@ -56,7 +56,7 @@ public class Escuela implements Serializable {
     @JsonIgnore
     @ManyToOne(optional = false)
     private Plan planIdPlan;  
-    @ManyToOne(optional = false) // Relación N:1 (muchas escuelas pueden compartir una cuota)
+    @ManyToOne(optional = true) // Relación N:1 (muchas escuelas pueden compartir una cuota)
     @JoinColumn(name = "cuota_id_cuota", referencedColumnName = "id_cuota") // Clave foránea
     private Cuota cuotaIdCuota;
     @JsonIgnore

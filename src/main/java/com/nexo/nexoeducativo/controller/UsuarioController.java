@@ -42,6 +42,7 @@ import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Tarea;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.service.AsistenciaService;
+import com.nexo.nexoeducativo.service.CuotaService;
 import com.nexo.nexoeducativo.service.CursoService;
 import com.nexo.nexoeducativo.service.CursoUsuarioService;
 import com.nexo.nexoeducativo.service.EscuelaService;
@@ -121,6 +122,9 @@ public class UsuarioController {
     
     @Autowired
     private EventoService eventoService;
+    
+    @Autowired
+    private CuotaService cuotaService;
     
      private static final Logger LOGGER = LoggerFactory.getLogger(UsuarioController.class);
     
@@ -749,6 +753,29 @@ public class UsuarioController {
 		}
 		
 		return new ResponseEntity<>(usuarios, HttpStatus.OK);   
+    }
+    
+       @PreAuthorize("hasAuthority('administrativo') ")
+    @PostMapping(value="/altaCuota")
+    ResponseEntity<?> cuota(Authentication auth, @RequestBody Double monto){
+        String mailUsuario=auth.getPrincipal().toString();
+        Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+        cuotaService.altaCuota(monto, e.getIdEscuela());
+          //colocar solo esto en el body del request:100000
+		
+		return new ResponseEntity<>("Importe ingresado exitosamente", HttpStatus.CREATED);   
+    }
+    
+          @PreAuthorize("hasAuthority('administrativo') ")
+    @PatchMapping(value="/modificarCuota")
+    ResponseEntity<?> cuotaM(Authentication auth, @RequestBody Double monto){
+        String mailUsuario=auth.getPrincipal().toString();
+        Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+        cuotaService.altaCuota(monto, e.getIdEscuela());
+         //colocar solo esto en el body del request:100000
+
+		
+		return new ResponseEntity<>("Importe modificado exitosamente", HttpStatus.OK);   
     }
     
     @PreAuthorize("hasAuthority('super admin')"

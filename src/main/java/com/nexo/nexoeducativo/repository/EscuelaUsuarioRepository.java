@@ -5,11 +5,13 @@ import com.nexo.nexoeducativo.models.entities.Usuario;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Martina
  */
+@Repository
 public interface EscuelaUsuarioRepository extends JpaRepository<EscuelaUsuario, Integer>{
     
     /*@Modifying

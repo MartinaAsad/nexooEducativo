@@ -8,6 +8,7 @@ import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -36,5 +37,8 @@ public interface EscuelaRepository extends JpaRepository<Escuela, Integer> {
     Escuela findActivoByIdEscuela(int idEscuela);
     
     //boolean isActivo(Integer idEscuela);
+    @Modifying
+    @Query("UPDATE Escuela e SET e.cuotaIdCuota.idCuota = :idCuota WHERE e.idEscuela= :idEscuela")
+    void updateEscuelaByIdCuotaAndIdEscuela(Integer idCuota, Integer idEscuela);
     
 }
