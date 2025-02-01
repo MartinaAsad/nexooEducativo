@@ -22,11 +22,14 @@ public interface TareaRepository extends JpaRepository<Tarea, Integer> {
 "WHERE ut.usuarioIdUsuario= :usuarioIdUsuario")
     List<String> descripcionTareas (Usuario usuarioIdUsuario);
     
-    @Query("SELECT DISTINCT new com.nexo.nexoeducativo.models.dto.request.ObtenerTareaView (t.idTarea, t.descripcion) FROM Tarea t " +
-"LEFT JOIN UsuarioTarea ut ON " +
-"t.idTarea=ut.tareaIdTarea " +
-"WHERE ut.usuarioIdUsuario.idUsuario= :idUsuario AND ut.materiaIdMateria.idMateria= :idMateria")
-    List<ObtenerTareaView> descripcionTareasProfe (Integer idUsuario, Integer idMateria);
+    @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.ObtenerTareaView (t.idTarea,"
+            + "t.descripcion) FROM Tarea t " +
+" JOIN UsuarioTarea ut ON " +
+"t.idTarea=ut.tareaIdTarea" +
+" JOIN CursoUsuario cu ON " +
+"cu.usuarioIdUsuario=ut.usuarioIdUsuario " +
+"WHERE cu.cursoIdCurso.idCurso= :idCurso AND t.materiaIdMateria.idMateria= :idMateria")
+    List<ObtenerTareaView> descripcionTareasProfe (Integer idCurso, Integer idMateria);
     
     @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.CalificacionesHijoView "
             + "(t.descripcion as descripcion, c.nota as nota, m.nombre as nombre, u.nombre as nombreP, u.apellido as apellidoP) FROM Tarea t " +

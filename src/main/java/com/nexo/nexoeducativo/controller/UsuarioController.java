@@ -606,7 +606,7 @@ public class UsuarioController {
         //buscar el id del usuario ingresado
         String mail=auth.getPrincipal().toString();
         Usuario usuario=uService.buscarUsuario(mail);
-         List<ObtenerTareaView> materias=tareaService.obtenerTareasProfe(c,usuario, m);
+         List<ObtenerTareaView> materias=tareaService.obtenerTareasProfe(c, m);
         return new ResponseEntity<>(materias, HttpStatus.OK);
     }
     

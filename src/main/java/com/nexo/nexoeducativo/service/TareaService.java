@@ -160,8 +160,8 @@ public class TareaService {
         return tareas;
     }
     
-      public List<ObtenerTareaView> obtenerTareasProfe (Curso c,Usuario usuarioIdUsuario, Materia materiaIdMateria ){
-        List<ObtenerTareaView> tareas=tareaRepository.descripcionTareasProfe(usuarioIdUsuario.getIdUsuario(), materiaIdMateria.getIdMateria());
+      public List<ObtenerTareaView> obtenerTareasProfe (Curso c, Materia materiaIdMateria ){
+        List<ObtenerTareaView> tareas=tareaRepository.descripcionTareasProfe(c.getIdCurso(),materiaIdMateria.getIdMateria());
         return tareas;
     }
     
