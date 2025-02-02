@@ -5,6 +5,7 @@ import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.MateriaNotFoundException;
 import com.nexo.nexoeducativo.exception.MaterialNotFoundException;
+import com.nexo.nexoeducativo.exception.TamanoIncorrectoException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.CalificacionesHijoView;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
@@ -19,6 +20,7 @@ import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Tarea;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.models.entities.Materia;
+import com.nexo.nexoeducativo.models.entities.Material;
 import com.nexo.nexoeducativo.models.entities.UsuarioTarea;
 import com.nexo.nexoeducativo.repository.CalificacionRepository;
 import com.nexo.nexoeducativo.repository.CursoRepository;
@@ -27,6 +29,7 @@ import com.nexo.nexoeducativo.repository.MateriaRepository;
 import com.nexo.nexoeducativo.repository.TareaRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import com.nexo.nexoeducativo.repository.UsuarioTareaRepository;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -34,12 +37,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class TareaService {
@@ -69,16 +74,16 @@ public class TareaService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TareaService.class);
     
     @Transactional
-    public Tarea altaTarea(TareaDTO tarea, Integer cursoIdCurso){
+    public Tarea altaTarea(TareaDTO tarea, Integer cursoIdCurso, MultipartFile file) throws Exception{
         Calificacion c=altaCalificacion(tarea);
         
         Materia m=materiaRepository.findById(tarea.getIdMateria()).orElseThrow(
         ()-> new MateriaNotFoundException("No existe la materia ingresada"));
         
-;        Tarea t=new Tarea();
+        Tarea t=new Tarea();
         //VER PROBLEMA CON LA DESCRIPCION
         t.setDescripcion(tarea.getDescripcion());
-        t.setArchivo(null);
+        guardarImagen(file, t);
         t.setCalificacionIdCalificacion(c);
         t.setMateriaIdMateria(m);
         
@@ -92,6 +97,47 @@ public class TareaService {
         
         return tGuardada;
         
+    }
+    
+    public void guardarImagen(MultipartFile file, Tarea material) throws IOException, Exception {
+      //para no sobreescribir archivos con nombres iguales
+      try{  
+      String id=UUID.randomUUID().toString();
+        byte[] bytes = file.getBytes();
+        String nombreOriginal=file.getOriginalFilename();
+        
+        long tamano=file.getSize();
+        long maximo=12*1024*1024;
+        if (tamano > maximo) {
+            throw new TamanoIncorrectoException("El archivo puede pesar hasta 12 mb");
+        }
+        
+        //chequear el tipo de archivo
+        if(!nombreOriginal.endsWith(".pdf")
+          && !nombreOriginal.endsWith(".docx")
+          && !nombreOriginal.endsWith(".png")
+          && !nombreOriginal.endsWith(".jpg")
+          && !nombreOriginal.endsWith(".jpeg")
+          && !nombreOriginal.endsWith(".png")
+          && !nombreOriginal.endsWith(".xls")
+          && !nombreOriginal.endsWith(".pptx")
+                ){
+            throw new FormatoIncorrectoException("Los formatos admitidos son pdf, docx, png, jpg, jpeg, png, xls y pptx");        
+        }
+        
+        String obtenerTipoArchivo=nombreOriginal.substring(nombreOriginal.lastIndexOf("."));
+        String nuevoNombre=nombreOriginal+obtenerTipoArchivo;
+        
+         material.setArchivo(file.getBytes());
+        material.setNombreArchivo(nuevoNombre);
+        material.setTipoArchivo(obtenerTipoArchivo);
+      
+      }catch(Exception e){
+          throw new Exception(e.getMessage());
+      }
+        
+
+       
     }
     public void asociarTareaUsuario(Tarea t, Curso c, TareaDTO tarea){
         //obtengo la lista de alumnos de un curso

@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
@@ -44,7 +45,12 @@ public class Tarea implements Serializable {
     @Column(name = "descripcion")
     private String descripcion;
     @Column(name = "archivo")
-    private String archivo;
+   @Lob  // Indica que es un campo grande (BLOB)
+    private byte[] archivo;
+    @Column(name = "nombre_archivo")
+    private String nombreArchivo;
+    @Column(name = "tipo_archivo")
+    private String tipoArchivo;
     
     //relacion con la materia
      @ManyToOne(optional = false)

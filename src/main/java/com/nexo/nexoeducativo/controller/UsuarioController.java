@@ -586,13 +586,12 @@ public class UsuarioController {
     
     
      @PreAuthorize("hasAuthority('profesor') ")
-    @PostMapping(value="/altaTarea/{cursoIdCurso}")
-    ResponseEntity<?> altaTarea(@PathVariable("cursoIdCurso") Integer cursoIdCurso,@Valid @RequestBody TareaDTO tarea) throws NoSuchFieldException{
-        Tarea t=tareaService.altaTarea(tarea, cursoIdCurso);
-        /*poner esto en el Postman:
-        */
+    @PostMapping(value="/altaTarea/{cursoIdCurso}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<?> altaTarea(@PathVariable("cursoIdCurso") Integer cursoIdCurso,
+            @RequestPart (value="urlArchivo", required=false) MultipartFile urlArchivo, @Valid @RequestPart TareaDTO tarea) throws NoSuchFieldException, Exception{
+        Tarea t=tareaService.altaTarea(tarea, cursoIdCurso, urlArchivo);
         
-        return new ResponseEntity<>(t, HttpStatus.CREATED);
+        return new ResponseEntity<>("Tarea creada exitosamente", HttpStatus.CREATED);
     }
     
     /*endpoints necesarios para altaCalificacion*/
