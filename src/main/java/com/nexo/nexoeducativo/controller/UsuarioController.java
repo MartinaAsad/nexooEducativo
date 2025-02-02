@@ -559,11 +559,13 @@ public class UsuarioController {
     }
     
            @PreAuthorize("hasAuthority('profesor') ")
-    @PatchMapping(value="/modificarTarea/{idTarea}")
+    @PatchMapping(value="/modificarTarea/{idTarea}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> modificarTarea(@PathVariable("idTarea") Integer idTarea,
-          @Valid @RequestBody NotaDTO tarea, @RequestParam(value="descripcion", required=false) String descripcion) throws IOException, Exception {
+          @Valid @RequestPart(value="tarea", required=true) NotaDTO tarea,
+          @RequestPart(value="descripcion", required=false) String descripcion,
+          @RequestPart(value="archivo", required=false) MultipartFile archivo) throws IOException, Exception {
         
-        tareaService.editarTarea(tarea, descripcion);
+        tareaService.editarTarea(tarea, descripcion, archivo);
         /*LO QUE PUSE SI SOLO QUIERO EDITAR LA CALIFICACION:
         http://localhost:8080/api/usuario/modificarTarea/1
         {
@@ -580,6 +582,11 @@ public class UsuarioController {
   "idAlumno":7,
   "calificacion":""
 }
+        
+        SI SOLO QUIERO MODIFICAR LA IMAGEN:
+        EN BODY SELECCIONAR FORM DATA Y PONER COMO KEY tarea TIPO TEXT Y COLOCAR ESTO:{"idCurso":3, 
+"idTarea":1,"idMateria":2}
+        EN BODY SELECCIONAR FORM DATA Y PONER COMO KEY archivo TIPO FILE y conteny type: multipart/form-data
         */
         return new ResponseEntity<>("Tarea editada exitosamente", HttpStatus.OK);
     }
@@ -588,8 +595,8 @@ public class UsuarioController {
      @PreAuthorize("hasAuthority('profesor') ")
     @PostMapping(value="/altaTarea/{cursoIdCurso}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> altaTarea(@PathVariable("cursoIdCurso") Integer cursoIdCurso,
-            @RequestPart (value="urlArchivo", required=false) MultipartFile urlArchivo, @Valid @RequestPart TareaDTO tarea) throws NoSuchFieldException, Exception{
-        Tarea t=tareaService.altaTarea(tarea, cursoIdCurso, urlArchivo);
+            @RequestPart (value="file", required=false) MultipartFile file, @Valid @RequestPart TareaDTO tarea) throws NoSuchFieldException, Exception{
+        Tarea t=tareaService.altaTarea(tarea, cursoIdCurso, file);
         
         return new ResponseEntity<>("Tarea creada exitosamente", HttpStatus.CREATED);
     }

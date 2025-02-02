@@ -169,7 +169,7 @@ public class TareaService {
     }
     
     @Transactional
-    public void editarTarea (NotaDTO n, String descripcion){
+    public void editarTarea (NotaDTO n, String descripcion, MultipartFile file) throws Exception{
    
             //obtener la calificacion de la tarea a editar
           Tarea t = tareaRepository.findById(n.getIdTarea()).orElseThrow(
@@ -186,15 +186,22 @@ public class TareaService {
         }
 
         //acualizar la descripcion SOLO SI VINO EN EL DTO
-        if (!descripcion.isBlank()) {
+        if (descripcion != null && !descripcion.isEmpty()) {
             //chequear el largo
             if (descripcion.length() >= 5 && descripcion.length() <= 255) {
                 Integer idTarea = t.getIdTarea();
                 tareaRepository.updateDescripcionByIdMateria(descripcion, idTarea);
             } else {
-                throw new FormatoIncorrectoException("Minimo 5 caracteres y maximo 255 en la descripcion");
+                throw new FormatoIncorrectoException("Minimo 5 caracteres y maximo 255 en la descripcion "+descripcion.length());
             }
 
+        }
+        
+        //actualizar la imagen SOLO SI VIENE UNA NUEVA
+        if(file!=null){
+            guardarImagen(file, t);
+        }else{
+            throw new FormatoIncorrectoException("NO HAY ARCHIVO");
         }
 
         
