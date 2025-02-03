@@ -12,6 +12,7 @@ import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
 import com.nexo.nexoeducativo.models.dto.request.EliminarTareaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EventosDTO;
 import com.nexo.nexoeducativo.models.dto.request.EventosView;
+import com.nexo.nexoeducativo.models.dto.request.EventosView;
 import com.nexo.nexoeducativo.models.dto.request.InfoMateriaHijoView;
 import com.nexo.nexoeducativo.models.dto.request.NotaDTO;
 import com.nexo.nexoeducativo.models.dto.request.ObtenerTareaView;
@@ -146,7 +147,6 @@ public class TareaService {
     public void asociarTareaUsuario(Tarea t, Curso c, TareaDTO tarea){
         //obtengo la lista de alumnos de un curso
         List<Usuario> alumnos=usuarioRepository.findByCurso(c);
-        System.out.println("Alumnos encontrados: " + alumnos.size());
         //obtengo la materia en donde se agrega esa materia
         Materia m=materiaRepository.findById(tarea.getIdMateria()).orElseThrow(
         ()-> new MateriaNotFoundException("No existe la materia ingresada"));

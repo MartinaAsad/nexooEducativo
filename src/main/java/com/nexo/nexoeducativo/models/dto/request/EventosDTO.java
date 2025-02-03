@@ -1,6 +1,7 @@
 
 package com.nexo.nexoeducativo.models.dto.request;
 
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventosDTO {
-     private String descripcion;
+      private String descripcion;
     private String fecha;
     
 }
