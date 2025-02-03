@@ -9,6 +9,7 @@ import com.nexo.nexoeducativo.exception.TamanoIncorrectoException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.CalificacionesHijoView;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
+import com.nexo.nexoeducativo.models.dto.request.EliminarTareaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EventosDTO;
 import com.nexo.nexoeducativo.models.dto.request.EventosView;
 import com.nexo.nexoeducativo.models.dto.request.InfoMateriaHijoView;
@@ -83,7 +84,10 @@ public class TareaService {
         Tarea t=new Tarea();
         //VER PROBLEMA CON LA DESCRIPCION
         t.setDescripcion(tarea.getDescripcion());
-        guardarImagen(file, t);
+        if(file==null){} else {
+            guardarImagen(file, t);
+         }
+;
         t.setCalificacionIdCalificacion(c);
         t.setMateriaIdMateria(m);
         
@@ -142,6 +146,7 @@ public class TareaService {
     public void asociarTareaUsuario(Tarea t, Curso c, TareaDTO tarea){
         //obtengo la lista de alumnos de un curso
         List<Usuario> alumnos=usuarioRepository.findByCurso(c);
+        System.out.println("Alumnos encontrados: " + alumnos.size());
         //obtengo la materia en donde se agrega esa materia
         Materia m=materiaRepository.findById(tarea.getIdMateria()).orElseThrow(
         ()-> new MateriaNotFoundException("No existe la materia ingresada"));
@@ -217,6 +222,16 @@ public class TareaService {
         List<ObtenerTareaView> tareas=tareaRepository.descripcionTareasProfe(c.getIdCurso(),materiaIdMateria.getIdMateria());
         return tareas;
     }
+      
+      @Transactional
+      public void eliminarTarea(EliminarTareaDTO dto){
+          //primero borro la tareas
+          tareaRepository.deleteById(dto.getIdTarea());
+          
+          //luego borro la asociacion de esa tarea a los usuarios de un curso
+          usuarioTRepository.deleteByIdCursoAndIdTarea(dto.getIdCurso(), dto.getIdTarea());
+          
+      }
     
     public HashMap<String, String> agregarInfo (List<Object[]> tareas){
          HashMap<String, String> info=new HashMap<>();

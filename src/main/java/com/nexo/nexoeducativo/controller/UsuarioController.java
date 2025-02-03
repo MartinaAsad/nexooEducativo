@@ -13,6 +13,7 @@ import com.nexo.nexoeducativo.models.dto.request.BorrarMateriaRequestDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoRequest;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
+import com.nexo.nexoeducativo.models.dto.request.EliminarTareaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaView;
@@ -589,6 +590,15 @@ public class UsuarioController {
         EN BODY SELECCIONAR FORM DATA Y PONER COMO KEY archivo TIPO FILE y conteny type: multipart/form-data
         */
         return new ResponseEntity<>("Tarea editada exitosamente", HttpStatus.OK);
+    }
+    
+    
+     @PreAuthorize("hasAuthority('profesor') ")
+    @DeleteMapping(value="/borrarTarea")
+    ResponseEntity<?> bajaTarea( @Valid @RequestBody EliminarTareaDTO tarea){
+        tareaService.eliminarTarea(tarea);
+        
+        return new ResponseEntity<>("Tarea eliminada exitosamente", HttpStatus.OK);
     }
     
     
