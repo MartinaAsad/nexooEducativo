@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.nexo.nexoeducativo.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -89,7 +85,10 @@ public class Usuario implements Serializable {
     @JsonIgnore
     @ManyToOne
     private Rol rolidrol;
-    @ToString.Exclude 
+    @ToString.Exclude
+    @JsonIgnore
+    @Column(name = "tipo_jornada")
+    private String tipoJornada;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdUsuario")
     private List<UsuarioMensaje> usuarioMensajeList;

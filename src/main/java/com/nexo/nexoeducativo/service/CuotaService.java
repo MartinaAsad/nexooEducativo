@@ -1,6 +1,7 @@
 
 package com.nexo.nexoeducativo.service;
 
+import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.models.entities.Cuota;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.repository.CuotaRepository;
@@ -24,6 +25,9 @@ public class CuotaService {
     @Transactional
     public void altaCuota(double monto, Integer idEscuela){
         Cuota c=new Cuota();
+        if(monto<150){
+            throw new FormatoIncorrectoException("L acuota debe ser mayor a $150");
+        }
         c.setImporte(monto);
         cuotaRepository.save(c);
         

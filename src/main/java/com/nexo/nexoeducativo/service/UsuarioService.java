@@ -164,6 +164,10 @@ public class UsuarioService {
         alumno.setTelefono(a.getTelefono());
         alumno.setActivo(a.getActivo());
         alumno.setRolidrol(rolAlumno);
+        if(a.getJornada().isEmpty() || a.getJornada().isBlank()){
+            alumno.setTipoJornada("simple");
+        }
+        alumno.setTipoJornada(a.getJornada());
         alumno = this.usuariorepository.save(alumno);
 
         if (cursoUsuarioRepository.existsByCursoIdCursoAndUsuarioIdUsuario(curso, alumno)) {
