@@ -889,6 +889,14 @@ public class UsuarioController {
             return new ResponseEntity<>("No pudo realizarse la modificacion",HttpStatus.BAD_REQUEST);   
         }*/   
     }
+    
+       @PreAuthorize("hasAuthority('profesor')" ) 
+    @PostMapping(value="/altaEvento/{idCurso}")
+     ResponseEntity<?> altaEvento (Authentication auth, @PathVariable(value="idCurso") Integer idCurso, 
+             @Valid @RequestBody EventosView ev){
+         eventoService.altaEvento(ev, idCurso);
+           return new ResponseEntity<>("El evento fue dado de alta exitosamente",HttpStatus.OK);   
+    }    
 }
 
      
