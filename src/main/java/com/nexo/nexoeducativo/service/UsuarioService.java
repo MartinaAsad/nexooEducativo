@@ -383,6 +383,10 @@ public class UsuarioService {
              
          }
          
+         if(dto.getJornada() !=null){
+             u.setTipoJornada(dto.getJornada());
+         }
+         
          //LOGGER.info("el nuevo objeto contiene: "+u.toString());
          
          
@@ -442,7 +446,7 @@ public class UsuarioService {
         
         
     }
-     return new AlumnoModificacionDTO(j.getNombre(), j.getApellido(), j.getDni(),j.getMail(), j.getClave(),j.getTelefono(), j.getActivo(), j.getIdCurso(), j.getIdPadre());
+     return new AlumnoModificacionDTO(j.getNombre(), j.getApellido(), j.getDni(),j.getMail(), j.getClave(),j.getTelefono(), j.getActivo(), j.getIdCurso(), j.getIdPadre(), j.getJornada());
     }
     
     
