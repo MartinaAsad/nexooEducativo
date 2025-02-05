@@ -10,6 +10,7 @@ import com.nexo.nexoeducativo.models.dto.request.AlumnoModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsignarPreceptorDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsistenciaDTO;
 import com.nexo.nexoeducativo.models.dto.request.BorrarMateriaRequestDTO;
+import com.nexo.nexoeducativo.models.dto.request.CuotaDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoRequest;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
@@ -773,13 +774,13 @@ public class UsuarioController {
     
        @PreAuthorize("hasAuthority('administrativo') ")
     @PostMapping(value="/altaCuota")
-    ResponseEntity<?> cuota(Authentication auth, @RequestBody Double monto){
+    ResponseEntity<?> cuota(Authentication auth, @RequestBody CuotaDTO c){
         String mailUsuario=auth.getPrincipal().toString();
         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
-        cuotaService.altaCuota(monto, e.getIdEscuela());
+        cuotaService.altaCuota(c.getMonto(), e.getIdEscuela(), c.getJornada());
           //colocar solo esto en el body del request:100000
 		
-		return new ResponseEntity<>("Importe ingresado exitosamente", HttpStatus.CREATED);   
+		return new ResponseEntity<>("Cuota ingresada exitosamente", HttpStatus.CREATED);   
     }
     
           @PreAuthorize("hasAuthority('administrativo') ")
@@ -787,7 +788,7 @@ public class UsuarioController {
     ResponseEntity<?> cuotaM(Authentication auth, @RequestBody Double monto){
         String mailUsuario=auth.getPrincipal().toString();
         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
-        cuotaService.altaCuota(monto, e.getIdEscuela());
+        cuotaService.modificarCuota(monto, e.getIdEscuela());
          //colocar solo esto en el body del request:100000
 
 		

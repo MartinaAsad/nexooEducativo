@@ -34,7 +34,8 @@ import lombok.ToString;
     @NamedQuery(name = "Escuela.findAll", query = "SELECT e FROM Escuela e")})
 @Data
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"materiaEscuelaList", "cursoEscuelaList", "escuelaUsuarioList", "escuelaComprobantePagoList"})
+
 public class Escuela implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -56,9 +57,6 @@ public class Escuela implements Serializable {
     @JsonIgnore
     @ManyToOne(optional = false)
     private Plan planIdPlan;  
-    @ManyToOne(optional = true) // Relación N:1 (muchas escuelas pueden compartir una cuota)
-    @JoinColumn(name = "cuota_id_cuota", referencedColumnName = "id_cuota") // Clave foránea
-    private Cuota cuotaIdCuota;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "escuelaIdEscuela")
     private List<EscuelaComprobantePago> escuelaComprobantePagoList;

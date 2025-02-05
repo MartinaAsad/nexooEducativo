@@ -4,6 +4,7 @@ package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
+import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.RolNotFound;
 import com.nexo.nexoeducativo.exception.UsuarioAssignedException;
 import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
@@ -166,6 +167,9 @@ public class UsuarioService {
         alumno.setRolidrol(rolAlumno);
         if(a.getJornada().isEmpty() || a.getJornada().isBlank()){
             alumno.setTipoJornada("simple");
+        }
+         if(!(a.getJornada().equalsIgnoreCase("simple") || a.getJornada().equalsIgnoreCase("completa"))){
+            throw new FormatoIncorrectoException("La jornada puede ser simple o completa");
         }
         alumno.setTipoJornada(a.getJornada());
         alumno = this.usuariorepository.save(alumno);

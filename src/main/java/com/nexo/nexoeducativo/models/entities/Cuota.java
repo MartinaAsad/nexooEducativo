@@ -1,6 +1,8 @@
 package com.nexo.nexoeducativo.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,5 +38,9 @@ public class Cuota implements Serializable {
     private Integer idCuota;
     @Column(name = "importe")
     private Double importe;
-   
-}
+   @Column(name = "tipo_jornada")
+    private String tipoJornada;
+   @OneToMany(mappedBy = "cuota", cascade = CascadeType.ALL)
+   @JsonIgnore
+   private List<EscuelaCuota> escuelaCuotaList;
+   }
