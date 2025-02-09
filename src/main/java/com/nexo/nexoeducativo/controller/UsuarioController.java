@@ -784,11 +784,11 @@ public class UsuarioController {
     }
     
           @PreAuthorize("hasAuthority('administrativo') ")
-    @PatchMapping(value="/modificarCuota")
-    ResponseEntity<?> cuotaM(Authentication auth, @RequestBody Double monto){
+    @PatchMapping(value="/modificarCuota/{tipoJornada}")
+    ResponseEntity<?> cuotaM(Authentication auth, @RequestBody Double monto, @PathVariable("tipoJornada") String tipoJornada ){
         String mailUsuario=auth.getPrincipal().toString();
         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
-        cuotaService.modificarCuota(monto, e.getIdEscuela());
+        cuotaService.modificarCuota(monto, e.getIdEscuela(),tipoJornada);
          //colocar solo esto en el body del request:100000
 
 		
