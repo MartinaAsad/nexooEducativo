@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package com.nexo.nexoeducativo.repository;
 
 import com.nexo.nexoeducativo.models.entities.Rol;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,4 +20,6 @@ public interface RolRepository extends JpaRepository<Rol, Integer>{
     List<String> getNombreRol();
     
     int getIdByNombre(String nombre);//chequear
+    
+    Optional<Rol> findByNombre (String nombre);
 }

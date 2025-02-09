@@ -73,6 +73,7 @@ public class CuotaService {
         escuelaCuotaRepository.updateEscuelaByIdCuotaAndIdEscuela(c.getIdCuota(), e.getIdEscuela(), jornada);
         
         }
+    
     }
     
  

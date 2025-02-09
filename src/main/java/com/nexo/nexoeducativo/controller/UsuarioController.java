@@ -51,6 +51,7 @@ import com.nexo.nexoeducativo.service.EscuelaService;
 import com.nexo.nexoeducativo.service.EventoService;
 import com.nexo.nexoeducativo.service.MateriaService;
 import com.nexo.nexoeducativo.service.MaterialService;
+import com.nexo.nexoeducativo.service.MensajeService;
 import com.nexo.nexoeducativo.service.PlanService;
 import com.nexo.nexoeducativo.service.RolService;
 import com.nexo.nexoeducativo.service.TareaService;
@@ -127,6 +128,9 @@ public class UsuarioController {
     
     @Autowired
     private CuotaService cuotaService;
+    
+    @Autowired
+    private MensajeService mensajeService;
     
      private static final Logger LOGGER = LoggerFactory.getLogger(UsuarioController.class);
     
@@ -897,7 +901,18 @@ public class UsuarioController {
              @Valid @RequestBody EventosView ev){
          eventoService.altaEvento(ev, idCurso);
            return new ResponseEntity<>("El evento fue dado de alta exitosamente",HttpStatus.OK);   
-    }    
+    }
+     
+     @PreAuthorize("hasAuthority('administrativo')" ) 
+    @PostMapping(value="/subirInfoPago")
+     ResponseEntity<?> subirInfoPago(Authentication auth, @Valid @RequestBody String mensaje){
+         String mailUsuario=auth.getPrincipal().toString();
+        Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+         mensajeService.altaInfoPagoMensaje(mensaje, e);
+           return new ResponseEntity<>("La informacion de pago ya puede verse",HttpStatus.CREATED);   
+    }
+     
+     
 }
 
      
