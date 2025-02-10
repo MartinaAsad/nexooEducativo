@@ -16,6 +16,7 @@ import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -68,4 +69,21 @@ public class MensajeService {
         }
         
     }
-}
+    
+    @Transactional
+     public void editarMensaje(String nuevoMensaje, Escuela escuela, Rol r){
+                  
+        int cantLetras=nuevoMensaje.length();
+        if(cantLetras>255 || cantLetras<10){
+            throw new FormatoIncorrectoException("El mensaje debe tener entre 10 y 255 caracteres");
+        }
+        
+         Mensaje infoPago =umRepository.obtenerMensajesEscuela(escuela, r.getIdRol());
+        infoPago.setContenido(nuevoMensaje);
+       mensajeRepository.updateContenido(infoPago.getIdMensaje(), nuevoMensaje);
+      
+        }
+        
+    }
+
+

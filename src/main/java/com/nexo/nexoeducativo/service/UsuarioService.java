@@ -462,7 +462,7 @@ public class UsuarioService {
      }
      
      public Usuario buscarUsuario(String mail){
-         return usuariorepository.getUsuarioByMail(mail);
+         return usuariorepository.findUsuarioByMail(mail);
      }
      
      public void tomarAsistencia(int idCurso){

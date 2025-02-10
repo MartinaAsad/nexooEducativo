@@ -40,6 +40,7 @@ import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.MateriaCurso;
+import com.nexo.nexoeducativo.models.entities.Mensaje;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Tarea;
 import com.nexo.nexoeducativo.models.entities.Usuario;
@@ -910,6 +911,17 @@ public class UsuarioController {
         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
          mensajeService.altaInfoPagoMensaje(mensaje, e);
            return new ResponseEntity<>("La informacion de pago ya puede verse",HttpStatus.CREATED);   
+    }
+     
+     @PreAuthorize("hasAuthority('administrativo')" ) 
+    @PatchMapping(value="/editarInfoPago")
+     ResponseEntity<?> editarInfoPago(Authentication auth, @Valid @RequestBody String mensaje){
+         String mailUsuario=auth.getPrincipal().toString();
+          Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+        Rol r=new Rol();
+        r.setIdRol(6);
+         mensajeService.editarMensaje(mensaje,e, r);
+           return new ResponseEntity<>("Informacion editada correctamente",HttpStatus.OK);   
     }
      
      

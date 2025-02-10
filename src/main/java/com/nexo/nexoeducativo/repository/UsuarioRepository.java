@@ -62,7 +62,7 @@ Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
      
      
      //para chequear usuario logueado
-      Usuario getUsuarioByMail(String mail); 
+      Usuario findUsuarioByMail(String mail); 
       
       //para obtener todos los usuario segun el rol
       @Query(value="SELECT new com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO(u.idUsuario, u.nombre, u.apellido, u.dni) FROM Usuario"
