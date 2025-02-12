@@ -12,6 +12,8 @@ import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.AgregarInfoMateriaDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoView;
+import com.nexo.nexoeducativo.models.dto.request.EditarCursoDTO;
+import com.nexo.nexoeducativo.models.dto.request.EditarCursoMateriaDTO;
 import com.nexo.nexoeducativo.models.dto.request.MateriaView;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
 import com.nexo.nexoeducativo.models.dto.request.verCursoView;
@@ -41,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -174,6 +177,26 @@ public class CursoService {
         
         return cursos;
     }
+        
+        
+       public void actualizarCampos(EditarCursoDTO e,Curso c, Escuela escuela){
+           if(e.getActivo()==0 || e.getActivo()==1){
+               c.setActivo(e.getActivo());
+           }
+           
+           if (e.getNumero() != 0) {
+               if (e.getDivision() != null) {
+                   boolean existe = siYaExisteCombinacion(escuela.getIdEscuela(), e.getNumero(), e.getDivision());
+                   if (!existe) {
+                       c.setDivision(e.getDivision());
+                       c.setNumero(e.getNumero());
+                   }
+               }
+           }
+           
+       } 
+        
+        
        
     public List<MateriaCurso> agregarMaterias(List<AgregarInfoMateriaDTO> infoMaterias, Escuela e,CursoDTO c) {
          List<MateriaCurso> materiasCurso = new ArrayList<>();
@@ -227,5 +250,35 @@ public class CursoService {
         
         
         return materiasCurso;
+    }
+    
+    @Transactional 
+    public void modificarMaterias(List<EditarCursoMateriaDTO> lista, Curso c, MateriaCurso  mc){
+        for(EditarCursoMateriaDTO iterador:lista){
+            
+            MateriaCurso mCurso = materiaCursoRepository.findByCursoIdCurso(c);
+            //si se cambio la materia pero no el profesor
+            if(iterador.getIdMateria()!=0 & iterador.getIdProfesor()==null){
+             Materia m=materiaRepository.findById(iterador.getIdMateria()).orElseThrow(
+                    ()-> new MateriaNotFoundException("Esa materia no existe"));
+            mCurso.setMateriaIdMateria(m);
+            }//si se cambia el profe y no la materia
+            else if(iterador.getIdProfesor()!=null){
+                 Usuario profesor = usuarioRepository.findById(iterador.getIdProfesor().intValue().orElseThrow(
+                         ()-> new UsuarioNotFoundException("El profesor ingresado no existe"));
+                 mCurso.setProfesor(profesor);
+            }
+            
+            if(iterador.getDia()!=null){
+                mCurso.setDia(iterador.getDia());
+            }
+            
+            //si solo se hizo cambio en la hora pero NO en el dia
+            if(iterador.getHoraInicio()!=null){
+                boolean existe=materiaCursoRepository.existsByCursoIdCursoAndHoraInicio(c,iterador.getHoraInicio(), mc.getDia());
+            }
+            
+            
+        }
     }
 }
