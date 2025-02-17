@@ -539,66 +539,39 @@ public class UsuarioService {
                 roles.add(7);
             }
             
-            //rol  alumno: preceptor, profesor, administrativo
-             case 7 ->{ 
+            //rol  padre: preceptor, profesor, administrativo
+             case 6 ->{ 
                 roles.add(3);
                  roles.add(4);
                 roles.add(5);
             }
-        }
-        
-        //recorro la lista de roles para rellenar el desplegable
-        List<DesplegableChatView> info= new ArrayList<>();
-         List<DesplegableChatView> alumnos= new ArrayList<>();
-          List<DesplegableChatView> usuarios= new ArrayList<>();
-        DesplegableChatView objeto=null;
-        if(obtenido.getIdRol()==3){
-        for (Integer rol : roles) {
-            Rol iterado=new Rol();
-            iterado.setIdRol(rol);
-            info=usuariorepository.obtenerInfoDesplegables(iterado, e);
-            if(rol==7){
-                alumnos=usuariorepository.obtenerAlumnosDesplegable(e);
+             
+             //rol alumno: preceptor, profesor
+              case 7 ->{ 
+                roles.add(3);
+                 roles.add(4);
             }
-            usuarios.addAll(info);
-            if(!(alumnos.isEmpty())){
-                usuarios.addAll(alumnos);
-            }  
         }
-       
-         return usuarios;
-        }else if(obtenido.getIdRol()==5){
-            for (Integer rol : roles) {
-            Rol iterado=new Rol();
-            iterado.setIdRol(rol);
-            info=usuariorepository.obtenerInfoDesplegables(iterado, e);
-            if(rol==7){
-                //obtengo la lista de los cursos en los que esta ese profesor enpoint: verCursoProfesor
+        List<DesplegableChatView> usuarios= new ArrayList<>();
+       for (Integer rol : roles) {
+        Rol iterado = new Rol();
+        iterado.setIdRol(rol);
+        
+        List<DesplegableChatView> info = usuariorepository.obtenerInfoDesplegables(iterado, e);
+        usuarios.addAll(info); // Agregar usuarios de cada rol
+        
+        // Si el rol es alumno, obtener alumnos de los cursos a cargo
+        if (obtenido.getIdRol() == 5 && rol == 7) { // Si el usuario es profesor y está buscando alumnos
             for (verCursoView curso : verCursos) {
-                Curso c=new Curso();
+                Curso c = new Curso();
                 c.setIdCurso(curso.getIdCurso());
-                alumnos=usuariorepository.obtenerAlumnosProfe(e,c);
-               // LOGGER.info("id cursos a cargo: "+c.toString());
+                List<DesplegableChatView> alumnos = usuariorepository.obtenerAlumnosProfe(e, c);
+                usuarios.addAll(alumnos); // Agregar los alumnos de cada curso
             }
-                
-            }
-            usuarios.addAll(info);
-            if(!(alumnos.isEmpty())){
-                usuarios.addAll(alumnos);
-            }  
-        } 
-    }else{
-            for (Integer rol : roles) {
-            Rol iterado=new Rol();
-            iterado.setIdRol(rol);
-            info=usuariorepository.obtenerInfoDesplegables(iterado, e);
         }
-            return info;
-            
-       
-        
     }
-         return usuarios;
+    
+    return usuarios;
 }
     
   
