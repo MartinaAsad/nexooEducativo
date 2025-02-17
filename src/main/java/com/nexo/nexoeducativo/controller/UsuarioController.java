@@ -17,6 +17,7 @@ import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaView;
 import com.nexo.nexoeducativo.models.dto.request.EventosView;
+import com.nexo.nexoeducativo.models.dto.request.InfoAlumnoCuotaView;
 import com.nexo.nexoeducativo.models.dto.request.InfoMateriaHijoView;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
@@ -894,6 +895,19 @@ public class UsuarioController {
              @Valid @RequestBody EventosView ev){
          eventoService.altaEvento(ev, idCurso);
            return new ResponseEntity<>("El evento fue dado de alta exitosamente",HttpStatus.OK);   
+    }
+     
+       @PreAuthorize("hasAuthority('padre')" ) 
+    @GetMapping(value="/obtenerInfoCuota")
+     ResponseEntity<?> obtenerInfoCuota (Authentication auth){
+         String mailUsuario=auth.getPrincipal().toString();
+         Usuario u=uService.buscarUsuario(mailUsuario);
+        List<InfoAlumnoCuotaView> lista=cuotaService.obtenerInfoCuota(u.getIdUsuario());
+		if(lista.isEmpty()) {
+			return new ResponseEntity<>("Usted no tiene hijos",HttpStatus.NO_CONTENT);
+		}
+		
+		return new ResponseEntity<>(lista, HttpStatus.OK);  
     }
      
      @PreAuthorize("hasAuthority('administrativo')" ) 

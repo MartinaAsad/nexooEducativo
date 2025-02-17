@@ -1,8 +1,8 @@
 package com.nexo.nexoeducativo.repository;
 
 
+import com.nexo.nexoeducativo.models.dto.request.InfoAlumnoCuotaView;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
-import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
 import com.nexo.nexoeducativo.models.dto.request.verCursoView;
@@ -12,12 +12,12 @@ import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PathVariable;
 
 /**
@@ -139,6 +139,14 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
       @Query("SELECT u FROM Usuario u LEFT JOIN CursoUsuario cu ON cu.usuarioIdUsuario=u.idUsuario "
               + "WHERE cu.cursoIdCurso= :c and u.rolidrol=7")
     public List<Usuario> findByCurso(Curso c);
+    
+    @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.InfoAlumnoCuotaView"
+            + " (u.idUsuario as idUsuario, u.nombre AS nombre, u.apellido AS apellido, c.importe AS importe, u.tipoJornada AS tipoJornada) " +
+"FROM Usuario u " +
+"LEFT JOIN Cuota c ON c.tipoJornada = u.tipoJornada " +
+"LEFT JOIN UsuarioUsuario uu ON uu.usuarioIdUsuario = u.idUsuario " +
+"WHERE uu.usuarioIdUsuario1 = :usuarioIdUsuario1")
+    public List<InfoAlumnoCuotaView> obtenerCuotaHijos(Usuario usuarioIdUsuario1);
     
     
       

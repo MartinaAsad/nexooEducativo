@@ -3,12 +3,17 @@ package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
+import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
+import com.nexo.nexoeducativo.models.dto.request.InfoAlumnoCuotaView;
 import com.nexo.nexoeducativo.models.entities.Cuota;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.EscuelaCuota;
+import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.repository.CuotaRepository;
 import com.nexo.nexoeducativo.repository.EscuelaCuotaRepository;
 import com.nexo.nexoeducativo.repository.EscuelaRepository;
+import com.nexo.nexoeducativo.repository.UsuarioRepository;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +34,9 @@ public class CuotaService {
     
     @Autowired
     private EscuelaRepository escuelaRepository;
+    
+    @Autowired
+    private UsuarioRepository usuarioRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(CuotaService.class);
     
     @Transactional
@@ -73,6 +81,13 @@ public class CuotaService {
         escuelaCuotaRepository.updateEscuelaByIdCuotaAndIdEscuela(c.getIdCuota(), e.getIdEscuela(), jornada);
         
         }
+    
+    public List<InfoAlumnoCuotaView> obtenerInfoCuota(Integer idPadre){
+        Usuario padre=usuarioRepository.findById(idPadre).orElseThrow(()
+                -> new UsuarioNotFoundException("No existe ese padre"));
+     List<InfoAlumnoCuotaView> lista=usuarioRepository.obtenerCuotaHijos(padre);
+     return lista;
+    }
     
     }
     
