@@ -47,7 +47,7 @@ public class ComprobantePago implements Serializable {
     private Date fecha;
     @Basic(optional = false)
     @Column(name = "importe")
-    private long importe;
+    private double importe;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "comprobantePagoIdComprobantePago")
     private List<EscuelaComprobantePago> escuelaComprobantePagoList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "comprobantePagoIdComprobantePago")

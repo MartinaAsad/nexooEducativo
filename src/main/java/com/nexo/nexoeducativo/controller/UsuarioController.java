@@ -8,6 +8,7 @@ import com.nexo.nexoeducativo.models.dto.request.AlumnoModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsignarPreceptorDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsistenciaDTO;
 import com.nexo.nexoeducativo.models.dto.request.BorrarMateriaRequestDTO;
+import com.nexo.nexoeducativo.models.dto.request.ComprobantePagoDto;
 import com.nexo.nexoeducativo.models.dto.request.CuotaDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoRequest;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
@@ -42,6 +43,7 @@ import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Tarea;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.service.AsistenciaService;
+import com.nexo.nexoeducativo.service.ComprobantePagoService;
 import com.nexo.nexoeducativo.service.CuotaService;
 import com.nexo.nexoeducativo.service.CursoService;
 import com.nexo.nexoeducativo.service.CursoUsuarioService;
@@ -125,6 +127,9 @@ public class UsuarioController {
     
     @Autowired
     private MensajeService mensajeService;
+    
+    @Autowired
+    private ComprobantePagoService cpService;
     
      private static final Logger LOGGER = LoggerFactory.getLogger(UsuarioController.class);
     
@@ -908,6 +913,18 @@ public class UsuarioController {
 		}
 		
 		return new ResponseEntity<>(lista, HttpStatus.OK);  
+    }
+     
+         @PreAuthorize("hasAuthority('padre')" ) 
+    @PostMapping(value="/generarComprobante")
+     ResponseEntity<?> generarComprobante (Authentication auth, @Valid @RequestBody ComprobantePagoDto pago){
+         String mailUsuario=auth.getPrincipal().toString();
+         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+      
+         cpService.cuotaPagada(pago, e.getIdEscuela());
+       
+		
+		return new ResponseEntity<>("Comprobante de pago generado exitosamente", HttpStatus.OK);  
     }
      
      @PreAuthorize("hasAuthority('administrativo')" ) 

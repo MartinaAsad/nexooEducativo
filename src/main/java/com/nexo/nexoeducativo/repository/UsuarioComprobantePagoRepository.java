@@ -1,0 +1,14 @@
+package com.nexo.nexoeducativo.repository;
+
+import com.nexo.nexoeducativo.models.entities.UsuarioComprobantePago;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+/**
+ *
+ * @author Martina
+ */
+@Repository
+public interface UsuarioComprobantePagoRepository extends JpaRepository<UsuarioComprobantePago, Integer> {
+    
+}
