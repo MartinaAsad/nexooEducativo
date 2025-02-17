@@ -78,7 +78,7 @@ public class MensajeService {
             throw new FormatoIncorrectoException("El mensaje debe tener entre 10 y 255 caracteres");
         }
         
-         Mensaje infoPago =umRepository.obtenerMensajesEscuela(escuela, r.getIdRol());
+         Mensaje infoPago =umRepository.obtenerMensajesEscuela(escuela, r.getIdRol(), "cbu");
         infoPago.setContenido(nuevoMensaje);
        mensajeRepository.updateContenido(infoPago.getIdMensaje(), nuevoMensaje);
       
