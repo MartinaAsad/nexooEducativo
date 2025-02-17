@@ -1,18 +1,16 @@
 
 package com.nexo.nexoeducativo.models.dto.request;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.io.Serializable;
 
 /**
  *
  * @author Martina
  */
-@Data
-@NoArgsConstructor
-public class DesplegableChatView {
-    private String nombre;
-    private String apellido;
-    private String mail;
+public interface DesplegableChatView extends Serializable {
+     Integer getId_usuario();
+     String getNombre();
+     String getApellido();
+     String getMail();
     
 }

@@ -516,18 +516,69 @@ public class UsuarioService {
         return obtenerHijos;
     }
     
-    public List<DesplegableChatView> infoUsuariosChat(Escuela e, Usuario auth){
+    public List<DesplegableChatView> infoUsuariosChat(Escuela e, Usuario auth, List<verCursoView> verCursos){
         //obtener el rol y en base a eso, ver a que tipos de usuaios le puede enviar mensaje
-         Integer[] roles = null;
+         List<Integer> roles = new ArrayList<>();
         Rol obtenido=auth.getRolidrol();
         switch(obtenido.getIdRol()){
-            case 1:
-                roles[0]=obtenido.getIdRol();
-                        break;
+            //rol administrativo: padres, alumnos
+            case 3 ->{ 
+                roles.add(6);
+                roles.add(7);
+            }
+            //rol profesor: padres y alumnos SOLO de los cursos a su cargo
+            case 5 ->{ 
+                roles.add(6);
+                roles.add(7);
+            }
+        }
+        
+        //recorro la lista de roles para rellenar el desplegable
+        List<DesplegableChatView> info= new ArrayList<>();
+         List<DesplegableChatView> alumnos= new ArrayList<>();
+          List<DesplegableChatView> usuarios= new ArrayList<>();
+        DesplegableChatView objeto=null;
+        if(obtenido.getIdRol()!=5){
+        for (Integer rol : roles) {
+            Rol iterado=new Rol();
+            iterado.setIdRol(rol);
+            info=usuariorepository.obtenerInfoDesplegables(iterado, e);
+            if(rol==7){
+                alumnos=usuariorepository.obtenerAlumnosDesplegable(e);
+            }
+            usuarios.addAll(info);
+            if(!(alumnos.isEmpty())){
+                usuarios.addAll(alumnos);
+            }  
         }
        
-         List<DesplegableChatView> usuarios=new ArrayList<>();
          return usuarios;
+        }else{
+            for (Integer rol : roles) {
+            Rol iterado=new Rol();
+            iterado.setIdRol(rol);
+            info=usuariorepository.obtenerInfoDesplegables(iterado, e);
+            if(rol==7){
+                //obtengo la lista de los cursos en los que esta ese profesor enpoint: verCursoProfesor
+            for (verCursoView curso : verCursos) {
+                Curso c=new Curso();
+                c.setIdCurso(curso.getIdCurso());
+                alumnos=usuariorepository.obtenerAlumnosProfe(e,c);
+               // LOGGER.info("id cursos a cargo: "+c.toString());
+            }
+                
+            }
+            usuarios.addAll(info);
+            if(!(alumnos.isEmpty())){
+                usuarios.addAll(alumnos);
+            }  
+        }
+       
+         return usuarios;
+            
+        
+    }
+        
     }
     
   

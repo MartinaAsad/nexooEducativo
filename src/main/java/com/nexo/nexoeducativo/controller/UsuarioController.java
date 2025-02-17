@@ -11,6 +11,7 @@ import com.nexo.nexoeducativo.models.dto.request.BorrarMateriaRequestDTO;
 import com.nexo.nexoeducativo.models.dto.request.ComprobantePagoDto;
 import com.nexo.nexoeducativo.models.dto.request.CuotaDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoRequest;
+import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
 import com.nexo.nexoeducativo.models.dto.request.EditarCursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EliminarTareaDTO;
@@ -935,6 +936,26 @@ public class UsuarioController {
          mensajeService.altaInfoPagoMensaje(mensaje, e);
            return new ResponseEntity<>("La informacion de pago ya puede verse",HttpStatus.CREATED);   
     }
+     
+       @PreAuthorize("hasAuthority('administrativo')" 
+                + "or hasAuthority('profesor') ")
+    @GetMapping(value="/desplegableChat")
+     ResponseEntity<?> desplegableChat(Authentication auth){
+         String mailUsuario=auth.getPrincipal().toString();
+        Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+         Usuario u=uService.buscarUsuario(mailUsuario);
+         
+         //esto para el rol profesor
+         List<MateriaCurso> obtenerCursos=uService.obtenerCursos(u);
+         List<verCursoView> verCursos=uService.verCursos(obtenerCursos);
+        List<DesplegableChatView> usuarios=uService.infoUsuariosChat(e, u, verCursos);
+        if(usuarios.isEmpty()) {
+			return new ResponseEntity<>("No hay cursos activos",HttpStatus.NO_CONTENT);
+		}
+		
+		return new ResponseEntity<>(usuarios, HttpStatus.OK);  
+    }
+     
      
      @PreAuthorize("hasAuthority('administrativo')" ) 
     @PatchMapping(value="/editarInfoPago")

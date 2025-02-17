@@ -1,6 +1,7 @@
 package com.nexo.nexoeducativo.repository;
 
 
+import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
 import com.nexo.nexoeducativo.models.dto.request.InfoAlumnoCuotaView;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
@@ -133,7 +134,7 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
               + " FROM Usuario u INNER JOIN Rol r ON r.idRol=u.rolidrol"
               + " INNER JOIN CursoUsuario cu ON cu.usuarioIdUsuario=u.idUsuario "
               + "INNER JOIN CursoEscuela ce ON ce.cursoIdCurso=cu.cursoIdCurso "
-              + "WHERE r.nombre='alumno' AND ce.escuelaIdEscuela= :escuelaIdEscuela")
+              + "WHERE r.nombre='alumno' AND ce.escuelaIdEscuela= :escuelaIdEscuela AND u.activo=1")
       List<NombreCompletoDTO> obtenerAlumnos(Escuela escuelaIdEscuela);
 
       @Query("SELECT u FROM Usuario u LEFT JOIN CursoUsuario cu ON cu.usuarioIdUsuario=u.idUsuario "
@@ -148,8 +149,26 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
 "WHERE uu.usuarioIdUsuario1 = :usuarioIdUsuario1")
     public List<InfoAlumnoCuotaView> obtenerCuotaHijos(Usuario usuarioIdUsuario1);
     
-    
+      @Query("SELECT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail FROM Usuario u"
+              + " JOIN EscuelaUsuario eu ON " +
+"eu.usuarioIdUsuario=u.idUsuario " +
+"WHERE u.rolidrol= :rol and eu.escuelaIdEscuela= :escuela and u.activo= 1")
+      List<DesplegableChatView> obtenerInfoDesplegables(Rol rol, Escuela escuela);
       
+       @Query("SELECT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail"
+              + " FROM Usuario u INNER JOIN Rol r ON r.idRol=u.rolidrol"
+              + " INNER JOIN CursoUsuario cu ON cu.usuarioIdUsuario=u.idUsuario "
+              + "INNER JOIN CursoEscuela ce ON ce.cursoIdCurso=cu.cursoIdCurso "
+              + "WHERE r.nombre='alumno' AND ce.escuelaIdEscuela= :escuelaIdEscuela AND u.activo=1")
+      List<DesplegableChatView> obtenerAlumnosDesplegable(Escuela escuelaIdEscuela);
+      
+      @Query("SELECT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail"
+              + " FROM Usuario u INNER JOIN Rol r ON r.idRol=u.rolidrol"
+              + " INNER JOIN CursoUsuario cu ON cu.usuarioIdUsuario=u.idUsuario "
+              + "INNER JOIN CursoEscuela ce ON ce.cursoIdCurso=cu.cursoIdCurso "
+              + "WHERE r.nombre='alumno' AND ce.escuelaIdEscuela= :escuelaIdEscuela AND u.activo=1 AND cu.cursoIdCurso= :c")
+      List<DesplegableChatView> obtenerAlumnosProfe(Escuela escuelaIdEscuela, Curso c );
+    
       
 
           
