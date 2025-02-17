@@ -2,12 +2,15 @@ package com.nexo.nexoeducativo.models.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.time.LocalTime;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -15,12 +18,12 @@ import org.hibernate.validator.constraints.Length;
  * @author Martina
  */
 @Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class EditarCursoMateriaDTO implements Serializable {
-     @NotNull(message = "la materia debe estar asociada a un curso")
-    @Min(value = 1, message = "El valor debe ser igual o mayor a 1")
-    private int idCurso;    //endpoint: verCursoAdministrativo
-   
-      @JsonInclude(JsonInclude.Include.NON_NULL)//PERMITE IGNORAR LOS VALORES
+    @NotNull(message="Por favro, seeleccione un materi a editar")
     @Min(value = 1, message = "El valor debe ser igual o mayor a 1")
     private int idMateria;  //endpoint: verMaterias
    

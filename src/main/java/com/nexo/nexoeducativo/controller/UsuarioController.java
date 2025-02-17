@@ -2,18 +2,16 @@
 package com.nexo.nexoeducativo.controller;
 
 import com.nexo.nexoeducativo.exception.CursoNotFound;
-import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
-import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
-import com.nexo.nexoeducativo.models.dto.request.AgregarInfoMateriaDTO;
+import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsignarPreceptorDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsistenciaDTO;
 import com.nexo.nexoeducativo.models.dto.request.BorrarMateriaRequestDTO;
 import com.nexo.nexoeducativo.models.dto.request.CuotaDTO;
-import com.nexo.nexoeducativo.models.dto.request.CursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoRequest;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
+import com.nexo.nexoeducativo.models.dto.request.EditarCursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EliminarTareaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaModificacionDTO;
@@ -23,7 +21,6 @@ import com.nexo.nexoeducativo.models.dto.request.InfoMateriaHijoView;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.MateriaDTO;
-import com.nexo.nexoeducativo.models.dto.request.MateriaView;
 import com.nexo.nexoeducativo.models.dto.request.MaterialDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
@@ -40,7 +37,6 @@ import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.MateriaCurso;
-import com.nexo.nexoeducativo.models.entities.Mensaje;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Tarea;
 import com.nexo.nexoeducativo.models.entities.Usuario;
@@ -58,18 +54,15 @@ import com.nexo.nexoeducativo.service.RolService;
 import com.nexo.nexoeducativo.service.TareaService;
 import com.nexo.nexoeducativo.service.UsuarioService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -78,7 +71,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -924,10 +916,45 @@ public class UsuarioController {
            return new ResponseEntity<>("Informacion editada correctamente",HttpStatus.OK);   
     }
      
-     
+        @PreAuthorize("hasAuthority('administrativo') "
+            + "or hasAuthority('preceptor') ") //despues sacar este permiso mas adelante
+     @PatchMapping("/modificarCurso/{idCurso}")
+     public ResponseEntity<?> prueba50(@Valid @RequestBody EditarCursoDTO cr , Authentication auth, @PathVariable("idCurso") Integer idCurso){
+         String mailUsuario=auth.getPrincipal().toString();
+         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+         cursoService.modificarCurso(cr, idCurso, e);//buscar la manera de que en caso que no se haya creado, mostrar en el Postman un mensaje de error
+          return new ResponseEntity<>("el curso fue modificado correctamente", HttpStatus.OK);
+     }
+          
+          //SI SOLO QUERES EDITAR MATERIAS, PONER EESTSO EN POSTMAN:
+         /* {
+    "numero":0,
+    "division":null,
+    "activo":null,
+    "materias":[
+        {
+        "idProfesor":null,
+        "idMateria":2,
+        "dia": "jueves",
+        "horaInicio":null,
+        "horaFin":null
+        }
+    ]
 }
-
+SI SOLO QUIERO MODIFICAR EL CURSO, PONER ESTO EN POSTMAN:
+     {
+    "numero":1,
+    "division":null,
+    "activo":null,
+    "materias":[]
+}
+          /*
+         
      
+     
+}*/
+
+}
   
     
 

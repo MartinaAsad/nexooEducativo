@@ -5,8 +5,6 @@ import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.MateriaCurso;
-import java.time.LocalDate;
-import com.nexo.nexoeducativo.models.dto.request.MateriaView;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import java.time.LocalTime;
 import java.util.List;
@@ -53,8 +51,8 @@ List<MateriaCurso> findByCursoIdCursoAndProfesor (Curso cursoIdCurso, Usuario pr
     //findIdMateriaCursoByCursoIdCursoAndMateriaIdMateria
     
     MateriaCurso findByMateriaIdMateria(Materia materiaIdMateria);
-    MateriaCurso findByCursoIdCurso(Curso cursoIdCurso);
+    MateriaCurso findByCursoIdCursoAndMateriaIdMateriaAndDiaIsNotNullAndHoraInicioIsNotNullAndHoraFinIsNotNull(Curso cursoIdCurso, Materia materiaIdMateria);
     boolean existsByCursoIdCursoAndHoraInicioAndDia(Curso cursoIdCurso, LocalTime horaInicio, String dia);
-    boolean existsByCursoIdCursoAndHoraFin(Curso cursoIdCurso, LocalTime horaFin, String dia);
+    boolean existsByCursoIdCursoAndHoraFinAndDia(Curso cursoIdCurso, LocalTime horaFin, String dia);
 
 }

@@ -2,7 +2,6 @@
 package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.exception.CursoNotFound;
-import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.HoraInvalidatedexception;
 import com.nexo.nexoeducativo.exception.MateriaExistingException;
@@ -19,11 +18,9 @@ import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
 import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.CursoEscuela;
-import com.nexo.nexoeducativo.models.entities.CursoUsuario;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.MateriaCurso;
-import com.nexo.nexoeducativo.models.entities.MateriaEscuela;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.repository.CursoEscuelaRepository;
@@ -34,10 +31,8 @@ import com.nexo.nexoeducativo.repository.MateriaCursoRepository;
 import com.nexo.nexoeducativo.repository.MateriaEscuelaRepository;
 import com.nexo.nexoeducativo.repository.MateriaRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,7 +86,6 @@ public class CursoService {
         curso.setActivo(c.getActivo());
         int numero=curso.getNumero();
         Character division=curso.getDivision();
-        
         int escuelaId=e.getIdEscuela();
         
         CursoEscuela ce=new CursoEscuela();//tabla intermedia donde se va a guardar a que escuela esta asociado ese curso
@@ -184,15 +178,41 @@ public class CursoService {
                c.setActivo(e.getActivo());
            }
            
-           if (e.getNumero() != 0) {
-               if (e.getDivision() != null) {
+           //si ingreso numeror y division
+               if (e.getDivision() != null && e.getNumero() != 0) {
                    boolean existe = siYaExisteCombinacion(escuela.getIdEscuela(), e.getNumero(), e.getDivision());
                    if (!existe) {
                        c.setDivision(e.getDivision());
                        c.setNumero(e.getNumero());
-                   }
+                   }else{
+                   throw new FormatoIncorrectoException("Ya existe ese curso en la base de datos");
+               }
+               }
+           
+           //si solo ingreso el numero
+           if (e.getNumero() != 0) {
+               boolean existeNumero=escuelaRepository.existsCursoInEscuela(escuela.getIdEscuela(), e.getNumero(), c.getDivision());//ver si existe previamente el numero de curso a modificar
+               LOGGER.info("LOL ENTRO EN EL IF");
+               if(!existeNumero){
+                   c.setNumero(e.getNumero());
+                    //LOGGER.info("ES FALSO");
+               }else{
+                   throw new FormatoIncorrectoException("Ya existe ese curso en la base de datos");
                }
            }
+           
+            //si solo ingreso la division
+           if (e.getDivision()!= null) {
+               boolean existe=escuelaRepository.existsCursoInEscuela(escuela.getIdEscuela(), c.getNumero(), e.getDivision());//ver si existe previamente el numero de curso a modificar
+               if(!existe){
+                   c.setDivision(e.getDivision());
+               }else{
+                   throw new FormatoIncorrectoException("Ya existe ese curso en la base de datos");
+               }
+               
+           }
+           
+           cursoRepository.save(c);
            
        } 
         
@@ -251,21 +271,21 @@ public class CursoService {
         
         return materiasCurso;
     }
-    
-    @Transactional 
-    public void modificarMaterias(List<EditarCursoMateriaDTO> lista, Curso c, MateriaCurso  mc){
+    public void modificarMaterias(List<EditarCursoMateriaDTO> lista, Curso c){
         for(EditarCursoMateriaDTO iterador:lista){
-            
-            MateriaCurso mCurso = materiaCursoRepository.findByCursoIdCurso(c);
-            //si se cambio la materia pero no el profesor
-            if(iterador.getIdMateria()!=0 & iterador.getIdProfesor()==null){
              Materia m=materiaRepository.findById(iterador.getIdMateria()).orElseThrow(
                     ()-> new MateriaNotFoundException("Esa materia no existe"));
+            MateriaCurso mCurso = materiaCursoRepository.
+                    findByCursoIdCursoAndMateriaIdMateriaAndDiaIsNotNullAndHoraInicioIsNotNullAndHoraFinIsNotNull(c, m);
+            //si se cambio la materia pero no el profesor
+            if(iterador.getIdMateria()!=0 & iterador.getIdProfesor()==null){
+             /*Materia m=materiaRepository.findById(iterador.getIdMateria()).orElseThrow(
+                    ()-> new MateriaNotFoundException("Esa materia no existe*/
             mCurso.setMateriaIdMateria(m);
             }//si se cambia el profe y no la materia
             else if(iterador.getIdProfesor()!=null){
-                 Usuario profesor = usuarioRepository.findById(iterador.getIdProfesor().intValue().orElseThrow(
-                         ()-> new UsuarioNotFoundException("El profesor ingresado no existe"));
+             Usuario profesor = usuarioRepository.findById(iterador.getIdProfesor()).orElseThrow(()->
+              new UsuarioNotFoundException("No existe ese profesor"));
                  mCurso.setProfesor(profesor);
             }
             
@@ -275,10 +295,38 @@ public class CursoService {
             
             //si solo se hizo cambio en la hora pero NO en el dia
             if(iterador.getHoraInicio()!=null){
-                boolean existe=materiaCursoRepository.existsByCursoIdCursoAndHoraInicio(c,iterador.getHoraInicio(), mc.getDia());
+                boolean existe=materiaCursoRepository.existsByCursoIdCursoAndHoraInicioAndDia(c,iterador.getHoraInicio(), mCurso.getDia());
+                if(!existe){
+                    mCurso.setHoraInicio(iterador.getHoraInicio());
+                }
+            }else if(iterador.getHoraFin()!=null){
+                boolean existe=materiaCursoRepository.existsByCursoIdCursoAndHoraFinAndDia(c,iterador.getHoraFin(), mCurso.getDia());
+                if(!existe){
+                    mCurso.setHoraFin(iterador.getHoraFin());
+                }
+            }
+            
+            //si se cambian ambos horarios
+            if(iterador.getHoraInicio()!=null &&iterador.getHoraFin()!=null){
+                boolean existe=materiaCursoRepository.verSiYaExisteEsaMateria(c, mCurso.getDia(), iterador.getHoraInicio(), iterador.getHoraFin());
+           if(!existe){
+                mCurso.setHoraInicio(iterador.getHoraInicio());
+                    mCurso.setHoraFin(iterador.getHoraFin());
+                }
             }
             
             
+        }
+    }
+    
+    @Transactional
+    public void modificarCurso(EditarCursoDTO e, Integer idCurso, Escuela escuela){
+        Curso c=cursoRepository.findById(idCurso).orElseThrow(()-> new CursoNotFound("No existee el curso ingresado"));
+        actualizarCampos(e, c, escuela);
+        
+        //solo actualizar materias ssi vhay materias para actualizar, sino no
+        if(!(e.getMaterias().isEmpty())){
+            modificarMaterias(e.getMaterias(), c);
         }
     }
 }
