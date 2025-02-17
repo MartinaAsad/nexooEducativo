@@ -7,27 +7,24 @@ import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.RolNotFound;
 import com.nexo.nexoeducativo.exception.UsuarioAssignedException;
-import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
-import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
-import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
-import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
-import com.nexo.nexoeducativo.models.entities.Curso;
-import com.nexo.nexoeducativo.models.entities.CursoEscuela;
-import com.nexo.nexoeducativo.models.entities.CursoUsuario;
-import com.nexo.nexoeducativo.models.entities.Escuela;
-import com.nexo.nexoeducativo.models.entities.EscuelaUsuario;
 import com.nexo.nexoeducativo.exception.UsuarioExistingException;
 import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.exception.UsuarioWithPadreException;
+import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
+import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoModificacionDTO;
-import com.nexo.nexoeducativo.models.dto.request.EventosView;
-import com.nexo.nexoeducativo.models.dto.request.InfoMateriaHijoView;
+import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
+import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
 import com.nexo.nexoeducativo.models.dto.request.verCursoView;
+import com.nexo.nexoeducativo.models.entities.Curso;
+import com.nexo.nexoeducativo.models.entities.CursoUsuario;
+import com.nexo.nexoeducativo.models.entities.Escuela;
+import com.nexo.nexoeducativo.models.entities.EscuelaUsuario;
 import com.nexo.nexoeducativo.models.entities.MateriaCurso;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
@@ -43,14 +40,10 @@ import com.nexo.nexoeducativo.repository.UsuarioUsuarioRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
-import java.lang.reflect.Field;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -58,7 +51,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ReflectionUtils;
 
 /**
  *
@@ -522,6 +514,20 @@ public class UsuarioService {
     public List<UsuarioView> obtenerHijos(Usuario padre){
         List<UsuarioView> obtenerHijos= uuRepository.obtenerHijos(padre);
         return obtenerHijos;
+    }
+    
+    public List<DesplegableChatView> infoUsuariosChat(Escuela e, Usuario auth){
+        //obtener el rol y en base a eso, ver a que tipos de usuaios le puede enviar mensaje
+         Integer[] roles = null;
+        Rol obtenido=auth.getRolidrol();
+        switch(obtenido.getIdRol()){
+            case 1:
+                roles[0]=obtenido.getIdRol();
+                        break;
+        }
+       
+         List<DesplegableChatView> usuarios=new ArrayList<>();
+         return usuarios;
     }
     
   
