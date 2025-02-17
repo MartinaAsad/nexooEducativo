@@ -255,8 +255,10 @@ public class UsuarioController {
      //CHEQUEAR
      @PreAuthorize("hasAuthority('administrativo') ")
      @PostMapping("/saveAlumno")
-     ResponseEntity<?> prueba7(@Valid @RequestBody AlumnoDTO a){
-         uService.crearAlumno(a);
+     ResponseEntity<?> prueba7(@Valid @RequestBody AlumnoDTO a, Authentication auth){
+          String mailUsuario=auth.getPrincipal().toString();
+         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+         uService.crearAlumno(a, e);
           return new ResponseEntity<>("el alumno fue creado correctamente", HttpStatus.OK);
          /*PONER ESTO EN POSTMAN:
           {
@@ -938,7 +940,8 @@ public class UsuarioController {
     }
      
        @PreAuthorize("hasAuthority('administrativo')" 
-                + "or hasAuthority('profesor') ")
+                + "or hasAuthority('profesor') "
+       + "or hasAuthority('alumno') ")
     @GetMapping(value="/desplegableChat")
      ResponseEntity<?> desplegableChat(Authentication auth){
          String mailUsuario=auth.getPrincipal().toString();

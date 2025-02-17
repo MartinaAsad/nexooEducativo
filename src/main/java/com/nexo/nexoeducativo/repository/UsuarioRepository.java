@@ -168,6 +168,8 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
               + "INNER JOIN CursoEscuela ce ON ce.cursoIdCurso=cu.cursoIdCurso "
               + "WHERE r.nombre='alumno' AND ce.escuelaIdEscuela= :escuelaIdEscuela AND u.activo=1 AND cu.cursoIdCurso= :c")
       List<DesplegableChatView> obtenerAlumnosProfe(Escuela escuelaIdEscuela, Curso c );
+      
+      //List<DesplegableChatView> infoDesplegableRolAlumno(Usuario u);
     
       
 

@@ -137,7 +137,7 @@ public class UsuarioService {
         }
     }
      
-     public void crearAlumno(AlumnoDTO a){
+     public void crearAlumno(AlumnoDTO a, Escuela e){
        Rol rolAlumno = rolRepository.findById(7)
         .orElseThrow(() -> new RolNotFound("El rol de Alumno no existe"));
 
@@ -165,7 +165,7 @@ public class UsuarioService {
         }
         alumno.setTipoJornada(a.getJornada());
         alumno = this.usuariorepository.save(alumno);
-
+      
         if (cursoUsuarioRepository.existsByCursoIdCursoAndUsuarioIdUsuario(curso, alumno)) {
             throw new UsuarioAssignedException("El alumno ya está asignado a ese curso");
         }
@@ -185,6 +185,13 @@ public class UsuarioService {
         if (usuarioUsuarioRepo.existsByUsuarioIdUsuarioAndUsuarioIdUsuario1(alumno, padre)) {
             throw new UsuarioWithPadreException("Ese alumno ya tiene asociado a ese padre");
         }
+        
+        //asociar el alumno a la escuela
+        Escuela escuela=escuelaRepository.findById(e.getIdEscuela()).orElseThrow(()-> new EscuelaNotFoundException("Esa escuela no existe"));
+        EscuelaUsuario eu=new EscuelaUsuario();
+        eu.setEscuelaIdEscuela(escuela);
+        eu.setUsuarioIdUsuario(alumno);
+        escuelaUsuarioRepository.save(eu);
 
         CursoUsuario cursoUsuario = new CursoUsuario();
         cursoUsuario.setCursoIdCurso(curso);
@@ -531,6 +538,13 @@ public class UsuarioService {
                 roles.add(6);
                 roles.add(7);
             }
+            
+            //rol  alumno: preceptor, profesor, administrativo
+             case 7 ->{ 
+                roles.add(3);
+                 roles.add(4);
+                roles.add(5);
+            }
         }
         
         //recorro la lista de roles para rellenar el desplegable
@@ -538,7 +552,7 @@ public class UsuarioService {
          List<DesplegableChatView> alumnos= new ArrayList<>();
           List<DesplegableChatView> usuarios= new ArrayList<>();
         DesplegableChatView objeto=null;
-        if(obtenido.getIdRol()!=5){
+        if(obtenido.getIdRol()==3){
         for (Integer rol : roles) {
             Rol iterado=new Rol();
             iterado.setIdRol(rol);
@@ -553,7 +567,7 @@ public class UsuarioService {
         }
        
          return usuarios;
-        }else{
+        }else if(obtenido.getIdRol()==5){
             for (Integer rol : roles) {
             Rol iterado=new Rol();
             iterado.setIdRol(rol);
@@ -572,14 +586,20 @@ public class UsuarioService {
             if(!(alumnos.isEmpty())){
                 usuarios.addAll(alumnos);
             }  
+        } 
+    }else{
+            for (Integer rol : roles) {
+            Rol iterado=new Rol();
+            iterado.setIdRol(rol);
+            info=usuariorepository.obtenerInfoDesplegables(iterado, e);
         }
-       
-         return usuarios;
+            return info;
             
+       
         
     }
-        
-    }
+         return usuarios;
+}
     
   
     
