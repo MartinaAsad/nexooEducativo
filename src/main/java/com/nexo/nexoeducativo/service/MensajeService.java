@@ -3,6 +3,7 @@ package com.nexo.nexoeducativo.service;
 import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.RolNotFound;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
+import com.nexo.nexoeducativo.models.dto.request.MensajeDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Mensaje;
@@ -13,6 +14,10 @@ import com.nexo.nexoeducativo.repository.MensajeRepository;
 import com.nexo.nexoeducativo.repository.RolRepository;
 import com.nexo.nexoeducativo.repository.UsuarioMensajeRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +40,9 @@ public class MensajeService {
     
     @Autowired
     private UsuarioMensajeRepository umRepository;
+    LocalDateTime hoy = LocalDateTime.now();
+     DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+    
     
     public void altaInfoPagoMensaje(String info, Escuela escuela){
         Mensaje infoPago = new Mensaje();
@@ -83,6 +91,39 @@ public class MensajeService {
        mensajeRepository.updateContenido(infoPago.getIdMensaje(), nuevoMensaje);
       
         }
+     
+     public Mensaje altaMensajeIndividual(MensajeDTO mensaje){
+          Mensaje m = new Mensaje();
+          m.setContenido(mensaje.getContenido());
+        if (mensaje.getArchivo().isEmpty() || mensaje.getArchivo().isBlank()) {
+            m.setArchivo(mensaje.getArchivo());
+        }
+        String fechaNueva = hoy.format(formato);
+        LocalDateTime actual = LocalDateTime.parse(fechaNueva, formato);
+        Date fechaDate = Date.from(actual.atZone(ZoneId.systemDefault()).toInstant());
+        m.setFecha(fechaDate);
+        
+         m = mensajeRepository.save(m);
+         
+          Usuario comunicador=usuarioRepository.findByMail(mensaje.getComunicador()).orElseThrow(
+                    ()-> new UsuarioNotFoundException("No existe el destinatario"));
+          
+         Usuario destinatario=usuarioRepository.findByMail(mensaje.getDestinatario()).orElseThrow(
+                    ()-> new UsuarioNotFoundException("No existe el destinatario"));
+
+        // tabla intermedia
+        UsuarioMensaje usuarioMensaje = new UsuarioMensaje();
+        usuarioMensaje.setMensajeIdMensaje(m);
+        usuarioMensaje.setUsuarioIdUsuario(comunicador);
+
+        UsuarioMensaje usuarioMensajeDestinatario = new UsuarioMensaje();
+        usuarioMensajeDestinatario.setMensajeIdMensaje(m);
+        usuarioMensajeDestinatario.setUsuarioIdUsuario(destinatario);
+
+        // Retornar el mensaje guardado
+        return m;
+         
+     }
         
     }
 

@@ -44,6 +44,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/api/**").authenticated()
                  .requestMatchers("/auth/**").authenticated()
                     .requestMatchers("/logout").authenticated()
+                    .requestMatchers("/ms/**").authenticated()
   //             .requestMatchers("/api/usuario/**").authenticated() // Rutas protegidas
                    
                 .requestMatchers("/login").permitAll() // Permitir acceso a login sin autenticación
