@@ -3,7 +3,7 @@ package com.nexo.nexoeducativo.service;
 import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.RolNotFound;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
-import com.nexo.nexoeducativo.models.dto.request.MensajeDTO;
+import com.nexo.nexoeducativo.models.dto.request.MensajeIndividualDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Mensaje;
@@ -92,7 +92,7 @@ public class MensajeService {
       
         }
      
-     public Mensaje altaMensajeIndividual(MensajeDTO mensaje){
+     public Mensaje altaMensaje(MensajeIndividualDTO mensaje){
           Mensaje m = new Mensaje();
           m.setContenido(mensaje.getContenido());
         if (mensaje.getArchivo().isEmpty() || mensaje.getArchivo().isBlank()) {

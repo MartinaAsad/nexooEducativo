@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.Length;
  */
 @Data
 @NoArgsConstructor
-public class MensajeDTO implements Serializable{
+public class MensajeIndividualDTO implements Serializable{
     @NotBlank(message = "no puede enviar un mensaje vacio")
     @Length(min=3, max=255)
     private String contenido;

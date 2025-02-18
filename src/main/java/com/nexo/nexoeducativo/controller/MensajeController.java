@@ -1,6 +1,6 @@
 package com.nexo.nexoeducativo.controller;
 
-import com.nexo.nexoeducativo.models.dto.request.MensajeDTO;
+import com.nexo.nexoeducativo.models.dto.request.MensajeIndividualDTO;
 import com.nexo.nexoeducativo.models.entities.Mensaje;
 import com.nexo.nexoeducativo.service.MensajeService;
 import lombok.RequiredArgsConstructor;
@@ -25,16 +25,16 @@ public class MensajeController {
     private final SimpMessagingTemplate usuarioPrivado;
 
     @MessageMapping
-    @SendTo("/grupo/publico")
-    public Mensaje enviarMensaje(@Payload MensajeDTO mensaje) {
-        Mensaje m = mensajeService.altaMensajeIndividual(mensaje);
+    @SendTo("/grupo")  //cambiar mas adelante por MensajeGrupalDTO
+    public Mensaje enviarMensaje(@Payload MensajeIndividualDTO mensaje) {
+        Mensaje m = mensajeService.altaMensaje(mensaje);
 
         return m;
     }
 
     //mensaje a un usuario especifico
     @MessageMapping("/mensajePrivado")
-    public MensajeDTO agregarUsuario(@Payload MensajeDTO mensaje) {
+    public MensajeIndividualDTO agregarUsuario(@Payload MensajeIndividualDTO mensaje) {
         usuarioPrivado.convertAndSendToUser(mensaje.getDestinatario(), "/privado", mensaje);
         return mensaje;
     }
