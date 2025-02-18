@@ -3,6 +3,8 @@ package com.nexo.nexoeducativo.service;
 import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.RolNotFound;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
+import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
+import com.nexo.nexoeducativo.models.dto.request.MensajeGrupalDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeIndividualDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.entities.Escuela;
@@ -19,6 +21,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,7 +95,7 @@ public class MensajeService {
       
         }
      
-     public Mensaje altaMensaje(MensajeIndividualDTO mensaje){
+     public Mensaje altaMensaje(MensajeGrupalDTO mensaje){
           Mensaje m = new Mensaje();
           m.setContenido(mensaje.getContenido());
         if (mensaje.getArchivo().isEmpty() || mensaje.getArchivo().isBlank()) {
@@ -108,22 +111,69 @@ public class MensajeService {
           Usuario comunicador=usuarioRepository.findByMail(mensaje.getComunicador()).orElseThrow(
                     ()-> new UsuarioNotFoundException("No existe el destinatario"));
           
-         Usuario destinatario=usuarioRepository.findByMail(mensaje.getDestinatario()).orElseThrow(
-                    ()-> new UsuarioNotFoundException("No existe el destinatario"));
+          UsuarioMensaje usuarioMensaje = new UsuarioMensaje();
+        usuarioMensaje.setMensajeIdMensaje(m);
+        usuarioMensaje.setUsuarioIdUsuario(comunicador);
+        umRepository.save(usuarioMensaje);
+          
+         for (DesplegableChatView usuario : mensaje.getGrupoUsuarios()) {
+             //buscar cada usuario dentro del grupo de destinatarios
+             Usuario destinatario = usuarioRepository.findByMail(usuario.getMail()).orElseThrow(
+                     () -> new UsuarioNotFoundException("No existe el destinatario"));
 
-        // tabla intermedia
+              // tabla intermedia
+             UsuarioMensaje usuarioMensajeDestinatario = new UsuarioMensaje();
+             usuarioMensajeDestinatario.setMensajeIdMensaje(m);
+             usuarioMensajeDestinatario.setUsuarioIdUsuario(destinatario);
+             umRepository.save(usuarioMensajeDestinatario);
+
+         }
+        return m;
+         
+     }
+     
+     public Mensaje buscarMensaje(Integer id){
+         Optional<Mensaje> mensaje= mensajeRepository.findByIdMensaje(id);
+         Mensaje m=mensaje.get();
+         return m;
+         
+     }
+     
+    public Mensaje altaMensajeIndividual(MensajeIndividualDTO mensaje) {
+        Mensaje m = new Mensaje();
+        m.setContenido(mensaje.getContenido());
+        if (mensaje.getArchivo().isEmpty() || mensaje.getArchivo().isBlank()) {
+            m.setArchivo(mensaje.getArchivo());
+        }
+        String fechaNueva = hoy.format(formato);
+        LocalDateTime actual = LocalDateTime.parse(fechaNueva, formato);
+        Date fechaDate = Date.from(actual.atZone(ZoneId.systemDefault()).toInstant());
+        m.setFecha(fechaDate);
+
+        m = mensajeRepository.save(m);
+
+        Usuario comunicador = usuarioRepository.findByMail(mensaje.getComunicador()).orElseThrow(
+                () -> new UsuarioNotFoundException("No existe el comunicador"));
+
+        Usuario destinatario = usuarioRepository.findByMail(mensaje.getDestinatario()).orElseThrow(
+                () -> new UsuarioNotFoundException("No existe el destinatario"));
+
         UsuarioMensaje usuarioMensaje = new UsuarioMensaje();
         usuarioMensaje.setMensajeIdMensaje(m);
         usuarioMensaje.setUsuarioIdUsuario(comunicador);
+        umRepository.save(usuarioMensaje);
 
         UsuarioMensaje usuarioMensajeDestinatario = new UsuarioMensaje();
         usuarioMensajeDestinatario.setMensajeIdMensaje(m);
         usuarioMensajeDestinatario.setUsuarioIdUsuario(destinatario);
-
-        // Retornar el mensaje guardado
+        umRepository.save(usuarioMensajeDestinatario);
         return m;
-         
-     }
+
+    }
+    
+    public Mensaje editarMensaje(Mensaje m){
+        return mensajeRepository.save(m);
+    }
         
     }
 
