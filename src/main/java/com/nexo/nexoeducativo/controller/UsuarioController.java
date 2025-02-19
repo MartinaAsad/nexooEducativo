@@ -14,6 +14,7 @@ import com.nexo.nexoeducativo.models.dto.request.CursoRequest;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
 import com.nexo.nexoeducativo.models.dto.request.EditarCursoDTO;
+import com.nexo.nexoeducativo.models.dto.request.EditarEventoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EliminarTareaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaModificacionDTO;
@@ -903,6 +904,13 @@ public class UsuarioController {
              @Valid @RequestBody EventosView ev){
          eventoService.altaEvento(ev, idCurso);
            return new ResponseEntity<>("El evento fue dado de alta exitosamente",HttpStatus.OK);   
+    }
+     
+     @PreAuthorize("hasAuthority('profesor')" ) 
+    @PatchMapping(value="/modificarEvento")
+     ResponseEntity<?> editarEvento (@Valid @RequestBody EditarEventoDTO ev){
+         eventoService.editarEvento(ev);
+           return new ResponseEntity<>("El evento fue modificado exitosamente",HttpStatus.OK);   
     }
      
        @PreAuthorize("hasAuthority('padre')" ) 

@@ -4,6 +4,7 @@ package com.nexo.nexoeducativo.service;
 import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.EventoNotFoundException;
 import com.nexo.nexoeducativo.exception.HoraInvalidatedexception;
+import com.nexo.nexoeducativo.models.dto.request.EditarEventoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EventosView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.CursoUsuario;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -91,13 +93,34 @@ public class EventoService {
        return obtener;
     }
     
-    public void verificarCampos(){
+    public void verificarCampos(EditarEventoDTO dto, Evento ingresado){
+        if(dto.getDescripcion()!=null){
+            ingresado.setDescripcion(dto.getDescripcion());
+        }
+        
+        String fechaNueva=hoy.format(formato);
+         LocalDateTime actual=LocalDateTime.parse(fechaNueva, formato);
+        Date fechaActual = Date.from(actual.atZone(ZoneId.systemDefault()).toInstant());
+        if(dto.getFecha()!=null){
+            if(dto.getFecha().before(fechaActual)){
+         throw new HoraInvalidatedexception("No puedes agendar un evento antes de la fecha actual "+dto.getFecha());   
+        }
+          ingresado.setFecha(dto.getFecha());   
+        }
+        
+        eventoRepository.save(ingresado);
+        
+        
         
     }
     
-    public void editarEvento(Integer idEvento){
-        Evento modificado=eventoRepository.findById(idEvento).orElseThrow(
+    @Transactional
+    public Evento editarEvento(EditarEventoDTO dto){
+        Evento modificado=eventoRepository.findById(dto.getIdEvento()).orElseThrow(
                 ()-> new EventoNotFoundException("No existe el evento que se desea modificar"));
+        
+        verificarCampos(dto, modificado);
+        return modificado;
     }
     
 }
