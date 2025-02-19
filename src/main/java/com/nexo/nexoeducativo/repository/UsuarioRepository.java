@@ -76,9 +76,9 @@ Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
           
       Usuario findNombreAndApellidoByIdUsuario(Integer idUsuario);
       
-      @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.UsuarioView(u.nombre, u.apellido) FROM Usuario u "
+      @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.UsuarioView(u.idUsuario,u.nombre, u.apellido) FROM Usuario u "
               + "JOIN CursoUsuario cu ON u.idUsuario=cu.usuarioIdUsuario"
-              + " WHERE cu.cursoIdCurso= :curso and u.rolidrol=7 and cu.cursoIdCurso.activo=1")
+              + " WHERE cu.cursoIdCurso= :curso and u.rolidrol=7")
       
       List<UsuarioView> infoAlumnos(@Param("curso") Curso curso);
       
@@ -96,7 +96,7 @@ Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
               + "WHERE u.rolidrol=2 and u.mail= :mail")
       Escuela obtenerIdEscuela(@Param("mail") String mail);
       
-      @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.verCursoView (c.numero, c.division, c.activo)"
+      @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.verCursoView (c.numero, c.division, c.activo, c.idCurso)"
               + " FROM Curso c INNER JOIN CursoEscuela ce ON ce.cursoIdCurso=c.idCurso WHERE ce.escuelaIdEscuela= :escuelaIdEscuela")
       List<verCursoView> obtenerCursos(@Param("escuelaIdEscuela") Escuela escuelaIdEscuela);
       
@@ -169,12 +169,14 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
               + "WHERE r.nombre='alumno' AND ce.escuelaIdEscuela= :escuelaIdEscuela AND u.activo=1 AND cu.cursoIdCurso= :c")
       List<DesplegableChatView> obtenerAlumnosProfe(Escuela escuelaIdEscuela, Curso c );
       
-      @Query("SELECT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail "
-              + "FROM Usuario u " +
-"LEFT JOIN UsuarioUsuario uu ON " +
-"uu.usuarioIdUsuario=u.idUsuario " +
-"WHERE uu.usuarioIdUsuario1.rolidrol=7")
-      List<DesplegableChatView> infoPadresCurso();
+     @Query("SELECT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail " +
+                  "FROM Usuario u " +
+                  "JOIN UsuarioUsuario uu ON uu.usuarioIdUsuario = u.idUsuario " +
+                  "JOIN CursoUsuario cu ON cu.usuarioIdUsuario = uu.usuarioIdUsuario1 " +
+                  "JOIN Usuario padre ON uu.usuarioIdUsuario1= padre.idUsuario " +
+                  "WHERE padre.rolidrol=7 AND cu.cursoIdCurso = :cursoIdCurso")
+
+      List<DesplegableChatView> infoPadresCurso(Curso cursoIdCurso);
     
       
 

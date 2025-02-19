@@ -967,6 +967,36 @@ public class UsuarioController {
 		return new ResponseEntity<>(usuarios, HttpStatus.OK);  
     }
      
+      @PreAuthorize("hasAuthority('administrativo')" 
+                + "or hasAuthority('profesor') "
+       + "or hasAuthority('alumno') ")
+    @GetMapping(value="/desplegableChatGrupal")
+     ResponseEntity<?> desplegableChatGrupal(Authentication auth){
+         String mailUsuario=auth.getPrincipal().toString();
+        Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+         Usuario u=uService.buscarUsuario(mailUsuario);
+         
+         //esto para el rol profesor
+         /*List<MateriaCurso> obtenerCursos=uService.obtenerCursos(u);
+         List<verCursoView> verCursos=uService.verCursos(obtenerCursos);
+        List<DesplegableChatView> usuarios=uService.infoUsuariosChat(e, u, verCursos);
+        if(usuarios.isEmpty()) {
+			return new ResponseEntity<>("No hay cursos activos",HttpStatus.NO_CONTENT);
+		}
+		
+		return new ResponseEntity<>(usuarios, HttpStatus.OK);  */
+         //esto es para el rol administrativo
+         
+         List<verCursoView> usuarios=uService.desplegableChatGrupal(e, u);
+         if(!usuarios.isEmpty()){
+               return new ResponseEntity<>(usuarios,HttpStatus.OK);
+               /*FRONT: CON LO QUE SE TRAE DE ACA SELECCIONAR CURSO Y DIVISION PARA MOSTRARLO LUEGO PONER EL ID DEL CURSO COMO EVENT KEY
+               TIPO ASI: PADRES DE 3 b, ALUMNOS DE 3 b, Padres y alumnos DE 3b (ejemplo)*/
+         }
+         return new ResponseEntity<>("no hay informacion", HttpStatus.NO_CONTENT);
+         
+    }
+     
      
      @PreAuthorize("hasAuthority('administrativo')" ) 
     @PatchMapping(value="/editarInfoPago")

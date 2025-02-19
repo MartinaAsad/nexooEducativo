@@ -576,18 +576,71 @@ public class UsuarioService {
 }
     
     //ESTE DESPLEGABLE ES PARA CHAT GRUPAL
-     /*public List<DesplegableChatView> desplegableChatGrupal(Escuela e, Usuario auth){
+     public List<verCursoView> desplegableChatGrupal(Escuela e, Usuario auth){
         //obtener el rol y en base a eso, ver a que tipos de usuaios le puede enviar mensaje
         Rol obtenido=auth.getRolidrol();
+        List<UsuarioView>  alumnos = new ArrayList<>(); 
+        List<verCursoView> desplegables=new ArrayList<>();
+        List<MateriaCurso> desplegables2=new ArrayList<>();
         switch(obtenido.getIdRol()){
             //rol administrativo: padres, alumnos
             case 3 ->{ 
                 List<verCursoView> obtenerCursos=usuariorepository.obtenerCursos(e);
+                for (verCursoView obtenerCurso : obtenerCursos) {
+                    Curso c=cursoRepository.findById(obtenerCurso.getIdCurso()).orElseThrow(
+                            ()-> new CursoNotFound("El curso no existe"));
+                    //LOGGER.info("cursos encontardos: "+c.toString());
+                alumnos=usuariorepository.infoAlumnos(c);
+                LOGGER.info("cursos encontardos: "+c.getIdCurso());
+                if(!alumnos.isEmpty()){
+                    //agregar al desplegable los cursos
+                    verCursoView cursos=new verCursoView();
+                    cursos.setIdCurso(c.getIdCurso());
+                    cursos.setActivo(c.getActivo());
+                    cursos.setDivision(c.getDivision());
+                    cursos.setNumero(c.getNumero());
+                    
+                    desplegables.add(cursos);
+                    
+                }else{
+                    LOGGER.info("lista vacia: ");
+                    LOGGER.info("cursos encontardos: "+c.getIdCurso());
+                }
+                
+                }
+            }
+            
+            //rol  profesor:alumnos
+            case 5 -> {
+                desplegables2 = matCursoRepository.findDistinctByProfesor(auth); //obtengo todos los cursos donde esta el profesor que inicio la sesion
+                for (MateriaCurso cursos : desplegables2) {
+                    //obtengo todos los alumnos del curso
+                    alumnos = usuariorepository.infoAlumnos(cursos.getCursoIdCurso());
+                    if (!alumnos.isEmpty()) {
+                        //agregar al desplegable los cursos
+                        /*verCursoView cursos2 = new verCursoView();
+                        cursos.setIdCurso(cursos.getIdCurso());
+                        cursos.setActivo(c.getActivo());
+                        cursos.setDivision(c.getDivision());
+                        cursos.setNumero(c.getNumero());
+
+                        desplegables.add(cursos);*/
+
+                    } else {
+                        LOGGER.info("lista vacia: ");
+                        //LOGGER.info("cursos encontardos: " + c.getIdCurso());
+                    }
+
+                }
+                 
+                
                
             }
+            
            
         }
-     }*/
+        return desplegables;
+     }
 }
     
     
