@@ -5,22 +5,19 @@ import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoAsistenciaDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsistenciaDTO;
-import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
-import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
-import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.Asistencia;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.CursoAsistencia;
 import com.nexo.nexoeducativo.models.entities.Presentismo;
 import com.nexo.nexoeducativo.models.entities.PresentismoUsuario;
 import com.nexo.nexoeducativo.models.entities.Usuario;
-import com.nexo.nexoeducativo.repository.AsistenciaRepository;
-import com.nexo.nexoeducativo.repository.CursoRepository;
-import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import com.nexo.nexoeducativo.models.entities.UsuarioAsistencia;
+import com.nexo.nexoeducativo.repository.AsistenciaRepository;
 import com.nexo.nexoeducativo.repository.CursoAsistenciaRepository;
+import com.nexo.nexoeducativo.repository.CursoRepository;
 import com.nexo.nexoeducativo.repository.PresentismoRepository;
 import com.nexo.nexoeducativo.repository.PresentismoUsuarioRepository;
+import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -160,5 +157,6 @@ public class AsistenciaService {
         cursoARepository.save(ca);
         return ca;
     }
+    
     
 }

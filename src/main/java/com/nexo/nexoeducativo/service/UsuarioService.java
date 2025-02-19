@@ -14,6 +14,7 @@ import com.nexo.nexoeducativo.exception.UsuarioWithPadreException;
 import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoModificacionDTO;
+import com.nexo.nexoeducativo.models.dto.request.DesplegableChatGrupalView;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
@@ -576,11 +577,11 @@ public class UsuarioService {
 }
     
     //ESTE DESPLEGABLE ES PARA CHAT GRUPAL
-     public List<verCursoView> desplegableChatGrupal(Escuela e, Usuario auth){
+     public List<DesplegableChatGrupalView> desplegableChatGrupal(Escuela e, Usuario auth){
         //obtener el rol y en base a eso, ver a que tipos de usuaios le puede enviar mensaje
         Rol obtenido=auth.getRolidrol();
         List<UsuarioView>  alumnos = new ArrayList<>(); 
-        List<verCursoView> desplegables=new ArrayList<>();
+        List<DesplegableChatGrupalView> desplegables=new ArrayList<>();
         List<MateriaCurso> desplegables2=new ArrayList<>();
         switch(obtenido.getIdRol()){
             //rol administrativo: padres, alumnos
@@ -594,7 +595,7 @@ public class UsuarioService {
                 LOGGER.info("cursos encontardos: "+c.getIdCurso());
                 if(!alumnos.isEmpty()){
                     //agregar al desplegable los cursos
-                    verCursoView cursos=new verCursoView();
+                    DesplegableChatGrupalView cursos=new DesplegableChatGrupalView();
                     cursos.setIdCurso(c.getIdCurso());
                     cursos.setActivo(c.getActivo());
                     cursos.setDivision(c.getDivision());
@@ -616,21 +617,18 @@ public class UsuarioService {
                 for (MateriaCurso cursos : desplegables2) {
                     //obtengo todos los alumnos del curso
                     alumnos = usuariorepository.infoAlumnos(cursos.getCursoIdCurso());
-                    if (!alumnos.isEmpty()) {
-                        //agregar al desplegable los cursos
-                        /*verCursoView cursos2 = new verCursoView();
-                        cursos.setIdCurso(cursos.getIdCurso());
-                        cursos.setActivo(c.getActivo());
-                        cursos.setDivision(c.getDivision());
-                        cursos.setNumero(c.getNumero());
+                }
+                
+                //recorro la lista de alumnos
+                if(!alumnos.isEmpty()){
+                  for (UsuarioView alumno : alumnos) {
+                       //agregar al desplegable los alumnos
+                        DesplegableChatGrupalView alumnos2 = new DesplegableChatGrupalView();
+                        alumnos2.setIdUsuario(alumno.getIdUsuario());
 
-                        desplegables.add(cursos);*/
-
-                    } else {
-                        LOGGER.info("lista vacia: ");
-                        //LOGGER.info("cursos encontardos: " + c.getIdCurso());
-                    }
-
+                        desplegables.add(alumnos2);
+                    
+                }   
                 }
                  
                 

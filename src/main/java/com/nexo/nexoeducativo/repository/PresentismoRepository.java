@@ -1,13 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package com.nexo.nexoeducativo.repository;
 
 import com.nexo.nexoeducativo.models.entities.Presentismo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 
 public interface PresentismoRepository extends JpaRepository<Presentismo, Integer> {
+    @Query("SELECT p.cantInasistencia FROM Presentismo p "
+            + "INNER JOIN PresentismoUsuario pu ON "
+            + "pu.presentismoIdPresentismo=p.idPresentismo"
+            + " WHERE pu.usuarioIdUsuario.idUsuario= :idUsuario")
+    public Integer cantInasistencias(Integer idUsuario);
     
 }

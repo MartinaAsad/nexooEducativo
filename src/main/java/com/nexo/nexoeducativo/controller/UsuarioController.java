@@ -11,6 +11,7 @@ import com.nexo.nexoeducativo.models.dto.request.BorrarMateriaRequestDTO;
 import com.nexo.nexoeducativo.models.dto.request.ComprobantePagoDto;
 import com.nexo.nexoeducativo.models.dto.request.CuotaDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoRequest;
+import com.nexo.nexoeducativo.models.dto.request.DesplegableChatGrupalView;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
 import com.nexo.nexoeducativo.models.dto.request.EditarCursoDTO;
@@ -55,10 +56,12 @@ import com.nexo.nexoeducativo.service.MateriaService;
 import com.nexo.nexoeducativo.service.MaterialService;
 import com.nexo.nexoeducativo.service.MensajeService;
 import com.nexo.nexoeducativo.service.PlanService;
+import com.nexo.nexoeducativo.service.PresentismoService;
 import com.nexo.nexoeducativo.service.RolService;
 import com.nexo.nexoeducativo.service.TareaService;
 import com.nexo.nexoeducativo.service.UsuarioService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,6 +135,9 @@ public class UsuarioController {
     
     @Autowired
     private ComprobantePagoService cpService;
+    
+    @Autowired
+    private PresentismoService presentismoService;
     
      private static final Logger LOGGER = LoggerFactory.getLogger(UsuarioController.class);
     
@@ -874,7 +880,18 @@ public class UsuarioController {
           Usuario alumno=uService.buscarUsuario(mailUsuario);
          List<InfoMateriaHijoView> obtenerEventosPosteriores=tareaService.obtenerInformacion(alumno.getIdUsuario());
            return new ResponseEntity<>(obtenerEventosPosteriores,HttpStatus.OK);   
-    }    
+    }
+     
+     @PreAuthorize("hasAuthority('padre')")
+    @GetMapping(value="/cantInasistencias/{idUsuario}")
+     ResponseEntity<?> prueba230 (@PathVariable("idUsuario") @NotNull Integer idUsuario){
+         Integer cant=presentismoService.cantInasistencias(idUsuario);
+         if(cant!=0){
+          return new ResponseEntity<>(cant,HttpStatus.OK);     
+         }else{
+             return new ResponseEntity<>("No hay inasistencias registradas en el sistema",HttpStatus.OK); 
+         } 
+    }   
     
       @PreAuthorize("hasAuthority('administrativo') ")
     @PatchMapping(value="/modificarAlumno/{id}")
@@ -976,22 +993,13 @@ public class UsuarioController {
         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
          Usuario u=uService.buscarUsuario(mailUsuario);
          
-         //esto para el rol profesor
-         /*List<MateriaCurso> obtenerCursos=uService.obtenerCursos(u);
-         List<verCursoView> verCursos=uService.verCursos(obtenerCursos);
-        List<DesplegableChatView> usuarios=uService.infoUsuariosChat(e, u, verCursos);
-        if(usuarios.isEmpty()) {
-			return new ResponseEntity<>("No hay cursos activos",HttpStatus.NO_CONTENT);
-		}
-		
-		return new ResponseEntity<>(usuarios, HttpStatus.OK);  */
-         //esto es para el rol administrativo
-         
-         List<verCursoView> usuarios=uService.desplegableChatGrupal(e, u);
+         List<DesplegableChatGrupalView> usuarios=uService.desplegableChatGrupal(e, u);
          if(!usuarios.isEmpty()){
                return new ResponseEntity<>(usuarios,HttpStatus.OK);
                /*FRONT: CON LO QUE SE TRAE DE ACA SELECCIONAR CURSO Y DIVISION PARA MOSTRARLO LUEGO PONER EL ID DEL CURSO COMO EVENT KEY
                TIPO ASI: PADRES DE 3 b, ALUMNOS DE 3 b, Padres y alumnos DE 3b (ejemplo)*/
+               
+               /*PARA EL ROL PROFESOR MOSTRAR EL DESPLEGABLE DE CURSOS A SU CARGO*/
          }
          return new ResponseEntity<>("no hay informacion", HttpStatus.NO_CONTENT);
          

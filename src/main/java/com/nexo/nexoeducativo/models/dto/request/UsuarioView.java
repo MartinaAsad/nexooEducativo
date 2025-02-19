@@ -14,6 +14,12 @@ public class UsuarioView implements Serializable{
     private int idUsuario;
     private String nombre;
     private String apellido;
+
+    public UsuarioView(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+    
+    
     
     
 }
