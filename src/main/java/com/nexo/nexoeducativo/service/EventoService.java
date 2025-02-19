@@ -2,6 +2,7 @@ package com.nexo.nexoeducativo.service;
 
 
 import com.nexo.nexoeducativo.exception.CursoNotFound;
+import com.nexo.nexoeducativo.exception.EventoNotFoundException;
 import com.nexo.nexoeducativo.exception.HoraInvalidatedexception;
 import com.nexo.nexoeducativo.models.dto.request.EventosView;
 import com.nexo.nexoeducativo.models.entities.Curso;
@@ -88,6 +89,15 @@ public class EventoService {
     public List<EventosView> obtenerEventosPosteriores(Usuario usuarioIdUsuario){
        List<EventosView> obtener=eventoRepository.obtenerEventosPosteriores(usuarioIdUsuario);
        return obtener;
+    }
+    
+    public void verificarCampos(){
+        
+    }
+    
+    public void editarEvento(Integer idEvento){
+        Evento modificado=eventoRepository.findById(idEvento).orElseThrow(
+                ()-> new EventoNotFoundException("No existe el evento que se desea modificar"));
     }
     
 }

@@ -4,6 +4,7 @@ import com.nexo.nexoeducativo.exception.CalificacionWrongException;
 import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.EscuelaExistingException;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
+import com.nexo.nexoeducativo.exception.EventoNotFoundException;
 import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.HoraInvalidatedexception;
 import com.nexo.nexoeducativo.exception.MateriaExistingException;
@@ -118,6 +119,11 @@ public class GlobalExceptionHandler {
      @ExceptionHandler(FormatoIncorrectoException.class)
      public ResponseEntity<String>handleFormatoIncorrectoException(FormatoIncorrectoException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+     
+     @ExceptionHandler(EventoNotFoundException.class)
+    public ResponseEntity<String>handleEventoNotFoundException(EventoNotFoundException uf){
+         return new ResponseEntity<>(uf.getMessage(), HttpStatus.NOT_FOUND);
     }
      
     

@@ -78,7 +78,7 @@ Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
       
       @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.UsuarioView(u.nombre, u.apellido) FROM Usuario u "
               + "JOIN CursoUsuario cu ON u.idUsuario=cu.usuarioIdUsuario"
-              + " WHERE cu.cursoIdCurso= :curso and u.rolidrol=7")
+              + " WHERE cu.cursoIdCurso= :curso and u.rolidrol=7 cu.cursoIdCurso.activo=1")
       
       List<UsuarioView> infoAlumnos(@Param("curso") Curso curso);
       
@@ -169,7 +169,12 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
               + "WHERE r.nombre='alumno' AND ce.escuelaIdEscuela= :escuelaIdEscuela AND u.activo=1 AND cu.cursoIdCurso= :c")
       List<DesplegableChatView> obtenerAlumnosProfe(Escuela escuelaIdEscuela, Curso c );
       
-      //List<DesplegableChatView> infoDesplegableRolAlumno(Usuario u);
+      @Query("SELECT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail "
+              + "FROM Usuario u " +
+"LEFT JOIN UsuarioUsuario uu ON " +
+"uu.usuarioIdUsuario=u.idUsuario " +
+"WHERE uu.usuarioIdUsuario1.rolidrol=7")
+      List<DesplegableChatView> infoPadresCurso();
     
       
 
