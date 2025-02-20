@@ -59,7 +59,7 @@ public class WebSecurityConfig {
                 .authenticationEntryPoint((request, response, authException) -> {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.setContentType("application/json");
-                    response.getWriter().write("{\"error\": \"No está autenticado o la sesión ha expirado.\"}" + authException.getMessage());
+                    response.getWriter().write("{\"error\": \"Uusario inactivo o o la sesión ha expirado.\"}" + authException.getMessage());
                 })
                 .accessDeniedHandler((request, response, accessDeniedException) -> {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);

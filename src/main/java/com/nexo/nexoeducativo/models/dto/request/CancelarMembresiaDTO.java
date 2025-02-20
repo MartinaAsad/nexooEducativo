@@ -2,6 +2,7 @@
 package com.nexo.nexoeducativo.models.dto.request;
 
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,10 +12,11 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class CancelarMembresiaDTO implements Serializable{
-    private int id1;
+    private Integer id1;
     private short activo1;
-    private int id2;
+    private Integer id2;
     private short activo2;
     
 }

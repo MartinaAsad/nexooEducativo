@@ -1,17 +1,21 @@
 
 package com.nexo.nexoeducativo.service;
 
+import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.CancelarMembresiaDTO;
 import com.nexo.nexoeducativo.models.dto.request.ComprobantePagoDto;
 import com.nexo.nexoeducativo.models.dto.request.RenovarMembresiaDTO;
+import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.ComprobantePago;
+import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.EscuelaComprobantePago;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.models.entities.UsuarioComprobantePago;
 import com.nexo.nexoeducativo.repository.ComprobantePagoRepository;
+import com.nexo.nexoeducativo.repository.CursoRepository;
 import com.nexo.nexoeducativo.repository.EscuelaComprobantePagoRepository;
 import com.nexo.nexoeducativo.repository.EscuelaRepository;
 import com.nexo.nexoeducativo.repository.UsuarioComprobantePagoRepository;
@@ -23,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -47,6 +52,9 @@ public class ComprobantePagoService {
      
      @Autowired
      private UsuarioComprobantePagoRepository ucpRepository;
+     
+     @Autowired
+     private CursoRepository cursoRepository;
     
     public void cuotaPagada(ComprobantePagoDto pago, int idEscuela){
          String fechaNueva=hoy.format(formato);
@@ -88,16 +96,41 @@ public class ComprobantePagoService {
         
     }
       
-      public  List<CancelarMembresiaDTO> renovarMembresia(RenovarMembresiaDTO dto, Usuario u, ComprobantePagoDto pago){
+      @Transactional
+      public void renovarMembresia(RenovarMembresiaDTO dto, Usuario u, Escuela e,ComprobantePagoDto pago){
+         // dto.setE(e);
           List<CancelarMembresiaDTO> usuarios=null;
+           List<verCursoView> obtenerCursos=null;
           if(dto.isRenovo()){
-              cuotaPagada(pago, dto.getE().getIdEscuela());
+              cuotaPagada(pago, e.getIdEscuela());
           }else{
-              //obtengo todos los usuarios de la escuela
-              usuarios= usuarioRepository.usuariosEscuela(dto.getE());
+              //obtengo todos los usuarios de la escuela e info sobre id escuela y si esta activa
+              usuarios= usuarioRepository.usuariosEscuela(e);
+              for (CancelarMembresiaDTO us : usuarios) {
+                  Usuario existente=usuarioRepository.findById(us.getId1()).orElseThrow(()-> new UsuarioNotFoundException("No existe el usuario"));
+                  if (existente!=null) {
+                      existente.setActivo((short)0);
+                  }
+                  usuarioRepository.save(existente);
+                  
+              }
+              
+              //obtengo informacion sobre los cursos de la escuela
+              obtenerCursos=usuarioRepository.obtenerCursos(e);
+               for (verCursoView curso : obtenerCursos) {
+                  Curso existente=cursoRepository.findById(curso.getIdCurso()).orElseThrow(()-> new CursoNotFound("No existe el curso"));
+                  if (existente!=null) {
+                      existente.setActivo((short)0);
+                  }
+                  cursoRepository.save(existente);
+                  
+              }
+              
+              //alumnos, escuela y cursos pasan a estar TODOS inactivos
+                   
           }
           
-          return usuarios;
+          
           
       }
     

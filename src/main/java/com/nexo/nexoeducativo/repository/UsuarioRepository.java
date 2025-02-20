@@ -179,7 +179,8 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
 
       List<DesplegableChatView> infoPadresCurso(Curso cursoIdCurso);
       
-      @Query("SELECT DISTINCT(u.idUsuario AS id1), u.activo AS activo1, e.idEscuela AS id1, e.activo AS activo2 FROM Usuario u " +
+      @Query("SELECT DISTINCT new com.nexo.nexoeducativo.models.dto.request.CancelarMembresiaDTO (u.idUsuario AS id1, u.activo AS activo1,"
+              + " e.idEscuela AS id2, e.activo AS activo2) FROM Usuario u " +
 "INNER JOIN EscuelaUsuario eu ON " +
 "eu.usuarioIdUsuario=u.idUsuario " +
 "INNER JOIN Escuela e ON " +

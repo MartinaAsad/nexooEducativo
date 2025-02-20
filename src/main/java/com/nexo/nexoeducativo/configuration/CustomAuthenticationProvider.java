@@ -1,25 +1,18 @@
 package com.nexo.nexoeducativo.configuration;
 
 
-import ch.qos.logback.core.CoreConstants;
-import static com.mysql.cj.conf.PropertyKey.logger;
+import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioDTO;
-import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,7 +21,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Slf4j
@@ -61,15 +53,17 @@ private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticatio
             System.out.println("Contrasena hasheada proveniente del objeto: " + user.getClave());
             System.out.println("contra hasheada segun lo recibido: " + hashedPassword);*/
 
-            if (user.getClave().equals(hashedPassword)) {
+            if (user.getClave().equals(hashedPassword) && user.getActivo()==1) {
                 //System.out.println("siii todo bien: " + email);
                 List<GrantedAuthority> authorities = List.of(
                     new SimpleGrantedAuthority(user.getRolidrol().getNombre())
                 );
                 return new InfoUsuarioDTO(email, password, authorities, user.getNombre(), user.getApellido());
-            } else {
+            } else if (!user.getClave().equals(hashedPassword)){
                 //System.out.println("contra incorrecta: " + email);
                 throw new BadCredentialsException("Contraseña inválida");
+            }else{
+                throw new UsuarioNotFoundException("Usuario inactivo. Por favor, contacte al administrador de su escuela");
             }
         } catch (Exception e) {
             //System.out.println("error en la autenticacion desd eauthenticate: " + e.getMessage());
