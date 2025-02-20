@@ -1,6 +1,7 @@
 package com.nexo.nexoeducativo.repository;
 
 
+import com.nexo.nexoeducativo.models.dto.request.CancelarMembresiaDTO;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
 import com.nexo.nexoeducativo.models.dto.request.InfoAlumnoCuotaView;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
@@ -177,6 +178,14 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
                   "WHERE padre.rolidrol=7 AND cu.cursoIdCurso = :cursoIdCurso")
 
       List<DesplegableChatView> infoPadresCurso(Curso cursoIdCurso);
+      
+      @Query("SELECT DISTINCT(u.idUsuario AS id1), u.activo AS activo1, e.idEscuela AS id1, e.activo AS activo2 FROM Usuario u " +
+"INNER JOIN EscuelaUsuario eu ON " +
+"eu.usuarioIdUsuario=u.idUsuario " +
+"INNER JOIN Escuela e ON " +
+"e.idEscuela=eu.escuelaIdEscuela " +
+"WHERE eu.escuelaIdEscuela= :escuelaIdEscuela")
+      List<CancelarMembresiaDTO> usuariosEscuela(Escuela escuelaIdEscuela);
     
       
 

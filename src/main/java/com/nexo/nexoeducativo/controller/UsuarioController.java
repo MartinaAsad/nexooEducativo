@@ -8,6 +8,7 @@ import com.nexo.nexoeducativo.models.dto.request.AlumnoModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsignarPreceptorDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsistenciaDTO;
 import com.nexo.nexoeducativo.models.dto.request.BorrarMateriaRequestDTO;
+import com.nexo.nexoeducativo.models.dto.request.CancelarMembresiaDTO;
 import com.nexo.nexoeducativo.models.dto.request.ComprobantePagoDto;
 import com.nexo.nexoeducativo.models.dto.request.CuotaDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoRequest;
@@ -32,6 +33,7 @@ import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.NotaDTO;
 import com.nexo.nexoeducativo.models.dto.request.ObtenerTareaView;
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
+import com.nexo.nexoeducativo.models.dto.request.RenovarMembresiaDTO;
 import com.nexo.nexoeducativo.models.dto.request.RolDTO;
 import com.nexo.nexoeducativo.models.dto.request.SeleccionarMaterialView;
 import com.nexo.nexoeducativo.models.dto.request.TareaDTO;
@@ -943,7 +945,23 @@ public class UsuarioController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);  
     }
      
-         @PreAuthorize("hasAuthority('padre')" ) 
+      @PreAuthorize("hasAuthority('jefe colegio')" ) 
+    @GetMapping(value="/renovarMembresia")
+     ResponseEntity<?> renovarMembresia (Authentication auth, @Valid @RequestBody RenovarMembresiaDTO dto, 
+             @Valid @RequestBody(required=false) ComprobantePagoDto pago){
+         String mailUsuario=auth.getPrincipal().toString();
+         Usuario u=uService.buscarUsuario(mailUsuario);
+         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+        List<CancelarMembresiaDTO> lista=cpService.renovarMembresia(dto, u, pago);
+		if(lista.isEmpty()) {
+			return new ResponseEntity<>("Usted no tiene hijos",HttpStatus.NO_CONTENT);
+		}
+		
+		return new ResponseEntity<>(lista, HttpStatus.OK);  
+    }
+     
+         @PreAuthorize("hasAuthority('padre')"
+                 + "or hasAuthority('profesor') " ) 
     @PostMapping(value="/generarComprobante")
      ResponseEntity<?> generarComprobante (Authentication auth, @Valid @RequestBody ComprobantePagoDto pago){
          String mailUsuario=auth.getPrincipal().toString();

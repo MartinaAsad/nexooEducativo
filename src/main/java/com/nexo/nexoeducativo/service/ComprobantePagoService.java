@@ -3,7 +3,9 @@ package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
+import com.nexo.nexoeducativo.models.dto.request.CancelarMembresiaDTO;
 import com.nexo.nexoeducativo.models.dto.request.ComprobantePagoDto;
+import com.nexo.nexoeducativo.models.dto.request.RenovarMembresiaDTO;
 import com.nexo.nexoeducativo.models.entities.ComprobantePago;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.EscuelaComprobantePago;
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,5 +87,18 @@ public class ComprobantePagoService {
         return hora;
         
     }
+      
+      public  List<CancelarMembresiaDTO> renovarMembresia(RenovarMembresiaDTO dto, Usuario u, ComprobantePagoDto pago){
+          List<CancelarMembresiaDTO> usuarios=null;
+          if(dto.isRenovo()){
+              cuotaPagada(pago, dto.getE().getIdEscuela());
+          }else{
+              //obtengo todos los usuarios de la escuela
+              usuarios= usuarioRepository.usuariosEscuela(dto.getE());
+          }
+          
+          return usuarios;
+          
+      }
     
 }
