@@ -32,6 +32,7 @@ import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.NotaDTO;
 import com.nexo.nexoeducativo.models.dto.request.ObtenerTareaView;
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
+import com.nexo.nexoeducativo.models.dto.request.PlanView;
 import com.nexo.nexoeducativo.models.dto.request.RenovarMembresiaDTO;
 import com.nexo.nexoeducativo.models.dto.request.RolDTO;
 import com.nexo.nexoeducativo.models.dto.request.SeleccionarMaterialView;
@@ -386,6 +387,21 @@ public class UsuarioController {
         }
 
         return new ResponseEntity<>(planes, HttpStatus.OK);
+
+    }
+    
+     @PreAuthorize("hasAuthority('super admin') "
+             + "or hasAuthority('jefe colegio') ")
+     @GetMapping(value = "/getInfoPlanes")
+    ResponseEntity<?> prueba130() {
+        List<PlanView> planes2 = new ArrayList<PlanView>();
+        planService.planes().forEach(planes2::add);
+
+        if (planes2.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(planes2, HttpStatus.OK);
 
     }
     

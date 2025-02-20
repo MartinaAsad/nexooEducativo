@@ -5,6 +5,7 @@
 package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.models.dto.request.PlanDTO;
+import com.nexo.nexoeducativo.models.dto.request.PlanView;
 import com.nexo.nexoeducativo.models.entities.Plan;
 import com.nexo.nexoeducativo.repository.PlanRepository;
 import java.util.List;
@@ -34,5 +35,9 @@ public class PlanService {
      public List<String> obtenerNombrePlanes(){
         return planRepository.getDescripcionAndIdPlan();
     }
+     
+     public List<PlanView> planes(){
+         return planRepository.infoPlanes();
+     }
     
 }
