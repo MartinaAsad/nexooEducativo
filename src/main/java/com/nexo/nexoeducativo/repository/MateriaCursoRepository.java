@@ -36,7 +36,7 @@ public interface MateriaCursoRepository extends JpaRepository<MateriaCurso, Inte
 List<Object[]> infoMateria(@Param("idCurso") Integer idCurso);
 int deleteByCursoIdCursoAndMateriaIdMateria(Curso cursoIdCurso, Materia materiaIdMateria);
 
-@Query("SELECT new com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView (m.idMateria, m.nombre) FROM Materia "
+@Query("SELECT DISTINCT new com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView (m.idMateria, m.nombre) FROM Materia "
         + "m INNER JOIN MateriaCurso mc ON"
         + " m.idMateria=mc.materiaIdMateria"
         + " WHERE mc.cursoIdCurso= :cursoIdCurso")
