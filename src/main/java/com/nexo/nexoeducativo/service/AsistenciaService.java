@@ -158,5 +158,12 @@ public class AsistenciaService {
         return ca;
     }
     
+    public List<Date> obtenerFechasAsistencias (Curso id){
+        //obtengo las fechas de las asistencias de todos los miembros de un curdo
+        List<Date> a = asistRepository.fechasAsistencias(id);
+        
+        return a;
+    }
+    
     
 }

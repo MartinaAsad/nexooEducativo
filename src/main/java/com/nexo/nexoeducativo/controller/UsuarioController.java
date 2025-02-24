@@ -66,6 +66,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -509,6 +510,15 @@ public class UsuarioController {
     }
     ]
 }*/
+    }
+    /*endpoint necesario para editar una asistencia*/
+    @PreAuthorize("hasAuthority('preceptor')")
+    @GetMapping(value="/obtenerAsistencias/{cursoIdCurso}") 
+    ResponseEntity<?> obtenerAsisteencias(@PathVariable("cursoIdCurso") int cursoIdCurso){
+        Curso curso=new Curso();
+        curso.setIdCurso(cursoIdCurso);
+       List<Date> a=asistenciaS.obtenerFechasAsistencias(curso);
+         return new ResponseEntity<>(a, HttpStatus.OK);
     }
     
     /*endpoint para metodo altaTarea*/
