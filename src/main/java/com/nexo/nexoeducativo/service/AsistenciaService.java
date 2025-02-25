@@ -113,20 +113,22 @@ public class AsistenciaService {
     
     @Transactional
     public void guardarPresentismo(List<AlumnoAsistenciaDTO> lista){
-        Integer cantAsistencia = 0;
+        Double cantAsistencia = 0D;
         Integer cantInasistencia = 0;
-        Integer asistCompleta = 0;
-        Integer mediaFalta = 0;
+        Double asistCompleta = 0D;
+        Double mediaFalta = 0D;
 
         for (AlumnoAsistenciaDTO a : lista) {
             
             //si asistio=1 y mediafalta=1, se computa asistencia
-            asistCompleta += (a.getAsistio() == 1 && a.getMediaFalta() == 0 && a.getRetiroAntes()==0) ? 1 : 0;
-            mediaFalta += (a.getAsistio() == 0 && a.getMediaFalta() == 1 || a.getAsistio() == 0 && a.getRetiroAntes()==1 ) ? 1 : 0;
-            cantInasistencia += (asistCompleta == 0 && mediaFalta == 0) ? 1 : 0;
+             asistCompleta = (a.getAsistio() == 1 && a.getMediaFalta() == 0 && a.getRetiroAntes() == 0) ? 1D : 0D;
+            mediaFalta = (a.getAsistio() == 0 && (a.getMediaFalta() == 1 || a.getRetiroAntes() == 1)) ? 1D : 0D;
+            cantInasistencia = (asistCompleta == 0 && mediaFalta == 0) ? 1 : 0;
+            
+            cantAsistencia=asistCompleta+(mediaFalta/2);
             
             Presentismo p = new Presentismo();
-            p.setCantAsistencia(asistCompleta+mediaFalta);
+            p.setCantAsistencia(cantAsistencia);
             p.setCantInasistencia(cantInasistencia);
             presenRepository.save(p);
             
@@ -144,6 +146,7 @@ public class AsistenciaService {
         }
         
     }
+
     
     @Transactional
     public CursoAsistencia guardarCursoAsistencia(Curso c, Asistencia a){
@@ -161,8 +164,28 @@ public class AsistenciaService {
     public List<Date> obtenerFechasAsistencias (Curso id){
         //obtengo las fechas de las asistencias de todos los miembros de un curdo
         List<Date> a = asistRepository.fechasAsistencias(id);
-        
         return a;
+    }
+    
+    public List<Integer> obtenerIdAsistencias (Date fecha){
+        List<Asistencia> asistencias=asistRepository.findAsistenciaByFecha(fecha);
+        List<Integer> ids=new ArrayList<>();
+        Integer id=0;
+        for (Asistencia a : asistencias) {
+            id=a.getIdAsistencia();
+            ids.add(id);
+        }
+        
+        return ids;
+        
+    }
+    
+    @Transactional
+    public void modificarAsistencia(Curso c, Date fecha){
+        //guardo todas las asistencias asociadas a cada alumno de un curso
+        List<Integer> obtenerIdAsistencias=obtenerIdAsistencias(fecha);//22
+        
+        
     }
     
     

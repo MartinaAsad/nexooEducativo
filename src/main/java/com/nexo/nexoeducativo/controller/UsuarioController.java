@@ -65,6 +65,8 @@ import com.nexo.nexoeducativo.service.UsuarioService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -519,6 +521,22 @@ public class UsuarioController {
         curso.setIdCurso(cursoIdCurso);
        List<Date> a=asistenciaS.obtenerFechasAsistencias(curso);
          return new ResponseEntity<>(a, HttpStatus.OK);
+    }
+    
+        @PreAuthorize("hasAuthority('preceptor')")
+    @GetMapping(value="/obtenerId/{fecha}") 
+    ResponseEntity<?> obtenerId(@PathVariable("fecha") String fecha){
+         List<Integer> ids=new ArrayList<>();
+         SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+        Date fechaFormateada;
+         try {
+             fechaFormateada = formato.parse(fecha);
+              ids=asistenciaS.obtenerIdAsistencias(fechaFormateada);
+       //fecha a ingresar: 2025-01-14
+         } catch (ParseException ex) {
+             java.util.logging.Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+         }
+         return new ResponseEntity<>(ids, HttpStatus.OK);
     }
     
     /*endpoint para metodo altaTarea*/

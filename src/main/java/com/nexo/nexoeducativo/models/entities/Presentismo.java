@@ -39,7 +39,7 @@ public class Presentismo implements Serializable {
     @Column(name = "id_presentismo")
     private Integer idPresentismo;
     @Column(name = "cant_asistencia")
-    private Integer cantAsistencia;
+    private Double cantAsistencia;
     @Column(name = "cant_inasistencia")
     private Integer cantInasistencia;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "presentismoIdPresentismo")
