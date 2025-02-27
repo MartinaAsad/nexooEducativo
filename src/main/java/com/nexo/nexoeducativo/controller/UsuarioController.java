@@ -3,6 +3,7 @@ package com.nexo.nexoeducativo.controller;
 
 import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.models.dto.request.AdministrativoDTO;
+import com.nexo.nexoeducativo.models.dto.request.AlumnoAsistenciaDTO;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsignarPreceptorDTO;
@@ -424,7 +425,7 @@ public class UsuarioController {
     ResponseEntity<?> prueba14(Authentication auth){
         String mailUsuario=auth.getPrincipal().toString();
          Escuela escuelaIdEscuela=escuelaService.obtenerIdEscuela(mailUsuario);
-       List<String> materias= materiaService.verMateriasEscuela(escuelaIdEscuela);
+       List<DesplegableMateriaView> materias= materiaService.verMateriasEscuela(escuelaIdEscuela);
          return new ResponseEntity<>(materias, HttpStatus.OK);
     }
     
@@ -537,6 +538,35 @@ public class UsuarioController {
              java.util.logging.Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
          }
          return new ResponseEntity<>(ids, HttpStatus.OK);
+    } //@Valid @RequestBody AsistenciaDTO asistencia
+    
+     @PreAuthorize("hasAuthority('preceptor')")
+    @PatchMapping(value="/editarAsistencia/{cursoIdCurso}") 
+    ResponseEntity<?> editarAsistencia(@PathVariable("cursoIdCurso") Integer cursoIdCurso, @RequestParam String fecha, @Valid @RequestBody List<AlumnoAsistenciaDTO> asistencia ){
+        Curso c=new Curso();
+        c.setIdCurso(cursoIdCurso);
+         SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+        Date fechaFormateada;
+         try {
+             fechaFormateada = formato.parse(fecha);
+             asistenciaS.modificarAsistencia(c, fechaFormateada, asistencia);
+             return new ResponseEntity<>("Se modifico correctamente", HttpStatus.OK);
+       //fecha a ingresar: 2025-01-14
+         } catch (ParseException ex) {
+             java.util.logging.Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+             return new ResponseEntity<>(ex, HttpStatus.BAD_GATEWAY);
+         }
+         /*body:[
+     {
+        "idUsuario":36,
+        "asistio":0,
+        "mediaFalta":0,
+        "retiroAntes":0
+    }
+]*/
+         //url: http://localhost:8080/api/usuario/editarAsistencia/3?fecha=2025-02-24
+         
+         
     }
     
     /*endpoint para metodo altaTarea*/

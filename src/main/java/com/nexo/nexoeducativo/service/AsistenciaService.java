@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -181,10 +182,49 @@ public class AsistenciaService {
     }
     
     @Transactional
-    public void modificarAsistencia(Curso c, Date fecha){
+    public void modificarAsistencia(Curso c, Date fecha, List<AlumnoAsistenciaDTO> lista){
         //guardo todas las asistencias asociadas a cada alumno de un curso
         List<Integer> obtenerIdAsistencias=obtenerIdAsistencias(fecha);//22
+        Double cantAsistencia = 0D;
+        Integer cantInasistencia = 0;
+        Double asistCompleta = 0D;
+        Double mediaFalta = 0D;
         
+        
+        for (Integer asist : obtenerIdAsistencias) {
+            for (AlumnoAsistenciaDTO alumno : lista) {
+                Optional<Asistencia> siExiste=asistRepository.findById(asist);
+                                    //buscar el presentismo correspondiente al alumno
+                   Usuario u=new Usuario();
+                   u.setIdUsuario(alumno.getIdUsuario()); 
+                Optional<PresentismoUsuario> presentismo = presenUsuRepository.findByUsuarioIdUsuario(u);
+                 
+                if(presentismo.isPresent()){
+                    PresentismoUsuario pu=presentismo.get();
+                    Presentismo p=pu.getPresentismoIdPresentismo();
+                    Asistencia actual=siExiste.get();
+                    
+                    //Actualizar la asistencia
+                    asistCompleta = (alumno.getAsistio() == 1 && alumno.getMediaFalta() == 0 && alumno.getRetiroAntes() == 0) ? 1D : 0D;
+            mediaFalta = (alumno.getAsistio() == 0 && (alumno.getMediaFalta() == 1 || alumno.getRetiroAntes() == 1)) ? 1D : 0D;
+            cantInasistencia = (asistCompleta == 0 && mediaFalta == 0) ? 1 : 0;
+            
+            cantAsistencia=asistCompleta+(mediaFalta/2);
+            
+            p.setCantAsistencia(cantAsistencia);
+            p.setCantInasistencia(cantInasistencia);
+            
+            presenRepository.save(p);    
+                }
+                
+                
+                        
+                
+            }
+            
+        }
+
+       
         
     }
     

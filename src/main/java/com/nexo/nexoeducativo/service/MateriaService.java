@@ -1,21 +1,15 @@
 package com.nexo.nexoeducativo.service;
 
 import com.nexo.nexoeducativo.exception.CursoNotFound;
-import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
-import com.nexo.nexoeducativo.exception.HoraInvalidatedexception;
 import com.nexo.nexoeducativo.exception.MateriaExistingException;
 import com.nexo.nexoeducativo.exception.MateriaNotFoundException;
-import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
 import com.nexo.nexoeducativo.models.dto.request.MateriaDTO;
-import com.nexo.nexoeducativo.models.dto.request.MateriaView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Materia;
-import com.nexo.nexoeducativo.models.entities.MateriaCurso;
 import com.nexo.nexoeducativo.models.entities.MateriaEscuela;
-import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.repository.CursoEscuelaRepository;
 import com.nexo.nexoeducativo.repository.CursoRepository;
@@ -26,7 +20,6 @@ import com.nexo.nexoeducativo.repository.MateriaRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,8 +97,8 @@ public class MateriaService {
         return materias;
     }
     
-    public List<String> verMateriasEscuela (Escuela escuelaIdEscuela){
-        List<String> verMateriasEscuela=materiaEscuelaRepository.materiasSegunEscuela(escuelaIdEscuela);
+    public List<DesplegableMateriaView> verMateriasEscuela (Escuela escuelaIdEscuela){
+        List<DesplegableMateriaView> verMateriasEscuela=materiaEscuelaRepository.materiasSegunEscuela(escuelaIdEscuela);
         return verMateriasEscuela;
     }
     

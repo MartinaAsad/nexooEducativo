@@ -321,8 +321,10 @@ public class UsuarioService {
          if (dto.getTelefono() != null) {
              u.setTelefono(dto.getTelefono());
          }
-         if (dto.getActivo() != 0) {
+         if (dto.getActivo()==0 || dto.getActivo()==1) {
              u.setActivo(dto.getActivo());
+         }else{
+             LOGGER.info("valor ingresado: "+dto.getActivo());
          }
          
          //LOGGER.info("el nuevo objeto contiene: "+u.toString());
