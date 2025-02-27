@@ -135,7 +135,7 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
               + " FROM Usuario u INNER JOIN Rol r ON r.idRol=u.rolidrol"
               + " INNER JOIN CursoUsuario cu ON cu.usuarioIdUsuario=u.idUsuario "
               + "INNER JOIN CursoEscuela ce ON ce.cursoIdCurso=cu.cursoIdCurso "
-              + "WHERE r.nombre='alumno' AND ce.escuelaIdEscuela= :escuelaIdEscuela AND u.activo=1")
+              + "WHERE r.nombre='alumno' AND ce.escuelaIdEscuela= :escuelaIdEscuela")
       List<NombreCompletoDTO> obtenerAlumnos(Escuela escuelaIdEscuela);
 
       @Query("SELECT u FROM Usuario u LEFT JOIN CursoUsuario cu ON cu.usuarioIdUsuario=u.idUsuario "
