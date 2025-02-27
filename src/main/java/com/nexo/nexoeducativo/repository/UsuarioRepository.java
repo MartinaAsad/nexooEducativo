@@ -83,7 +83,7 @@ Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
       
       List<UsuarioView> infoAlumnos(@Param("curso") Curso curso);
       
-       @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.UsuarioView(u.nombre, u.apellido) FROM Usuario u "
+       @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.UsuarioView(u.idUsuario AS idUsuario,u.nombre AS nombre, u.apellido AS apellido) FROM Usuario u "
               + "JOIN CursoUsuario cu ON u.idUsuario=cu.usuarioIdUsuario"
               + " WHERE cu.cursoIdCurso= :curso and u.rolidrol=4")
       UsuarioView infoPreceptor(@Param("curso") Curso curso);

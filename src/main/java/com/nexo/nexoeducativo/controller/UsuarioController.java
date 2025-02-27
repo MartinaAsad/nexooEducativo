@@ -12,6 +12,7 @@ import com.nexo.nexoeducativo.models.dto.request.BorrarMateriaRequestDTO;
 import com.nexo.nexoeducativo.models.dto.request.ComprobantePagoDto;
 import com.nexo.nexoeducativo.models.dto.request.CuotaDTO;
 import com.nexo.nexoeducativo.models.dto.request.CursoRequest;
+import com.nexo.nexoeducativo.models.dto.request.CursoView;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableChatGrupalView;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
@@ -751,7 +752,7 @@ public class UsuarioController {
     @PreAuthorize("hasAuthority('jefe colegio')")
     @GetMapping(value="/selectCurso/{idCurso}")
     ResponseEntity<?> pruebita(@PathVariable("idCurso") int idCurso){
-        List<Curso> c= new ArrayList<Curso>();
+        List<CursoView> c= new ArrayList<CursoView>();
         return new ResponseEntity<>(cursoService.seleccionarCurso(idCurso), HttpStatus.OK);
     }
     
@@ -884,7 +885,8 @@ public class UsuarioController {
     }
     
     @PreAuthorize("hasAuthority('super admin')"
-            + "or hasAuthority('administrativo') ")
+            + "or hasAuthority('administrativo') "
+     + "or hasAuthority('jefe colegio') ")
     @GetMapping(value="/getUsuario/{id}")
     ResponseEntity<?> prueba20 (@PathVariable(value = "id") int id){
      JefeColegioModificacionDTO s=uService.getUsuarioPorID(id);
