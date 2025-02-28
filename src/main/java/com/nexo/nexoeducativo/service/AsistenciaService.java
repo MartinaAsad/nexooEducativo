@@ -111,6 +111,48 @@ public class AsistenciaService {
         return hora;
         
     }
+       @Transactional
+    public void altaAsistenciaProfe(AsistenciaDTO asistencia){ //ENDPOINTS NECESARIOS: verProfeAdministrativo y tomarAsistenciaProfesor
+        /*se obtiene la fecha actual */
+         String fechaNueva=hoy.format(formato);
+         LocalDateTime actual=LocalDateTime.parse(fechaNueva, formato);
+         String formatoFechaMostrar=mostrarHora(actual);
+         Date fechaDate = Date.from(actual.atZone(ZoneId.systemDefault()).toInstant());
+         
+         /*se da de alta una asistencia*/
+         Asistencia a=new Asistencia();
+         a.setFecha(fechaDate);
+         
+          short asistio=0,retiro=0, mediaFalta=0;
+         //registrar la asistencia de cada alumno         
+          List<UsuarioAsistencia> registro2 = new ArrayList<>();
+         for (AlumnoAsistenciaDTO profe : asistencia.getAlumnosCurso()) {
+        Usuario u = usuarioRepository.findById(profe.getIdUsuario())
+            .orElseThrow(() -> new UsuarioNotFoundException("Usuario no encontrado " + profe.getIdUsuario()));
+
+        UsuarioAsistencia usuarioAsistencia = new UsuarioAsistencia();
+        usuarioAsistencia.setAsistenciaIdAsistencia(a);
+        usuarioAsistencia.setUsuarioIdUsuario(u);
+
+        if (profe.getAsistio() == 1) asistio++;
+        if (profe.getMediaFalta() == 1) mediaFalta++;
+        if (profe.getRetiroAntes() == 1) retiro++;
+
+        registro2.add(usuarioAsistencia);
+    }
+         a.setAsistio(asistio);
+         a.setMediaFalta(mediaFalta);
+         a.setRetiroAntes(retiro);
+        a.setUsuarioAsistenciaList(registro2);
+        //LOGGER.info("esta es la lista "+registro2.toString());
+       // LOGGER.info("esto va a ser guardado: "+a.toString());
+         asistRepository.save(a);  
+         //LOGGER.info("esto va a ser guardado: "+a.toString());
+        
+         guardarPresentismo(asistencia.getAlumnosCurso());
+             
+    }
+    
     
     @Transactional
     public void guardarPresentismo(List<AlumnoAsistenciaDTO> lista){

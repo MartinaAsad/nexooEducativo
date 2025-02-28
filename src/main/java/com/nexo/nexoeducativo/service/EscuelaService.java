@@ -1,12 +1,9 @@
 package com.nexo.nexoeducativo.service;
 
-import com.nexo.nexoeducativo.configuration.FailureHandler;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
-import com.nexo.nexoeducativo.exception.UsuarioExistingException;
 import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaModificacionDTO;
-import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreDireccionEscuelaDTO;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.EscuelaUsuario;
@@ -17,7 +14,6 @@ import com.nexo.nexoeducativo.repository.EscuelaRepository;
 import com.nexo.nexoeducativo.repository.EscuelaUsuarioRepository;
 import com.nexo.nexoeducativo.repository.PlanRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
-import static com.nexo.nexoeducativo.service.UsuarioService.convertirSHA256;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -175,9 +171,14 @@ public class EscuelaService {
     
     public Escuela obtenerIdEscuela(String mail){
         Usuario usuarioIdUsuario=usuarioRepository.findIdUsuarioByMail(mail);
+        Escuela e=null;
         //LOGGER.info("id usuario logueado: "+usuarioIdUsuario.getIdUsuario());
         EscuelaUsuario eu= escuelaUsuarioRepository.findEscuelaIdEscuelaByUsuarioIdUsuario(usuarioIdUsuario);
-        Escuela e=eu.getEscuelaIdEscuela();
+        if(eu!=null){
+          e=eu.getEscuelaIdEscuela();   
+        }else{
+            throw new EscuelaNotFoundException("El usuario no esta registrado en ninguna escuela");
+        }
         //LOGGER.info("id escuela del usuario logueado: "+e.getIdEscuela());
         return e;
     }

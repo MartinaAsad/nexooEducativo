@@ -420,7 +420,8 @@ public class UsuarioController {
          return new ResponseEntity<>("la materia fue creada correctamente", HttpStatus.CREATED);
     }
     
-      @PreAuthorize("hasAuthority('administrativo') ")
+      @PreAuthorize("hasAuthority('administrativo') "
+      + "or hasAuthority('preceptor') ")
      //@PreAuthorize("hasAuthority('super admin') ")
     @GetMapping(value="/verMaterias")
     ResponseEntity<?> prueba14(Authentication auth){
@@ -434,7 +435,8 @@ public class UsuarioController {
     
     
     /*endpoint a partir de aca y el de abajo para metodo bajaMateria*/
-    @PreAuthorize("hasAuthority('administrativo')")
+    @PreAuthorize("hasAuthority('administrativo')"
+    + "or hasAuthority('preceptor') ")
     @GetMapping(value="/verCursoAdministrativo")
     ResponseEntity<?> prueba150(Authentication auth) throws NoSuchFieldException{
        String mail=auth.getPrincipal().toString();//obtengo el mail del usuario logueado
@@ -443,7 +445,8 @@ public class UsuarioController {
          return new ResponseEntity<>(listaCursos, HttpStatus.OK);
     }
     
-    @PreAuthorize("hasAuthority('administrativo')")
+    @PreAuthorize("hasAuthority('administrativo')"
+    + "or hasAuthority('preceptor') ")
     @GetMapping(value="/verProfesAdministrativo")
     ResponseEntity<?> verProfesAdm(Authentication auth) throws NoSuchFieldException{
         Rol r=new Rol();
@@ -496,6 +499,31 @@ public class UsuarioController {
     @PostMapping(value="/tomarAsistencia/{cursoIdCurso}")
     ResponseEntity<?> prueba152(@Valid @RequestBody AsistenciaDTO asistencia, @PathVariable("cursoIdCurso") Integer cursoIdCurso){
        asistenciaS.altaAsistencia(asistencia, cursoIdCurso);
+       //asistenciaS.guardarPresentismo(asistencia.getAlumnosCurso());
+         return new ResponseEntity<>("Asistencia creada correctamente", HttpStatus.CREATED);
+         /*{
+    "alumnosCurso": [
+    {
+        "idUsuario":7,
+        "asistio":1,
+        "mediaFalta":0,
+        "retiroAntes":0
+    },
+     {
+        "idUsuario":27,
+        "asistio":1,
+        "mediaFalta":0,
+        "retiroAntes":0
+    }
+    ]
+}*/
+    }
+    
+    
+     @PreAuthorize("hasAuthority('preceptor')")
+    @PostMapping(value="/tomarAsistenciaProfesor") //PROBAR MAS TARDE
+    ResponseEntity<?> tomarAsistenciaProfesor(@Valid @RequestBody AsistenciaDTO asistencia){
+       asistenciaS.altaAsistenciaProfe(asistencia);
        //asistenciaS.guardarPresentismo(asistencia.getAlumnosCurso());
          return new ResponseEntity<>("Asistencia creada correctamente", HttpStatus.CREATED);
          /*{
