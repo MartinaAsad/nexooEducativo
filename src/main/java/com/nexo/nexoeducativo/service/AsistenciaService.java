@@ -17,6 +17,7 @@ import com.nexo.nexoeducativo.repository.CursoAsistenciaRepository;
 import com.nexo.nexoeducativo.repository.CursoRepository;
 import com.nexo.nexoeducativo.repository.PresentismoRepository;
 import com.nexo.nexoeducativo.repository.PresentismoUsuarioRepository;
+import com.nexo.nexoeducativo.repository.UsuarioAsistenciaRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -53,6 +54,10 @@ public class AsistenciaService {
      
      @Autowired
      private PresentismoUsuarioRepository presenUsuRepository;
+             
+      @Autowired
+      private UsuarioAsistenciaRepository uaRepository;
+              
       private static final Logger LOGGER = LoggerFactory.getLogger(AsistenciaService.class);
     
      @Transactional
@@ -249,6 +254,55 @@ public class AsistenciaService {
                     //Actualizar la asistencia
                     asistCompleta = (alumno.getAsistio() == 1 && alumno.getMediaFalta() == 0 && alumno.getRetiroAntes() == 0) ? 1D : 0D;
             mediaFalta = (alumno.getAsistio() == 0 && (alumno.getMediaFalta() == 1 || alumno.getRetiroAntes() == 1)) ? 1D : 0D;
+            cantInasistencia = (asistCompleta == 0 && mediaFalta == 0) ? 1 : 0;
+            
+            cantAsistencia=asistCompleta+(mediaFalta/2);
+            
+            p.setCantAsistencia(cantAsistencia);
+            p.setCantInasistencia(cantInasistencia);
+            
+            presenRepository.save(p);    
+                }
+                
+                
+                        
+                
+            }
+            
+        }
+    }
+    
+    public List<Integer> obtenerAsistencias(Integer idRol, Integer idEscuela){
+        return uaRepository.obtenerAsistenciasProfe(idRol, idEscuela);
+    }
+    
+    
+        @Transactional //ENDPOINTS NECESARIOS: "/obtenerIdProfe/{fecha}, /obtenerAsistenciasProfe/{fecha}, /editarAsistenciaProfe
+    public void modificarAsistenciaProfe(Date fecha, List<AlumnoAsistenciaDTO> lista){
+        //guardo todas las asistencias asociadas a cada alumno de un curso
+        List<Integer> obtenerIdAsistencias=obtenerIdAsistencias(fecha);//22
+        Double cantAsistencia = 0D;
+        Integer cantInasistencia = 0;
+        Double asistCompleta = 0D;
+        Double mediaFalta = 0D;
+        
+        
+        for (Integer asist : obtenerIdAsistencias) {
+            for (AlumnoAsistenciaDTO profe : lista) {
+                Optional<Asistencia> siExiste=asistRepository.findById(asist);
+                                    //buscar el presentismo correspondiente al alumno
+                   Usuario u=new Usuario();
+                   u.setIdUsuario(profe.getIdUsuario()); 
+                Optional<PresentismoUsuario> presentismo = presenUsuRepository.findByUsuarioIdUsuario(u);
+                 
+                if(presentismo.isPresent()){
+                    PresentismoUsuario pu=presentismo.get();
+                    Presentismo p=pu.getPresentismoIdPresentismo();
+                    Asistencia actual=siExiste.get();
+                    
+                    //Actualizar la asistencia
+                    asistCompleta = (profe.getAsistio() == 1 && profe.getMediaFalta() == 0 && profe.getRetiroAntes() == 0) ? 1D : 0D;
+            mediaFalta = (profe.getAsistio() == 0 && (profe.getMediaFalta() == 1 || profe.getRetiroAntes() == 1)) ? 1D : 0D;
             cantInasistencia = (asistCompleta == 0 && mediaFalta == 0) ? 1 : 0;
             
             cantAsistencia=asistCompleta+(mediaFalta/2);

@@ -15,7 +15,7 @@ public class RenovarMembresiaDTO implements Serializable{
     /*@NotNull(message = "Ingrese una escuela")
     private Escuela e;*/
     
-     @NotNull(message = "Ingrese un plan")
+    // @NotNull(message = "Ingrese un plan")
     private int idPlan; 
      
       @NotNull(message = "Ingrese una respuesta valida")

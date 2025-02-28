@@ -518,31 +518,6 @@ public class UsuarioController {
     ]
 }*/
     }
-    
-    
-     @PreAuthorize("hasAuthority('preceptor')")
-    @PostMapping(value="/tomarAsistenciaProfesor") //PROBAR MAS TARDE
-    ResponseEntity<?> tomarAsistenciaProfesor(@Valid @RequestBody AsistenciaDTO asistencia){
-       asistenciaS.altaAsistenciaProfe(asistencia);
-       //asistenciaS.guardarPresentismo(asistencia.getAlumnosCurso());
-         return new ResponseEntity<>("Asistencia creada correctamente", HttpStatus.CREATED);
-         /*{
-    "alumnosCurso": [
-    {
-        "idUsuario":7,
-        "asistio":1,
-        "mediaFalta":0,
-        "retiroAntes":0
-    },
-     {
-        "idUsuario":27,
-        "asistio":1,
-        "mediaFalta":0,
-        "retiroAntes":0
-    }
-    ]
-}*/
-    }
     /*endpoint necesario para editar una asistencia*/
     @PreAuthorize("hasAuthority('preceptor')")
     @GetMapping(value="/obtenerAsistencias/{cursoIdCurso}") 
@@ -594,8 +569,38 @@ public class UsuarioController {
     }
 ]*/
          //url: http://localhost:8080/api/usuario/editarAsistencia/3?fecha=2025-02-24
-         
-         
+            
+    }
+    
+    //ASISTENCIA PROFE   
+     @PreAuthorize("hasAuthority('preceptor')")
+    @PostMapping(value="/tomarAsistenciaProfesor")
+    ResponseEntity<?> tomarAsistenciaProfesor(@Valid @RequestBody AsistenciaDTO asistencia){
+       asistenciaS.altaAsistenciaProfe(asistencia);
+       //asistenciaS.guardarPresentismo(asistencia.getAlumnosCurso());
+         return new ResponseEntity<>("Asistencia creada correctamente", HttpStatus.CREATED);
+         /*{
+    "alumnosCurso": [
+    {
+        "idUsuario":7,
+        "asistio":1,
+        "mediaFalta":0,
+        "retiroAntes":0
+    }
+    ]
+}*/
+    }
+     @PreAuthorize("hasAuthority('preceptor')")
+    @GetMapping(value="/obtenerAsistenciasProfe") //PROBAR
+    ResponseEntity<?> obtenerAsistenciasProfe(Authentication auth){
+        String mail=auth.getPrincipal().toString();
+         Escuela escuelaIdEscuela=escuelaService.obtenerIdEscuela(mail); 
+         List<Integer> aisstencias=asistenciaS.obtenerAsistencias(5, escuelaIdEscuela.getIdEscuela());
+         if(aisstencias.isEmpty()){
+              return new ResponseEntity<>("No se tomaron asistencias todavia", HttpStatus.NO_CONTENT);
+         }else{
+          return new ResponseEntity<>(aisstencias, HttpStatus.OK);   
+         }
     }
     
     /*endpoint para metodo altaTarea*/
