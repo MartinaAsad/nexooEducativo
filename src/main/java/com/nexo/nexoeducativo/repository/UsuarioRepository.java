@@ -156,6 +156,14 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
 "WHERE u.rolidrol= :rol and eu.escuelaIdEscuela= :escuela and u.activo= 1")
       List<DesplegableChatView> obtenerInfoDesplegables(Rol rol, Escuela escuela);
       
+       @Query("SELECT DISTINCT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail"
+              + " FROM Usuario u INNER JOIN Rol r ON r.idRol=u.rolidrol"
+              + " INNER JOIN CursoUsuario cu ON cu.usuarioIdUsuario=u.idUsuario "
+              + "INNER JOIN CursoEscuela ce ON ce.cursoIdCurso=cu.cursoIdCurso "
+              + "WHERE r.nombre='alumno' AND ce.escuelaIdEscuela= :escuelaIdEscuela "
+       + "GROUP BY u.idUsuario, u.nombre, u.apellido, u.mail")
+      List<DesplegableChatView> obtenerAlumnosChat(Escuela escuelaIdEscuela);
+      
        @Query("SELECT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail"
               + " FROM Usuario u INNER JOIN Rol r ON r.idRol=u.rolidrol"
               + " INNER JOIN CursoUsuario cu ON cu.usuarioIdUsuario=u.idUsuario "

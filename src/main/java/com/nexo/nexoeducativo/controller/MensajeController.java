@@ -3,15 +3,23 @@ package com.nexo.nexoeducativo.controller;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
 import com.nexo.nexoeducativo.models.dto.request.MensajeGrupalDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeIndividualDTO;
+import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Mensaje;
+import com.nexo.nexoeducativo.models.entities.Usuario;
+import com.nexo.nexoeducativo.service.EscuelaService;
 import com.nexo.nexoeducativo.service.MensajeService;
+import com.nexo.nexoeducativo.service.UsuarioService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +35,12 @@ public class MensajeController {
     private MensajeService mensajeService;
     //esto es para enviar un mensaje privado a un usuario
     private final SimpMessagingTemplate usuarioPrivado;
+    
+    @Autowired
+    private EscuelaService escuelaService;
+    
+     @Autowired
+    private UsuarioService usuarioService;
 
     @MessageMapping
     @SendTo("/grupo")  //cambiar mas adelante por MensajeGrupalDTO
@@ -76,5 +90,23 @@ public class MensajeController {
             }
         }
     }
+    
+       @PreAuthorize("hasAuthority('alumno') or hasAuthority('administrativo') or hasAuthority('preceptor') or hasAuthority('padre') or hasAuthority('profesor')")
+
+    @GetMapping(value="/chatIndividual")
+    ResponseEntity<?> cuotaM(Authentication auth ){
+        String mailUsuario=auth.getPrincipal().toString();
+        Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+        Usuario u=usuarioService.buscarUsuario(mailUsuario);
+        List<DesplegableChatView> infoUsuariosChat=usuarioService.infoUsuariosChat(e, u);
+        //System.out.println("🔍 Lista de cursos recibida: " + verCursos);
+
+        //return new ResponseEntity<>("lolll"+infoUsuariosChat,HttpStatus.OK);   
+         return ResponseEntity.ok(infoUsuariosChat);
+    }
+
+		
+		
+    
     
 }

@@ -1100,7 +1100,7 @@ public class UsuarioController {
          //esto para el rol profesor
          List<MateriaCurso> obtenerCursos=uService.obtenerCursos(u);
          List<verCursoView> verCursos=uService.verCursos(obtenerCursos);
-        List<DesplegableChatView> usuarios=uService.infoUsuariosChat(e, u, verCursos);
+        List<DesplegableChatView> usuarios=uService.infoUsuariosChat(e, u);
         if(usuarios.isEmpty()) {
 			return new ResponseEntity<>("No hay cursos activos",HttpStatus.NO_CONTENT);
 		}

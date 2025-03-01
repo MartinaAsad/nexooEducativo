@@ -44,9 +44,12 @@ import jakarta.validation.Validator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -530,7 +533,7 @@ public class UsuarioService {
     }
     
     //ESTE DESPLEGABLE ES PARA CHAT INDIVIDUAL
-    public List<DesplegableChatView> infoUsuariosChat(Escuela e, Usuario auth, List<verCursoView> verCursos){
+    public List<DesplegableChatView> infoUsuariosChat(Escuela e, Usuario auth){
         //obtener el rol y en base a eso, ver a que tipos de usuaios le puede enviar mensaje
          List<Integer> roles = new ArrayList<>();
         Rol obtenido=auth.getRolidrol();
@@ -540,7 +543,14 @@ public class UsuarioService {
                 roles.add(6);
                 roles.add(7);
             }
-            //rol profesor: padres y alumnos SOLO de los cursos a su cargo
+            
+               //rol preceptor: padres y alumnos 
+            case 4 -> {
+                roles.add(6);
+                roles.add(7);
+            }
+            
+            //rol profesor: padres y alumnos 
             case 5 ->{ 
                 roles.add(6);
                 roles.add(7);
@@ -558,27 +568,41 @@ public class UsuarioService {
                 roles.add(3);
                  roles.add(4);
             }
+              
+           
         }
-        List<DesplegableChatView> usuarios= new ArrayList<>();
+        Set <DesplegableChatView> usuarios= new HashSet<>();
+        List<DesplegableChatView> alumnos2=new ArrayList<>();
+        //DesplegableChatView alumno=null;
        for (Integer rol : roles) {
         Rol iterado = new Rol();
         iterado.setIdRol(rol);
         
         List<DesplegableChatView> info = usuariorepository.obtenerInfoDesplegables(iterado, e);
-        usuarios.addAll(info); // Agregar usuarios de cada rol
+        if(iterado.getIdRol()==7){
+           alumnos2 = usuariorepository.obtenerAlumnosChat(e);
+           for (DesplegableChatView alumno : alumnos2) {
+                usuarios.add(alumno); // Asegura que no haya duplicados
+            } 
+        }
+        
+         for (DesplegableChatView usuario : info) {
+            usuarios.add(usuario); // Asegura que no haya duplicados
+        }
+        
         
         // Si el rol es alumno, obtener alumnos de los cursos a cargo
-        if (obtenido.getIdRol() == 5 && rol == 7) { // Si el usuario es profesor y está buscando alumnos
+        /*if (obtenido.getIdRol() == 5 && rol == 7 || obtenido.getIdRol() == 4 && rol == 7) { // Si el usuario es profesor y está buscando alumnos
             for (verCursoView curso : verCursos) {
                 Curso c = new Curso();
                 c.setIdCurso(curso.getIdCurso());
                 List<DesplegableChatView> alumnos = usuariorepository.obtenerAlumnosProfe(e, c);
                 usuarios.addAll(alumnos); // Agregar los alumnos de cada curso
             }
-        }
+        }*/
     }
     
-    return usuarios;
+    return new ArrayList<> (usuarios);
 }
     
     //ESTE DESPLEGABLE ES PARA CHAT GRUPAL
@@ -635,11 +659,54 @@ public class UsuarioService {
                     
                 }   
                 }
-                 
-                
-               
+
             }
             
+            //rol padre: profesor, preceptor, administrativo
+            case 6 ->
+            {
+                List<InfoUsuarioSegunRolDTO> profes=usuariorepository.getUsuarioByRol("profesor", e);
+                 List<InfoUsuarioSegunRolDTO> preceptor=usuariorepository.getUsuarioByRol("preceptor", e);
+                  List<InfoUsuarioSegunRolDTO> adminisrativos=usuariorepository.getUsuarioByRol("administrativo", e);
+                  
+                  //unifico todo
+                  List<InfoUsuarioSegunRolDTO> usuarios = Stream.concat(
+                        Stream.concat(profes.stream(), preceptor.stream()),
+                        adminisrativos.stream()
+                ).collect(Collectors.toList());
+                  
+                  for (InfoUsuarioSegunRolDTO u : usuarios) {
+                    DesplegableChatGrupalView info= new DesplegableChatGrupalView();
+                    info.setIdUsuario(u.getIdUsuario());
+                    info.setNombre(u.getNombre());
+                    info.setApellido(u.getApellido());
+                    //guardar en desplegables la lista
+                    desplegables.add(info);
+                }
+
+            }
+            
+            //rol alumno: preceptor, profesor
+            case 7 -> {
+                List<InfoUsuarioSegunRolDTO> profes=usuariorepository.getUsuarioByRol("profesor", e);
+                 List<InfoUsuarioSegunRolDTO> preceptor=usuariorepository.getUsuarioByRol("preceptor", e);
+                  
+                  //unifico todo
+                 List<InfoUsuarioSegunRolDTO> usuarios = Stream.concat(
+                        profes.stream(),
+                        preceptor.stream()
+                ).collect(Collectors.toList());
+
+                  for (InfoUsuarioSegunRolDTO u : usuarios) {
+                    DesplegableChatGrupalView info= new DesplegableChatGrupalView();
+                    info.setIdUsuario(u.getIdUsuario());
+                    info.setNombre(u.getNombre());
+                    info.setApellido(u.getApellido());
+                    //guardar en desplegables la lista
+                    desplegables.add(info);
+                }
+                
+            }
            
         }
         return desplegables;

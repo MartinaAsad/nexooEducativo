@@ -17,4 +17,8 @@ public class verCursoView implements Serializable{
     private Character division;
     private short activo;
     private int idCurso;
+    
+    public verCursoView (int idCurso){
+        this.idCurso=idCurso;
+    }
 }

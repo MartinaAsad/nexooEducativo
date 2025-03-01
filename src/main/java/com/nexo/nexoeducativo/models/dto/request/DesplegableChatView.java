@@ -12,5 +12,9 @@ public interface DesplegableChatView extends Serializable {
      String getNombre();
      String getApellido();
      String getMail();
+     
+     
     
 }
+
+
