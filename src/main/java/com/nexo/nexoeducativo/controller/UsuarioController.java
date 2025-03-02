@@ -8,6 +8,7 @@ import com.nexo.nexoeducativo.models.dto.request.AlumnoDTO;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsignarPreceptorDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsistenciaDTO;
+import com.nexo.nexoeducativo.models.dto.request.AsistenciaView;
 import com.nexo.nexoeducativo.models.dto.request.BorrarMateriaRequestDTO;
 import com.nexo.nexoeducativo.models.dto.request.ComprobantePagoDto;
 import com.nexo.nexoeducativo.models.dto.request.CuotaDTO;
@@ -520,29 +521,13 @@ public class UsuarioController {
     }
     /*endpoint necesario para editar una asistencia*/
     @PreAuthorize("hasAuthority('preceptor')")
-    @GetMapping(value="/obtenerAsistencias/{cursoIdCurso}") 
+    @GetMapping(value="/obtenerAsistencias/{cursoIdCurso}") //RELLENAR DESPLEGABLE
     ResponseEntity<?> obtenerAsisteencias(@PathVariable("cursoIdCurso") int cursoIdCurso){
         Curso curso=new Curso();
         curso.setIdCurso(cursoIdCurso);
-       List<Date> a=asistenciaS.obtenerFechasAsistencias(curso);
+       List<AsistenciaView> a=asistenciaS.obtenerFechasAsistencias(curso);
          return new ResponseEntity<>(a, HttpStatus.OK);
     }
-    
-        @PreAuthorize("hasAuthority('preceptor')")
-    @GetMapping(value="/obtenerId/{fecha}") 
-    ResponseEntity<?> obtenerId(@PathVariable("fecha") String fecha){
-         List<Integer> ids=new ArrayList<>();
-         SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
-        Date fechaFormateada;
-         try {
-             fechaFormateada = formato.parse(fecha);
-              ids=asistenciaS.obtenerIdAsistencias(fechaFormateada);
-       //fecha a ingresar: 2025-01-14
-         } catch (ParseException ex) {
-             java.util.logging.Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
-         }
-         return new ResponseEntity<>(ids, HttpStatus.OK);
-    } //@Valid @RequestBody AsistenciaDTO asistencia
     
      @PreAuthorize("hasAuthority('preceptor')")
     @PatchMapping(value="/editarAsistencia/{cursoIdCurso}") 
@@ -595,7 +580,7 @@ public class UsuarioController {
     ResponseEntity<?> obtenerAsistenciasProfe(Authentication auth){
         String mail=auth.getPrincipal().toString();
          Escuela escuelaIdEscuela=escuelaService.obtenerIdEscuela(mail); 
-         List<Integer> aisstencias=asistenciaS.obtenerAsistencias(5, escuelaIdEscuela.getIdEscuela());
+         List<AsistenciaView> aisstencias=asistenciaS.obtenerAsistenciasProfe(5, escuelaIdEscuela.getIdEscuela());
          if(aisstencias.isEmpty()){
               return new ResponseEntity<>("No se tomaron asistencias todavia", HttpStatus.NO_CONTENT);
          }else{

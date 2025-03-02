@@ -5,6 +5,7 @@ import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.AlumnoAsistenciaDTO;
 import com.nexo.nexoeducativo.models.dto.request.AsistenciaDTO;
+import com.nexo.nexoeducativo.models.dto.request.AsistenciaView;
 import com.nexo.nexoeducativo.models.entities.Asistencia;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.CursoAsistencia;
@@ -209,9 +210,9 @@ public class AsistenciaService {
         return ca;
     }
     
-    public List<Date> obtenerFechasAsistencias (Curso id){
+    public List<AsistenciaView> obtenerFechasAsistencias (Curso id){
         //obtengo las fechas de las asistencias de todos los miembros de un curdo
-        List<Date> a = asistRepository.fechasAsistencias(id);
+        List<AsistenciaView> a = asistRepository.fechasAsistencias(id);
         return a;
     }
     
@@ -272,7 +273,7 @@ public class AsistenciaService {
         }
     }
     
-    public List<Integer> obtenerAsistencias(Integer idRol, Integer idEscuela){
+    public List<AsistenciaView> obtenerAsistenciasProfe(Integer idRol, Integer idEscuela){
         return uaRepository.obtenerAsistenciasProfe(idRol, idEscuela);
     }
     
