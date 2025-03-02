@@ -576,7 +576,7 @@ public class UsuarioController {
 }*/
     }
      @PreAuthorize("hasAuthority('preceptor')")
-    @GetMapping(value="/obtenerAsistenciasProfe") //PROBAR
+    @GetMapping(value="/obtenerAsistenciasProfe") 
     ResponseEntity<?> obtenerAsistenciasProfe(Authentication auth){
         String mail=auth.getPrincipal().toString();
          Escuela escuelaIdEscuela=escuelaService.obtenerIdEscuela(mail); 
@@ -586,6 +586,33 @@ public class UsuarioController {
          }else{
           return new ResponseEntity<>(aisstencias, HttpStatus.OK);   
          }
+    }
+    
+     @PreAuthorize("hasAuthority('preceptor')")
+    @PatchMapping(value="/editarAsistenciaProfe") 
+    ResponseEntity<?> editarAsistenciaP(@RequestParam String fecha, @Valid @RequestBody List<AlumnoAsistenciaDTO> asistencia ){
+
+         SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+        Date fechaFormateada;
+         try {
+             fechaFormateada = formato.parse(fecha);
+             asistenciaS.modificarAsistenciaProfe(fechaFormateada, asistencia);
+             return new ResponseEntity<>("Se modifico correctamente", HttpStatus.OK);
+       //fecha a ingresar: 2025-01-14
+         } catch (ParseException ex) {
+             java.util.logging.Logger.getLogger(UsuarioController.class.getName()).log(Level.SEVERE, null, ex);
+             return new ResponseEntity<>(ex, HttpStatus.BAD_GATEWAY);
+         }
+         /*body:[
+     {
+        "idUsuario":36,
+        "asistio":0,
+        "mediaFalta":0,
+        "retiroAntes":0
+    }
+]*/
+         //url: http://localhost:8080/api/usuario/editarAsistenciaProfe/26
+            
     }
     
     /*endpoint para metodo altaTarea*/

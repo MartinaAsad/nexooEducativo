@@ -262,7 +262,8 @@ public class AsistenciaService {
             p.setCantAsistencia(cantAsistencia);
             p.setCantInasistencia(cantInasistencia);
             
-            presenRepository.save(p);    
+            presenRepository.save(p);
+            asistRepository.save(actual);
                 }
                 
                 
@@ -278,52 +279,71 @@ public class AsistenciaService {
     }
     
     
-        @Transactional //ENDPOINTS NECESARIOS: "/obtenerIdProfe/{fecha}, /obtenerAsistenciasProfe/{fecha}, /editarAsistenciaProfe
-    public void modificarAsistenciaProfe(Date fecha, List<AlumnoAsistenciaDTO> lista){
-        //guardo todas las asistencias asociadas a cada alumno de un curso
-        List<Integer> obtenerIdAsistencias=obtenerIdAsistencias(fecha);//22
-        Double cantAsistencia = 0D;
-        Integer cantInasistencia = 0;
-        Double asistCompleta = 0D;
-        Double mediaFalta = 0D;
-        
-        
-        for (Integer asist : obtenerIdAsistencias) {
-            for (AlumnoAsistenciaDTO profe : lista) {
-                Optional<Asistencia> siExiste=asistRepository.findById(asist);
-                                    //buscar el presentismo correspondiente al alumno
-                   Usuario u=new Usuario();
-                   u.setIdUsuario(profe.getIdUsuario()); 
-                Optional<PresentismoUsuario> presentismo = presenUsuRepository.findByUsuarioIdUsuario(u);
-                 
-                if(presentismo.isPresent()){
-                    PresentismoUsuario pu=presentismo.get();
-                    Presentismo p=pu.getPresentismoIdPresentismo();
-                    Asistencia actual=siExiste.get();
-                    
-                    //Actualizar la asistencia
-                    asistCompleta = (profe.getAsistio() == 1 && profe.getMediaFalta() == 0 && profe.getRetiroAntes() == 0) ? 1D : 0D;
-            mediaFalta = (profe.getAsistio() == 0 && (profe.getMediaFalta() == 1 || profe.getRetiroAntes() == 1)) ? 1D : 0D;
-            cantInasistencia = (asistCompleta == 0 && mediaFalta == 0) ? 1 : 0;
-            
-            cantAsistencia=asistCompleta+(mediaFalta/2);
-            
-            p.setCantAsistencia(cantAsistencia);
-            p.setCantInasistencia(cantInasistencia);
-            
-            presenRepository.save(p);    
+   @Transactional
+public void modificarAsistenciaProfe(Date fecha, List<AlumnoAsistenciaDTO> lista) {
+    List<Integer> obtenerIdAsistencias = obtenerIdAsistencias(fecha);
+    Double cantAsistencia = 0D;
+    Integer cantInasistencia = 0;
+    Double asistCompleta = 0D;
+    Double mediaFalta = 0D;
+
+    for (Integer asist : obtenerIdAsistencias) {
+        for (AlumnoAsistenciaDTO profe : lista) {
+            Optional<Asistencia> siExiste = asistRepository.findById(asist);
+            // Buscar el presentismo correspondiente al alumno
+            Usuario u = new Usuario();
+            u.setIdUsuario(profe.getIdUsuario());
+            Optional<PresentismoUsuario> presentismo = presenUsuRepository.findByUsuarioIdUsuario(u);
+
+            if (siExiste.isPresent() && presentismo.isPresent()) {
+                Asistencia actual = siExiste.get();
+                PresentismoUsuario pu = presentismo.get();
+                Presentismo p = pu.getPresentismoIdPresentismo();
+
+                // Calcular asistencia
+                asistCompleta = (profe.getAsistio() == 1 && profe.getMediaFalta() == 0 && profe.getRetiroAntes() == 0) ? 1D : 0D;
+                mediaFalta = (profe.getAsistio() == 0 && (profe.getMediaFalta() == 1 || profe.getRetiroAntes() == 1)) ? 1D : 0D;
+                cantInasistencia = (asistCompleta == 0 && mediaFalta == 0) ? 1 : 0;
+
+                cantAsistencia = asistCompleta + (mediaFalta / 2);
+
+                // Actualizar la asistencia
+                p.setCantAsistencia(cantAsistencia);
+                p.setCantInasistencia(cantInasistencia);
+
+                // Obtener el valor anterior de 'asistio' para el cambio
+                int asistenciaAnterior = actual.getAsistio();  // Obtener el valor anterior de 'asistio'
+                actual.setAsistio(profe.getAsistio());  // Actualizar el valor de 'asistio'
+                actual.setMediaFalta(profe.getMediaFalta());  // Asegúrate de actualizar 'mediaFalta'
+                actual.setRetiroAntes(profe.getRetiroAntes());  // Asegúrate de actualizar 'retiroAntes'
+
+                // Si la asistencia cambia de 1 a 0 o de 0 a 1, actualizar el contador de asistencias en 'Presentismo'
+                if (asistenciaAnterior != profe.getAsistio()) {
+                    // Si la persona pasó de 'asistió' a 'no asistió', decrementamos el contador
+                    if (asistenciaAnterior == 1 && profe.getAsistio() == 0) {
+                        p.setCantAsistencia(p.getCantAsistencia() - 1);
+                    }
+                    // Si la persona pasó de 'no asistió' a 'asistió', incrementamos el contador
+                    else if (asistenciaAnterior == 0 && profe.getAsistio() == 1) {
+                        p.setCantAsistencia(p.getCantAsistencia() + 1);
+                    }
+
+                    // Guardar los cambios en el presentismo
+                    presenRepository.save(p);
+                    presenRepository.flush(); // Asegura que los cambios se persistan inmediatamente
                 }
                 
-                
-                        
-                
+                // Guardar la asistencia actualizada
+                asistRepository.save(actual);
+                asistRepository.flush();
             }
-            
         }
-
-       
-        
     }
+}
+
     
     
 }
+    
+    
+
