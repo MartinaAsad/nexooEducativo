@@ -97,12 +97,13 @@ public class ComprobantePagoService {
     }
       
       @Transactional
-      public void renovarMembresia(RenovarMembresiaDTO dto, Usuario u, Escuela e,ComprobantePagoDto pago){
+      public String renovarMembresia(RenovarMembresiaDTO dto, Usuario u, Escuela e){
          // dto.setE(e);
           List<CancelarMembresiaDTO> usuarios=null;
            List<verCursoView> obtenerCursos=null;
           if(dto.isRenovo()){
-              cuotaPagada(pago, e.getIdEscuela());
+              String mensaje="Nos comunicaremos a la brevedad para que pueda renovar correctamente su membresia!";
+              return mensaje;
           }else{
               //obtengo todos los usuarios de la escuela e info sobre id escuela y si esta activa
               usuarios= usuarioRepository.usuariosEscuela(e);
@@ -129,6 +130,8 @@ public class ComprobantePagoService {
               //alumnos, escuela y cursos pasan a estar TODOS inactivos
                    
           }
+          
+          return "Los usuarios registrados estan inactivos debido a que cancelo su menbresia";
           
           
           

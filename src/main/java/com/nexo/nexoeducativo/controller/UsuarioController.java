@@ -1066,16 +1066,15 @@ public class UsuarioController {
     }
      
       @PreAuthorize("hasAuthority('jefe colegio')" ) 
-    @GetMapping(value="/renovarMembresia")
-     ResponseEntity<?> renovarMembresia (Authentication auth, @Valid @RequestBody RenovarMembresiaDTO dto, 
-             @Valid @RequestBody(required=false) ComprobantePagoDto pago){
+    @PostMapping(value="/renovarMembresia")
+     ResponseEntity<?> renovarMembresia (Authentication auth, @Valid @RequestBody RenovarMembresiaDTO dto){
          String mailUsuario=auth.getPrincipal().toString();
          Usuario u=uService.buscarUsuario(mailUsuario);
          Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
-       cpService.renovarMembresia(dto, u, e,pago);
+      String mensaje= cpService.renovarMembresia(dto, u, e);
 		
 		
-		return new ResponseEntity<>("Se realizaron los cambios correspondientes", HttpStatus.OK);  
+		return new ResponseEntity<>(mensaje, HttpStatus.OK);  
     }
      
          @PreAuthorize("hasAuthority('padre')"
