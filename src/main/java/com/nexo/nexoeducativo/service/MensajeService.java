@@ -171,6 +171,7 @@ public class MensajeService {
 
     }
     
+    @Transactional
     public Mensaje editarMensaje(Mensaje m){
         return mensajeRepository.save(m);
     }

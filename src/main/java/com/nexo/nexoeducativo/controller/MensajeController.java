@@ -1,5 +1,6 @@
 package com.nexo.nexoeducativo.controller;
 
+import com.nexo.nexoeducativo.models.dto.request.DesplegableChatGrupalView;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
 import com.nexo.nexoeducativo.models.dto.request.MensajeGrupalDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeIndividualDTO;
@@ -92,13 +93,25 @@ public class MensajeController {
     }
     
        @PreAuthorize("hasAuthority('alumno') or hasAuthority('administrativo') or hasAuthority('preceptor') or hasAuthority('padre') or hasAuthority('profesor')")
-
     @GetMapping(value="/chatIndividual")
     ResponseEntity<?> cuotaM(Authentication auth ){
         String mailUsuario=auth.getPrincipal().toString();
         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
         Usuario u=usuarioService.buscarUsuario(mailUsuario);
         List<DesplegableChatView> infoUsuariosChat=usuarioService.infoUsuariosChat(e, u);
+        //System.out.println("🔍 Lista de cursos recibida: " + verCursos);
+
+        //return new ResponseEntity<>("lolll"+infoUsuariosChat,HttpStatus.OK);   
+         return ResponseEntity.ok(infoUsuariosChat);
+    }
+
+     @PreAuthorize("hasAuthority('alumno') or hasAuthority('administrativo') or hasAuthority('preceptor') or hasAuthority('padre') or hasAuthority('profesor')")
+    @GetMapping(value="/chatGrupal")
+    ResponseEntity<?> grupo(Authentication auth ){
+        String mailUsuario=auth.getPrincipal().toString();
+        Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+        Usuario u=usuarioService.buscarUsuario(mailUsuario);
+        List<DesplegableChatGrupalView> infoUsuariosChat=usuarioService.desplegableChatGrupal(e, u);
         //System.out.println("🔍 Lista de cursos recibida: " + verCursos);
 
         //return new ResponseEntity<>("lolll"+infoUsuariosChat,HttpStatus.OK);   
