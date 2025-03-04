@@ -622,8 +622,8 @@ public class UsuarioController {
         //buscar el id del usuario ingresado
         String mail=auth.getPrincipal().toString();
         Usuario usuario=uService.buscarUsuario(mail);
-         List<MateriaCurso> obtenerCursos=uService.obtenerCursos(usuario);
-         List<verCursoView> verCursos=uService.verCursos(obtenerCursos);
+         //List<MateriaCurso> obtenerCursos=uService.obtenerCursos(usuario);
+         List<verCursoView> verCursos=uService.verCursos2(usuario);
         return new ResponseEntity<>(verCursos, HttpStatus.OK);
     }
     

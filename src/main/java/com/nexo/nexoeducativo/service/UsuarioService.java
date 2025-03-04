@@ -522,6 +522,12 @@ public class UsuarioService {
         
     }
     
+      public List<verCursoView> verCursos2(Usuario u){
+        List<verCursoView> cursos=matCursoRepository.obtenerCursosProfe(u);    
+        return cursos;
+        
+    }
+    
     public List<NombreCompletoDTO> infoUsuarioSegunEscuela(Rol r, Escuela e){
         List<NombreCompletoDTO> usuarios=usuariorepository.obtenerInfoUsuario(r, e);
         return usuarios;
