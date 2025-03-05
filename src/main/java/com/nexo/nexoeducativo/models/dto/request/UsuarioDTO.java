@@ -6,6 +6,7 @@ package com.nexo.nexoeducativo.models.dto.request;
 
 
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -13,7 +14,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import java.io.Serializable;
 import lombok.Data;
-import jakarta.validation.constraints.Email;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
@@ -55,7 +55,6 @@ public class UsuarioDTO implements Serializable{
     regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&+])[A-Za-z\\d@$!%*?&+]{8,32}$",
     message = "La clave debe tener entre 8 y 32 caracteres, al menos una letra mayúscula, una letra minúscula, un número y un carácter especial."
 )
-
   
     @NotBlank(message="campo clave vacio")
     //@NotBlank(message = "campo clave vacio")
