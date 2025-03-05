@@ -16,9 +16,9 @@ import com.nexo.nexoeducativo.models.dto.request.ObtenerTareaView;
 import com.nexo.nexoeducativo.models.dto.request.TareaDTO;
 import com.nexo.nexoeducativo.models.entities.Calificacion;
 import com.nexo.nexoeducativo.models.entities.Curso;
+import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.Tarea;
 import com.nexo.nexoeducativo.models.entities.Usuario;
-import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.UsuarioTarea;
 import com.nexo.nexoeducativo.repository.CalificacionRepository;
 import com.nexo.nexoeducativo.repository.CursoRepository;
@@ -192,9 +192,12 @@ public class TareaService {
             if (descripcion.length() >= 5 && descripcion.length() <= 255) {
                 Integer idTarea = t.getIdTarea();
                 tareaRepository.updateDescripcionByIdMateria(descripcion, idTarea);
+                LOGGER.info("el id de la tarea ingresada: "+idTarea);
             } else {
                 throw new FormatoIncorrectoException("Minimo 5 caracteres y maximo 255 en la descripcion "+descripcion.length());
             }
+            
+            LOGGER.info("LA DESCRIPCION DEL DTO: "+descripcion);
 
         }
         
@@ -202,8 +205,11 @@ public class TareaService {
         if(file!=null){
             guardarImagen(file, t);
         }else{
-            throw new FormatoIncorrectoException("NO HAY ARCHIVO");
+            //throw new FormatoIncorrectoException("NO HAY ARCHIVO");
+            //LOGGER.info("INFO FILEE "+file.getName());
         }
+        
+       // tareaRepository.save(t);
 
         
       
