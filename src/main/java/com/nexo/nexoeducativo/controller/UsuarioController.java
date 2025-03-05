@@ -1045,6 +1045,14 @@ public class UsuarioController {
            return new ResponseEntity<>("El evento fue dado de alta exitosamente",HttpStatus.OK);   
     }
      
+      @PreAuthorize("hasAuthority('profesor')") 
+    @GetMapping(value="/verEventos/{idCurso}")
+     ResponseEntity<?> verEventos (@PathVariable(value="idCurso") Integer idCurso/*,
+            @RequestPart("materia") Integer materia*/){
+         List<EventosView> obtenerEventosPosteriores=eventoService.obtenerEventos(idCurso);
+           return new ResponseEntity<>(obtenerEventosPosteriores,HttpStatus.OK);   
+    }
+     
      @PreAuthorize("hasAuthority('profesor')" ) 
     @PatchMapping(value="/modificarEvento")
      ResponseEntity<?> editarEvento (@Valid @RequestBody EditarEventoDTO ev){

@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import java.util.Date;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -17,8 +16,10 @@ import org.hibernate.validator.constraints.Length;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class EventosView {
+    
+    private Integer idEvento;
      @NotBlank(message="descripcion no puede estar vacio")
     @Pattern(regexp = "^[a-zA-Z-0-9\s]+$", message = "formato de descripcion es invalido")
     @Length(min=4, max=80, message="la descripcion debe tener entre 4 y 80 caracteres")
@@ -28,5 +29,18 @@ public class EventosView {
      @JsonFormat(pattern="dd-MM-yyyy HH:mm")
 
     private Date fecha;
+     
+     public EventosView(String descripcion, Date fecha){
+         this.descripcion=descripcion;
+         this.fecha=fecha;
+     }
+
+    public EventosView(Integer idEvento, String descripcion, Date fecha) {
+        this.idEvento = idEvento;
+        this.descripcion = descripcion;
+        this.fecha = fecha;
+    }
+     
+     
     
 }

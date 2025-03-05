@@ -47,6 +47,7 @@ public class EventoService {
     
     @Autowired
     private CursoUsuarioEventoRepository cueRepository;
+    
     public void altaEvento(EventosView e, Integer idCurso){
         Evento evento=new Evento();
         evento.setDescripcion(e.getDescripcion());
@@ -90,6 +91,11 @@ public class EventoService {
     
     public List<EventosView> obtenerEventosPosteriores(Usuario usuarioIdUsuario){
        List<EventosView> obtener=eventoRepository.obtenerEventosPosteriores(usuarioIdUsuario);
+       return obtener;
+    }
+    
+     public List<EventosView> obtenerEventos(Integer curso){
+       List<EventosView> obtener=eventoRepository.obtenerEventos(curso);
        return obtener;
     }
     
