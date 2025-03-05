@@ -22,13 +22,11 @@ import java.io.IOException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -127,7 +125,7 @@ public class MaterialService {
             
     
     public List<SeleccionarMaterialView> seleccionarMaterial( Integer curso, Integer materia){
-        Curso cursoIdCurso=cursoRepository.findById(curso).orElseThrow(()-> new CursoNotFound("No se encunetra el curso seleccionado"));
+        Curso cursoIdCurso=cursoRepository.findById(curso).orElseThrow(()-> new CursoNotFound("No se encunetra el curso seleccionado "+curso));
         Materia materiaIdMateria=materiaRepository.findById(materia).orElseThrow(()-> new MateriaNotFoundException("No existe la materia seleccionada"));
         List<SeleccionarMaterialView> buscarMaterial=materRepository.buscarMaterial(cursoIdCurso, materiaIdMateria);
         //List<String> descripcion=new ArrayList<>();

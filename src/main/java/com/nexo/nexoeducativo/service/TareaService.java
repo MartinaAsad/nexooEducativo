@@ -1,6 +1,5 @@
 package com.nexo.nexoeducativo.service;
 
-import com.nexo.nexoeducativo.exception.CalificacionWrongException;
 import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.MateriaNotFoundException;
@@ -8,10 +7,8 @@ import com.nexo.nexoeducativo.exception.MaterialNotFoundException;
 import com.nexo.nexoeducativo.exception.TamanoIncorrectoException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.CalificacionesHijoView;
-import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
 import com.nexo.nexoeducativo.models.dto.request.EliminarTareaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EventosDTO;
-import com.nexo.nexoeducativo.models.dto.request.EventosView;
 import com.nexo.nexoeducativo.models.dto.request.EventosView;
 import com.nexo.nexoeducativo.models.dto.request.InfoMateriaHijoView;
 import com.nexo.nexoeducativo.models.dto.request.NotaDTO;
@@ -22,7 +19,6 @@ import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Tarea;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.models.entities.Materia;
-import com.nexo.nexoeducativo.models.entities.Material;
 import com.nexo.nexoeducativo.models.entities.UsuarioTarea;
 import com.nexo.nexoeducativo.repository.CalificacionRepository;
 import com.nexo.nexoeducativo.repository.CursoRepository;
