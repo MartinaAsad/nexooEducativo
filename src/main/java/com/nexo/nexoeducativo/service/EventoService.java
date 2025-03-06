@@ -103,27 +103,33 @@ public class EventoService {
        return obtener;
     }
     
-    public void verificarCampos(EditarEventoDTO dto, Evento ingresado){
-        if(dto.getDescripcion()!=null){
-            ingresado.setDescripcion(dto.getDescripcion());
-            LOGGER.info("descripcion "+ingresado.getDescripcion());
-        }
-        
-        String fechaNueva=hoy.format(formato);
-         LocalDateTime actual=LocalDateTime.parse(fechaNueva, formato);
-        Date fechaActual = Date.from(actual.atZone(ZoneId.systemDefault()).toInstant());
-        if(dto.getFecha()!=null){
-            if(dto.getFecha().before(fechaActual)){
-         throw new HoraInvalidatedexception("No puedes agendar un evento antes de la fecha actual "+dto.getFecha());   
-        }
-          ingresado.setFecha(dto.getFecha());   
-        }
-        
-        eventoRepository.save(ingresado);
-        
-        
-        
+    public void verificarCampos(EditarEventoDTO dto, Evento ingresado) {
+    LOGGER.info("DTO recibido: " + dto);
+
+    if (dto.getDescripcion() != null && !dto.getDescripcion().isEmpty()) {
+        ingresado.setDescripcion(dto.getDescripcion());
+        LOGGER.info("Descripción: " + ingresado.getDescripcion());
+    } else {
+        LOGGER.info("Descripción vacía");
     }
+
+    // Verificar fecha
+    if (dto.getFecha() != null) {
+        // Obtén la fecha actual (en formato LocalDateTime)
+        LocalDateTime fechaActual = LocalDateTime.now();
+
+        // Comparar fechas
+        if (dto.getFecha().isBefore(fechaActual)) {  // Usamos LocalDateTime directamente para la comparación
+            throw new HoraInvalidatedexception("No puedes agendar un evento antes de la fecha actual " + dto.getFecha());
+        }
+
+        ingresado.setFecha(Date.from(dto.getFecha().atZone(ZoneId.systemDefault()).toInstant()));  // Si es necesario, convertir a Date
+    }
+
+    // Guardar evento
+    eventoRepository.save(ingresado);
+}
+
     
     @Transactional
     public Evento editarEvento(EditarEventoDTO dto){
