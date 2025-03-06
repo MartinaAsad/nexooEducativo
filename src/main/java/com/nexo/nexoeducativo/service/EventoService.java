@@ -21,6 +21,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +49,8 @@ public class EventoService {
     
     @Autowired
     private CursoUsuarioEventoRepository cueRepository;
+    
+     private static final Logger LOGGER = LoggerFactory.getLogger(EventoService.class);
     
     public void altaEvento(EventosView e, Integer idCurso){
         Evento evento=new Evento();
@@ -102,6 +106,7 @@ public class EventoService {
     public void verificarCampos(EditarEventoDTO dto, Evento ingresado){
         if(dto.getDescripcion()!=null){
             ingresado.setDescripcion(dto.getDescripcion());
+            LOGGER.info("descripcion "+ingresado.getDescripcion());
         }
         
         String fechaNueva=hoy.format(formato);
@@ -122,6 +127,7 @@ public class EventoService {
     
     @Transactional
     public Evento editarEvento(EditarEventoDTO dto){
+        LOGGER.info("id evento ingresado: "+dto.getIdEvento());
         Evento modificado=eventoRepository.findById(dto.getIdEvento()).orElseThrow(
                 ()-> new EventoNotFoundException("No existe el evento que se desea modificar"));
         

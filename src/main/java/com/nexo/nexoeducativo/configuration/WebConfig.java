@@ -15,7 +15,7 @@ public class WebConfig implements WebMvcConfigurer{
                 .allowedOrigins("http://localhost:3000")  // Cambia esto según sea necesario
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                 .allowedHeaders("*")
-                .allowCredentials(false);//antes estaba en true
+                .allowCredentials(true);//antes estaba en true
     }
     
     @Override
