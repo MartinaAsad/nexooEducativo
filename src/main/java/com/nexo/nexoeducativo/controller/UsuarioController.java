@@ -487,7 +487,8 @@ public class UsuarioController {
     }
     
     @PreAuthorize("hasAuthority('preceptor')"
-    + "or hasAuthority('administrativo') ")
+    + "or hasAuthority('administrativo') "
+    + "or hasAuthority('profesor') ")
     @GetMapping(value="/verAlumnosCurso/{cursoIdCurso}") //este endpoint tambien es necesario para altaNota
     ResponseEntity<?> prueba153(@PathVariable("cursoIdCurso") int cursoIdCurso){
         Curso curso=new Curso();

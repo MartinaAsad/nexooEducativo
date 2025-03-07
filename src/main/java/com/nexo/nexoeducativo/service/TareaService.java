@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -179,10 +180,7 @@ public class TareaService {
         //actualizar la calificacion SOLO SI VINO EN EL DTO
         if (!n.getCalificacion().isEmpty()) {
             if (n.getCalificacion().length() >= 1 && n.getCalificacion().length() <= 28) {
-                String nota = n.getCalificacion();
-                Calificacion c = t.getCalificacionIdCalificacion();
-                Integer idCalificacion = c.getIdCalificacion();
-                califRepository.updateNotaByIdCalificacion(nota, idCalificacion);
+                editarCalificacion(n.getIdAlumno(), n.getIdTarea(), n.getCalificacion());
             }
         }
 
@@ -213,6 +211,40 @@ public class TareaService {
 
         
       
+    }
+    
+    @Transactional
+    public void editarCalificacion(Integer idAlumno, Integer idTarea, String calificacion){
+        Usuario alumno=usuarioRepository.findById(idAlumno).orElseThrow(()-> new UsuarioNotFoundException("No existe el alumno "+idAlumno));
+        Tarea tarea=tareaRepository.findById(idTarea).orElseThrow(()-> new TamanoIncorrectoException("No hay tarea"));
+        Optional<UsuarioTarea> existente=usuarioTRepository.findByUsuarioIdUsuarioAndTareaIdTarea(alumno, tarea);
+        
+        if(existente.isPresent()){
+            
+            UsuarioTarea obtenido=existente.get();
+            Optional<Calificacion> nota=califRepository.findByNota(calificacion); //ver si la clificacion ingresada existe previamente
+          
+            if(nota.isPresent()){
+                obtenido.setCalificacionIdCalificacion(nota.get());
+             //usuarioTRepository.updateByIdUsuarioAndIdTarea(nota.get(),idAlumno, idTarea);   //si existe, actualizar a ese alumno   
+            }else{
+                Calificacion nueva = new Calificacion(); //si no existe, crearla
+                nueva.setNota(calificacion);
+                String fechaNueva = hoy.format(formato);
+                LocalDateTime actual = LocalDateTime.parse(fechaNueva, formato);
+                Date fechaDate = Date.from(actual.atZone(ZoneId.systemDefault()).toInstant());
+                LOGGER.info("INFO A GUARDAR EN CALIFICACION NUEVA: " + nueva.getNota());
+                nueva.setFecha(fechaDate);
+                califRepository.save(nueva);
+                obtenido.setCalificacionIdCalificacion(nueva);
+             //usuarioTRepository.updateByIdUsuarioAndIdTarea(nueva,idAlumno, idTarea);  
+            }
+            
+            usuarioTRepository.save(obtenido);
+            
+        }else{
+            throw new UsuarioNotFoundException("El usuario ingresado nunca fue calificado");
+        }
     }
     
     public List<String> obtenerTareas (Usuario idAlumno){
