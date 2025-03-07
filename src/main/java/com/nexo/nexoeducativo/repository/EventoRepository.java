@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface EventoRepository extends JpaRepository<Evento, Integer>{
-    @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.EventosView (e.descripcion, e.fecha) FROM Evento e " +
+    @Query("SELECT DISTINCT new com.nexo.nexoeducativo.models.dto.request.EventosView (e.descripcion, e.fecha) FROM Evento e " +
 "INNER JOIN CursoUsuarioEvento ceu ON " +
 "ceu.eventoIdEvento=e.idEvento " +
 "INNER JOIN CursoUsuario cu ON " +

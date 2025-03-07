@@ -215,6 +215,8 @@ public class UsuarioController {
           rolService.crearRol(r);//buscar la manera de que en caso que no se haya creado, mostrar en el Postman un mensaje de error
           return new ResponseEntity<>("Rol guardado exitosamente", HttpStatus.OK);
      }
+     
+     
      @PreAuthorize("hasAuthority('administrativo') "
             + "or hasAuthority('preceptor') ") //despues sacar este permiso mas adelante
      @PostMapping("/saveCurso")
@@ -326,6 +328,22 @@ public class UsuarioController {
          
          
      }
+     
+     @PreAuthorize("hasAuthority('super admin') "
+            + "or hasAuthority('jefe colegio') "
+            + "or hasAuthority('administrativo') "
+            + "or hasAuthority('preceptor')" 
+            + "or hasAuthority('padre')"
+            + "or hasAuthority('profesor')" 
+            + "or hasAuthority('alumno')" )
+     @GetMapping(value="/usuarioLogueado")
+     ResponseEntity<?> prueba80(Authentication auth){
+     String mail=auth.getPrincipal().toString();//obtengo el mail del usuario logueado
+       Usuario obtenerUsuario=uService.buscarUsuario(mail);
+       return new ResponseEntity<>(obtenerUsuario.getIdUsuario(), HttpStatus.OK); 
+         
+     }
+     
      
      @PreAuthorize("hasAuthority('jefe colegio') "
       + "or hasAuthority('administrativo') ")

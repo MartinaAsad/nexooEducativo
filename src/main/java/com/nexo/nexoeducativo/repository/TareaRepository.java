@@ -29,7 +29,7 @@ public interface TareaRepository extends JpaRepository<Tarea, Integer> {
 "WHERE cu.cursoIdCurso.idCurso= :idCurso AND t.materiaIdMateria.idMateria= :idMateria")
     List<ObtenerTareaView> descripcionTareasProfe (  @Param("idCurso") Integer idCurso,  @Param("idMateria")  Integer idMateria);
     
-    @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.CalificacionesHijoView "
+    @Query("SELECT DISTINCT new com.nexo.nexoeducativo.models.dto.request.CalificacionesHijoView "
             + "(t.descripcion as descripcion, c.nota as nota, m.nombre as nombre, u.nombre as nombreP, u.apellido as apellidoP) FROM Tarea t " +
 "INNER JOIN UsuarioTarea ut ON " +
 "ut.tareaIdTarea=t.idTarea " +
