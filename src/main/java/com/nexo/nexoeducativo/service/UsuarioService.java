@@ -292,6 +292,7 @@ public class UsuarioService {
      } 
       
       public void actualizarCampos( JefeColegioModificacionDTO dto, Usuario u){
+           LOGGER.info("dto que llega: "+dto.toString());
          if (dto.getNombre() != null) {
              u.setNombre(dto.getNombre());
          }
@@ -318,7 +319,7 @@ public class UsuarioService {
     }
 }
 
-         if (dto.getClave() != null) {
+         if (dto.getClave() != null && !dto.getClave().isEmpty()) {
              u.setClave(convertirSHA256(dto.getClave()));
          }
          if (dto.getTelefono() != null) {
