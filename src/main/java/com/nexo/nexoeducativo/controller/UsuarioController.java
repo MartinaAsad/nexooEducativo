@@ -925,6 +925,16 @@ public class UsuarioController {
 		return new ResponseEntity<>(usuarios, HttpStatus.OK);   
     }
     
+       @PreAuthorize("hasAuthority('super admin') ")
+    @GetMapping(value="/getUsuariosSuperAdmin/{nombre}")
+    ResponseEntity<?> prueba190(@PathVariable(value = "nombre") String nombre){
+        List<InfoUsuarioSegunRolDTO> usuarios = uService.obtenerUsuario(nombre);
+
+		
+		return new ResponseEntity<>(usuarios, HttpStatus.OK);   
+    }
+    
+    
        @PreAuthorize("hasAuthority('administrativo') ")
     @PostMapping(value="/altaCuota")
     ResponseEntity<?> cuota(Authentication auth, @RequestBody CuotaDTO c){

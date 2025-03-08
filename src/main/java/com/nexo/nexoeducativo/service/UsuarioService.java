@@ -275,6 +275,15 @@ public class UsuarioService {
          return usuariorepository.getUsuarioByRol(nombre, escuelaIdEscuela);
      }
      
+        public List<InfoUsuarioSegunRolDTO> obtenerUsuario(String nombreRol){
+         //List<Usuario> usuarios = usuariorepository.getJefeColegio(nombreRol);
+         List<InfoUsuarioSegunRolDTO> lista = usuariorepository.getJefeColegio(nombreRol);
+         return lista;
+       
+     }
+     
+     
+     
      public void validarElDto (JefeColegioModificacionDTO j){
     Set<ConstraintViolation<JefeColegioModificacionDTO>> violaciones = validator.validate(j);
     if (!violaciones.isEmpty()) {
@@ -327,6 +336,7 @@ public class UsuarioService {
          }
          if (dto.getActivo()==0 || dto.getActivo()==1) {
              u.setActivo(dto.getActivo());
+              LOGGER.info("valor ingresado: "+dto.getActivo());
          }else{
              LOGGER.info("valor ingresado: "+dto.getActivo());
          }

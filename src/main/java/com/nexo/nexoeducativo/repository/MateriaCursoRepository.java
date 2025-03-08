@@ -30,7 +30,7 @@ public interface MateriaCursoRepository extends JpaRepository<MateriaCurso, Inte
                                  @Param("horaInicio") LocalTime horaInicio,
                                  @Param("horaFin") LocalTime horaFin);
     
-   @Query(value="SELECT u.nombre, u.apellido, m.nombre FROM usuario u "
+   @Query(value="SELECT DISTINCT u.nombre, u.apellido, m.nombre FROM usuario u "
            + "INNER JOIN materia_curso mc ON mc.profesor_id=u.id_usuario "
            + "INNER JOIN materia m ON m.id_materia=mc.materia_id_materia "
            + "WHERE mc.curso_id_curso= :idCurso", nativeQuery=true)

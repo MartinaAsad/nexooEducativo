@@ -70,6 +70,10 @@ Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
       @Query(value="SELECT new com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO(u.idUsuario, u.nombre, u.apellido, u.dni) FROM Usuario"
               + " u INNER JOIN Rol r ON r.idRol=u.rolidrol INNER JOIN EscuelaUsuario eu ON eu.usuarioIdUsuario=u.idUsuario WHERE r.nombre = :nombre AND eu.escuelaIdEscuela = :escuelaIdEscuela")
       List<InfoUsuarioSegunRolDTO>getUsuarioByRol(@PathVariable(value = "nombre") String nombre,@PathVariable(value = "escuelaIdEscuela") Escuela escuelaIdEscuela );
+      
+        @Query(value="SELECT new com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO(u.idUsuario, u.nombre, u.apellido, u.dni) FROM Usuario"
+              + " u INNER JOIN Rol r ON r.idRol=u.rolidrol WHERE r.nombre = :nombre")
+      List<InfoUsuarioSegunRolDTO>getJefeColegio(@PathVariable(value = "nombre") String nombre);
        
       //para obtener nombre y apellido del usuario logueado
           @Query(value = "SELECT u.nombre, u.apellido FROM Usuario u WHERE mail = :mail", nativeQuery = true)
@@ -77,7 +81,7 @@ Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
           
       Usuario findNombreAndApellidoByIdUsuario(Integer idUsuario);
       
-      @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.UsuarioView(u.idUsuario,u.nombre, u.apellido) FROM Usuario u "
+      @Query("SELECT DISTINCT new com.nexo.nexoeducativo.models.dto.request.UsuarioView(u.idUsuario,u.nombre, u.apellido) FROM Usuario u "
               + "JOIN CursoUsuario cu ON u.idUsuario=cu.usuarioIdUsuario"
               + " WHERE cu.cursoIdCurso= :curso and u.rolidrol=7")
       
@@ -131,7 +135,7 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
 "WHERE u.rolidrol= :rol and eu.escuelaIdEscuela= :escuela")
       List<NombreCompletoDTO> obtenerInfoUsuario(Rol rol, Escuela escuela);
       
-      @Query("SELECT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido"
+      @Query("SELECT DISTINCT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido"
               + " FROM Usuario u INNER JOIN Rol r ON r.idRol=u.rolidrol"
               + " INNER JOIN CursoUsuario cu ON cu.usuarioIdUsuario=u.idUsuario "
               + "INNER JOIN CursoEscuela ce ON ce.cursoIdCurso=cu.cursoIdCurso "

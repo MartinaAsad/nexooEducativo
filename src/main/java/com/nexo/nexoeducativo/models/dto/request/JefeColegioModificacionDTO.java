@@ -55,7 +55,7 @@ public class JefeColegioModificacionDTO implements Serializable{
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @Min(value = 0, message = "El valor debe ser 0 o 1")
     @Max(value = 1, message = "El valor debe ser 0 o 1")
-    private short activo;
+    private Short activo;
     
     @JsonCreator
      public JefeColegioModificacionDTO(
