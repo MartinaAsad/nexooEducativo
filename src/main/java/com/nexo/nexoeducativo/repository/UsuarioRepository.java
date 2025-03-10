@@ -156,7 +156,7 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
 "WHERE uu.usuarioIdUsuario1 = :usuarioIdUsuario1")
     public List<InfoAlumnoCuotaView> obtenerCuotaHijos(Usuario usuarioIdUsuario1);
     
-      @Query("SELECT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail FROM Usuario u"
+      @Query("SELECT DISTINCT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail FROM Usuario u"
               + " JOIN EscuelaUsuario eu ON " +
 "eu.usuarioIdUsuario=u.idUsuario " +
 "WHERE u.rolidrol= :rol and eu.escuelaIdEscuela= :escuela and u.activo= 1")
