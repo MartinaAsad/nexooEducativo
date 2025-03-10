@@ -12,6 +12,8 @@ import com.nexo.nexoeducativo.service.MensajeService;
 import com.nexo.nexoeducativo.service.UsuarioService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -43,6 +45,9 @@ public class MensajeController {
      @Autowired
     private UsuarioService usuarioService;
 
+     private static final Logger LOGGER = LoggerFactory.getLogger(MensajeController.class);
+     
+     
     @MessageMapping
     @SendTo("/grupo")  //cambiar mas adelante por MensajeGrupalDTO
     public void enviarMensaje(@Payload MensajeGrupalDTO mensaje) {
@@ -98,6 +103,7 @@ public class MensajeController {
         String mailUsuario=auth.getPrincipal().toString();
         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
         Usuario u=usuarioService.buscarUsuario(mailUsuario);
+        LOGGER.info("probando logger"+u.toString());
         List<DesplegableChatView> infoUsuariosChat=usuarioService.infoUsuariosChat(e, u);
         //System.out.println("🔍 Lista de cursos recibida: " + verCursos);
 
