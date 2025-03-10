@@ -12,63 +12,57 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 
-/**
- *
- * @author Martina
- */
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry ser) {
-       // url de acceso : ('http://localhost:8080/ms');
-       ser.addEndpoint("/ms").setAllowedOrigins("http://localhost:3000").withSockJS();
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        // Endpoint para la conexión WebSocket
+        registry.addEndpoint("/ws")
+                .setAllowedOrigins("http://localhost:3000") // Permitir React
+                .withSockJS();
     }
 
     @Override
-    public void configureWebSocketTransport(WebSocketTransportRegistration wstr) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        // Prefijo para que el cliente envíe mensajes al servidor
+        registry.setApplicationDestinationPrefixes("/app");
+
+        // Prefijos donde los clientes escucharán mensajes
+        registry.enableSimpleBroker("/grupo", "/privado");
+
+        // Para los chats individuales (permitir mensajes privados a usuarios específicos)
+        registry.setUserDestinationPrefix("/usuario");
     }
 
     @Override
-    public void configureClientInboundChannel(ChannelRegistration cr) {
-     //   throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
+        // Aquí puedes configurar límites de tamaño de mensaje si es necesario
     }
 
     @Override
-    public void configureClientOutboundChannel(ChannelRegistration cr) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void configureClientInboundChannel(ChannelRegistration registry) {
+        // Aquí puedes agregar intercepción de mensajes si es necesario
     }
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> list) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void configureClientOutboundChannel(ChannelRegistration registry) {
+        // Aquí puedes agregar intercepción de mensajes si es necesario
     }
 
     @Override
-    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> list) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        // No se necesitan resolvers adicionales por ahora
     }
 
     @Override
-    public boolean configureMessageConverters(List<MessageConverter> list) {
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    return false;
+    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
+        // No se necesitan handlers adicionales por ahora
     }
 
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry mbr) {
-        //endpoints que administran el envio de lols mensajes
-        mbr.enableSimpleBroker("/grupo", "/usuario");
-        
-        //prefijo que usa el cliente para enviar el mensje al servidor
-        mbr.setApplicationDestinationPrefixes("/enviar");
-        
-        //para chat individual
-        mbr.setUserDestinationPrefix("/usuario");
+    public boolean configureMessageConverters(List<MessageConverter> converters) {
+        return false; // Usar configuración por defecto
     }
-    
-    
-   
 }
