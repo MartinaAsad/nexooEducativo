@@ -52,6 +52,7 @@ List<MateriaCurso> findByCursoIdCursoAndProfesor (Curso cursoIdCurso, Usuario pr
     //findIdMateriaCursoByCursoIdCursoAndMateriaIdMateria
     
     MateriaCurso findByMateriaIdMateria(Materia materiaIdMateria);
+     List <MateriaCurso> findByCursoIdCurso(Curso cursoIdCurso);
     MateriaCurso findByCursoIdCursoAndMateriaIdMateriaAndDiaIsNotNullAndHoraInicioIsNotNullAndHoraFinIsNotNull(Curso cursoIdCurso, Materia materiaIdMateria);
     boolean existsByCursoIdCursoAndHoraInicioAndDia(Curso cursoIdCurso, LocalTime horaInicio, String dia);
     boolean existsByCursoIdCursoAndHoraFinAndDia(Curso cursoIdCurso, LocalTime horaFin, String dia);

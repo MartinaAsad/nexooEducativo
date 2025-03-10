@@ -266,6 +266,7 @@ public class TareaService {
           usuarioTRepository.deleteByIdCursoAndIdTarea(dto.getIdCurso(), dto.getIdTarea());
           
       }
+      
     
     public HashMap<String, String> agregarInfo (List<Object[]> tareas){
          HashMap<String, String> info=new HashMap<>();
