@@ -43,6 +43,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer>{
    @Query("SELECT u.rolidrol FROM Usuario u WHERE u.idUsuario = :idUsuario")
 Rol findRolidrolByIdUsuario(@Param("idUsuario") Integer idUsuario);
 
+
+Optional<Usuario> findByDni (int dni);
     
     
     
