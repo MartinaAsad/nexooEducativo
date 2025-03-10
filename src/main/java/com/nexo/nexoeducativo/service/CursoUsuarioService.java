@@ -1,9 +1,11 @@
 
 package com.nexo.nexoeducativo.service;
 
+import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.RolNotFound;
 import com.nexo.nexoeducativo.exception.UsuarioAssignedException;
 import com.nexo.nexoeducativo.exception.UsuarioNotAuthorizedException;
+import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.AsignarPreceptorDTO;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.CursoUsuario;
@@ -67,53 +69,34 @@ public class CursoUsuarioService {
         
     }
     
-   @Transactional
+@Transactional
 public void actualizarPreceptor(AsignarPreceptorDTO ap) {
-    // Verificar el rol de preceptor
-    Rol rolPreceptor = rolRepository.findById(4)
-            .orElseThrow(() -> new RolNotFound("El rol de Preceptor no existe"));
-    
-    // Obtener el curso
-    Curso c = cursoRepository.getReferenceById(ap.getCurso()); // Usar getReferenceById en lugar de findById
-    
-    // Paso 1: Manejar el usuario
-    Usuario u;
-    Optional<Usuario> usuarioExistente = usuarioRepository.findByDni(ap.getPreceptor());
-    
-    if (usuarioExistente.isPresent()) {
-        u = usuarioExistente.get();
-    } else {
-        // Crear nuevo usuario
-        u = new Usuario();
-        u.setDni(ap.getPreceptor());
-        u.setNombre("");
-        u.setApellido("");
-        u.setMail("");
-        u.setActivo((short)1);
-        u.setRolidrol(rolPreceptor);
-        
-        // Guardar usuario
-        u = usuarioRepository.saveAndFlush(u);
-    }
-    
-    // Paso 2: Eliminar asignaciones existentes (si hay)
-    Optional<CursoUsuario> asignacionExistente = cuRepository.siYaFueAsignado(c.getIdCurso());
+    // Paso 1: Obtener el curso
+    Curso curso = cursoRepository.findById(ap.getCurso())
+            .orElseThrow(() -> new CursoNotFound("No existe el curso seleccionado"));
+
+    // Paso 2: Obtener el usuario (preceptor)
+    Usuario usuario = usuarioRepository.findById(ap.getPreceptor())
+            .orElseThrow(() -> new UsuarioNotFoundException("No existe el usuario"));
+
+    // Paso 3: Verificar si ya existe una asignación para este curso
+    Optional<CursoUsuario> asignacionExistente = cuRepository.findByCursoIdCurso(curso);
+
     if (asignacionExistente.isPresent()) {
-        cuRepository.deleteById(asignacionExistente.get().getIdCursoUsuario());
-        cuRepository.flush();
+        // Si ya existe una asignación, la eliminamos
+        cuRepository.delete(asignacionExistente.get());
+        cuRepository.flush(); // Forzar la eliminación antes de continuar
     }
-    
-    // Asegurarse de que el usuario tenga un ID asignado
-    if (u.getIdUsuario() == null) {
-        throw new RuntimeException("El ID del usuario no fue asignado correctamente");
-    }
-    
-    // Crear una nueva asignación utilizando solo los IDs
-    CursoUsuario nuevaAsignacion = new CursoUsuario();
-    nuevaAsignacion.setCursoIdCurso(c);
-    nuevaAsignacion.setUsuarioIdUsuario(u);
-    
-    cuRepository.saveAndFlush(nuevaAsignacion);
+
+    // Paso 4: Crear una nueva instancia de CursoUsuario
+    CursoUsuario cursoUsuario = new CursoUsuario();
+    cursoUsuario.setCursoIdCurso(curso); // Asignar el curso
+    cursoUsuario.setUsuarioIdUsuario(usuario); // Asignar el usuario
+
+    // Paso 5: Guardar la nueva asignación
+    cuRepository.save(cursoUsuario);
+
+    LOGGER.info("Asignación exitosa: Preceptor con ID " + usuario.getIdUsuario() + " asignado al curso " + curso.getIdCurso());
 }
 
     

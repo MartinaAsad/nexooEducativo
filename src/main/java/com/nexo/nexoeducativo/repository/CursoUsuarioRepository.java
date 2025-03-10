@@ -4,11 +4,9 @@
  */
 package com.nexo.nexoeducativo.repository;
 
-import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.CursoUsuario;
 import com.nexo.nexoeducativo.models.entities.Usuario;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -36,6 +34,12 @@ public interface CursoUsuarioRepository extends JpaRepository<CursoUsuario, Inte
     CursoUsuario findNumeroAndDivisionByIdCurso (@Param("idCurso") Integer idCurso);
     
     Optional<CursoUsuario> findByUsuarioIdUsuario (Usuario usuarioIdUsuario);
+    
+   /* @Modifying
+    @Query("UPDATE CursoUsuario cu SET cu.cursoIdCurso= :cursoIdCurso WHERE cu.usuarioIdUsuario= :usuarioIdUsuario")
+    void asignarPreceptorDirecto(Curso cursoIdCurso, Usuario usuarioIdUsuario);*/
+    
+    Optional<CursoUsuario> findByCursoIdCurso(Curso cursoIdCurso);
     
    
 }

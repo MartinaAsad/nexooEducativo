@@ -44,7 +44,7 @@ public class CursoUsuario implements Serializable {
     private Curso cursoIdCurso;
     @JoinColumn(name = "usuario_id_usuario", referencedColumnName = "id_usuario")
     @ToString.Exclude //para evitar stackOverFlowError
-    @ManyToOne(optional = false)
+    @ManyToOne(cascade = CascadeType.ALL,optional = false)
     private Usuario usuarioIdUsuario;
      @ToString.Exclude //para evitar stackOverFlowError
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cursoUsuarioIdCursoUsuario")
