@@ -998,6 +998,14 @@ public class UsuarioController {
           
            return new ResponseEntity<>(HttpStatus.OK);   
     }   
+     
+       @PreAuthorize("hasAuthority('administrativo')") //asignado como ejemplo, despues cambiar a administrativo
+    @PostMapping(value="/actualizarPreceptor")
+     ResponseEntity<?> prueba203 ( @Valid @RequestBody AsignarPreceptorDTO em){
+          cursoUsuarioService.asignarPreceptor(em);
+          
+           return new ResponseEntity<>(HttpStatus.OK);   
+    }   
     
      /*endpoints necesarios para que un padre vea las notas de cada hijo*/
      @PreAuthorize("hasAuthority('padre')")

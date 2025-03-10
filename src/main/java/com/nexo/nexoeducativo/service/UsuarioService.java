@@ -386,7 +386,7 @@ public class UsuarioService {
          if (dto.getTelefono() != null) {
              u.setTelefono(dto.getTelefono());
          }
-          if (dto.getActivo()==0 || dto.getActivo()==1) {
+          if (dto.getActivo()!=null && dto.getActivo()==0 ||  dto.getActivo()!=null && dto.getActivo()==1) {
              u.setActivo(dto.getActivo());
              LOGGER.info("valor ingresado: "+dto.getActivo());
          }else{
