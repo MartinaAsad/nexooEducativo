@@ -22,5 +22,6 @@ public class EditarMateriaCursoView implements Serializable {
     private String nombre;
     private String nombreProfesor;
     private String apellidoProfesor;
+    private Integer idMateria;
     
 }
