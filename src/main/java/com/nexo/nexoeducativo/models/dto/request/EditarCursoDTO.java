@@ -24,7 +24,7 @@ public class EditarCursoDTO implements Serializable{
        @JsonInclude(JsonInclude.Include.NON_NULL)//PERMITE IGNORAR LOS VALORES
         @Min(value = 0, message = "El valor debe ser 0 o 1")
         @Max(value = 1, message = "El valor debe ser 0 o 1")
-        private short activo;
+        private Short activo;
        
         @JsonInclude(JsonInclude.Include.NON_NULL)//PERMITE IGNORAR LOS VALORES
       private List<EditarCursoMateriaDTO> materias;

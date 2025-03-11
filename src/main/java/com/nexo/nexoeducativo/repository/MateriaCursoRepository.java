@@ -56,7 +56,7 @@ List<MateriaCurso> findByCursoIdCursoAndProfesor (Curso cursoIdCurso, Usuario pr
     
     @Query("SELECT DISTINCT new com.nexo.nexoeducativo.models.dto.request.EditarMateriaCursoView "
             + "(mc.dia AS dia, mc.horaInicio, mc.horaFin, mc.materiaIdMateria.nombre, mc.profesor.nombre"
-            + ", mc.profesor.apellido)"
+            + ", mc.profesor.apellido, mc.materiaIdMateria.idMateria )"
             + "  FROM MateriaCurso mc WHERE mc.cursoIdCurso= :cursoIdCurso AND mc.dia IS NOT NULL")
      List <EditarMateriaCursoView> findDistinctByCursoIdCurso(Curso cursoIdCurso);
     MateriaCurso findByCursoIdCursoAndMateriaIdMateriaAndDiaIsNotNullAndHoraInicioIsNotNullAndHoraFinIsNotNull(Curso cursoIdCurso, Materia materiaIdMateria);

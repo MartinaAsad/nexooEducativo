@@ -174,7 +174,7 @@ public class CursoService {
         
         
        public void actualizarCampos(EditarCursoDTO e,Curso c, Escuela escuela){
-           if(e.getActivo()==0 || e.getActivo()==1){
+           if(e.getActivo()!=null){
                c.setActivo(e.getActivo());
            }
            
