@@ -110,6 +110,8 @@ Optional<Usuario> findByDni (int dni);
          @Query("SELECT eu.escuelaIdEscuela FROM Usuario u INNER JOIN EscuelaUsuario eu ON u.idUsuario=eu.usuarioIdUsuario "
               + "WHERE u.rolidrol=3 and u.mail= :mail")
       Escuela obtenerIdEscuelaAdministrativo(@Param("mail") String mail);
+      
+      
        @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.verCursoView (c.numero, c.division, c.activo, c.idCurso)"
               + " FROM Curso c INNER JOIN CursoEscuela ce ON " +
 "ce.cursoIdCurso=c.idCurso " +
@@ -119,7 +121,7 @@ Optional<Usuario> findByDni (int dni);
       //para preceptor MAS ADELANTE VER COMO MODIFICAR ESTO PARA QUE SEA REUTILIZABLE CON EL ROL ID 2 Y 3
      Usuario findIdUsuarioByMail(String mail);
      
-    @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.verCursoView(c.numero, c.division, c.activo) " +
+    @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.verCursoView(c.numero, c.division, c.activo, c.idCurso) " +
        "FROM CursoUsuario cu " +
        "JOIN cu.cursoIdCurso c " +
        "WHERE cu.usuarioIdUsuario.idUsuario = :usuario")
