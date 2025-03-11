@@ -1,15 +1,16 @@
 package com.nexo.nexoeducativo.configuration;
 
-import java.util.List;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.converter.MessageConverter;
-import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
-import org.springframework.messaging.handler.invocation.HandlerMethodReturnValueHandler;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 
 @Configuration
@@ -37,32 +38,21 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     @Override
-    public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
-        // Aquí puedes configurar límites de tamaño de mensaje si es necesario
-    }
-
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registry) {
-        // Aquí puedes agregar intercepción de mensajes si es necesario
-    }
-
-    @Override
-    public void configureClientOutboundChannel(ChannelRegistration registry) {
-        // Aquí puedes agregar intercepción de mensajes si es necesario
-    }
-
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        // No se necesitan resolvers adicionales por ahora
-    }
-
-    @Override
-    public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
-        // No se necesitan handlers adicionales por ahora
-    }
-
-    @Override
-    public boolean configureMessageConverters(List<MessageConverter> converters) {
-        return false; // Usar configuración por defecto
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        // Interceptor para propagar la autenticación
+        registration.interceptors(new ChannelInterceptor() {
+            @Override
+            public Message<?> preSend(Message<?> message, MessageChannel channel) {
+                StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+                if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+                    // Extraer el token o credenciales del encabezado
+                    String user = accessor.getFirstNativeHeader("user");
+                    if (user != null) {
+                        accessor.setUser(() -> user); // Asociar el usuario a la sesión
+                    }
+                }
+                return message;
+            }
+        });
     }
 }
