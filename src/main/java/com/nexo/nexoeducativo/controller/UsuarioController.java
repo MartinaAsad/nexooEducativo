@@ -19,6 +19,7 @@ import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
 import com.nexo.nexoeducativo.models.dto.request.EditarCursoDTO;
 import com.nexo.nexoeducativo.models.dto.request.EditarEventoDTO;
+import com.nexo.nexoeducativo.models.dto.request.EditarMateriaCursoView;
 import com.nexo.nexoeducativo.models.dto.request.EliminarTareaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaModificacionDTO;
@@ -57,6 +58,7 @@ import com.nexo.nexoeducativo.service.CursoService;
 import com.nexo.nexoeducativo.service.CursoUsuarioService;
 import com.nexo.nexoeducativo.service.EscuelaService;
 import com.nexo.nexoeducativo.service.EventoService;
+import com.nexo.nexoeducativo.service.MateriaCursoService;
 import com.nexo.nexoeducativo.service.MateriaService;
 import com.nexo.nexoeducativo.service.MaterialService;
 import com.nexo.nexoeducativo.service.MensajeService;
@@ -146,6 +148,9 @@ public class UsuarioController {
     
     @Autowired
     private PresentismoService presentismoService;
+    
+    @Autowired
+    private MateriaCursoService mcService;
     
      private static final Logger LOGGER = LoggerFactory.getLogger(UsuarioController.class);
     
@@ -1005,6 +1010,14 @@ public class UsuarioController {
           cursoUsuarioService.asignarPreceptor(em);
           
            return new ResponseEntity<>(HttpStatus.OK);   
+    }   
+     
+         @PreAuthorize("hasAuthority('administrativo')") //asignado como ejemplo, despues cambiar a administrativo
+    @GetMapping(value="/infoMateriasActualizarCurso/{idCurso}")
+     ResponseEntity<?> prueba2030 (@PathVariable(value = "idCurso") int idCurso){
+          List<EditarMateriaCursoView> materias=mcService.infoCompletaMaterias(idCurso);
+          
+           return new ResponseEntity<>(materias,HttpStatus.OK);   
     }   
     
      /*endpoints necesarios para que un padre vea las notas de cada hijo*/

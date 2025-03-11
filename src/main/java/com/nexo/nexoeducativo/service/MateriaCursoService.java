@@ -4,11 +4,11 @@ package com.nexo.nexoeducativo.service;
 import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.models.dto.request.EditarMateriaCursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
-import com.nexo.nexoeducativo.models.entities.MateriaCurso;
 import com.nexo.nexoeducativo.repository.CursoRepository;
 import com.nexo.nexoeducativo.repository.MateriaCursoRepository;
-import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,24 +24,16 @@ public class MateriaCursoService {
     
     @Autowired
     private CursoRepository cursoRepository;
+     private static final Logger LOGGER = LoggerFactory.getLogger(MateriaCursoService.class);
     
     public List<EditarMateriaCursoView> infoCompletaMaterias (Integer curso){
         Curso c=cursoRepository.findById(curso).orElseThrow(
                 ()-> new CursoNotFound("No existe el curso"));
         
-        List<MateriaCurso> lista=mcRepository.findByCursoIdCurso(c); //info de las materias halladas
-        List<EditarMateriaCursoView> infoCompletaMaterias=new ArrayList<>();
-        EditarMateriaCursoView iterador=null;
-        //por cada materia hallada, completar la view
-        for (MateriaCurso m : lista) {
-            iterador.setDia(m.getDia());
-            iterador.setHoraFin(m.getHoraFin());
-           // iterador.getHoraInicio(m.getHoraInicio());
-            //iterador.getProfesor(m.getProfesor());
-            
+        List<EditarMateriaCursoView> infoCompletaMaterias=mcRepository.findDistinctByCursoIdCurso(c);
+          return infoCompletaMaterias;   
         }
-        return infoCompletaMaterias;
         
     }
     
-}
+
