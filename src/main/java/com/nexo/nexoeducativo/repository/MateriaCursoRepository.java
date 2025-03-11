@@ -2,6 +2,7 @@
 package com.nexo.nexoeducativo.repository;
 
 import com.nexo.nexoeducativo.models.dto.request.DesplegableMateriaView;
+import com.nexo.nexoeducativo.models.dto.request.EditarMateriaCursoView;
 import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Materia;
@@ -52,6 +53,12 @@ List<MateriaCurso> findByCursoIdCursoAndProfesor (Curso cursoIdCurso, Usuario pr
     //findIdMateriaCursoByCursoIdCursoAndMateriaIdMateria
     
     MateriaCurso findByMateriaIdMateria(Materia materiaIdMateria);
+    
+    @Query("SELECT DISTINCT new com.nexo.nexoeducativo.models.dto.request.EditarMateriaCursoView "
+            + "(mc.dia AS dia, mc.horaInicio, mc.horaFin, mc.materiaIdMateria.nombre, mc.profesor.nombre"
+            + ", mc.profesor.apellido)"
+            + "  FROM MateriaCurso mc WHERE mc.cursoIdCurso= :cursoIdCurso AND mc.dia IS NOT NULL")
+     List <EditarMateriaCursoView> findDistinctByCursoIdCurso(Curso cursoIdCurso);
     MateriaCurso findByCursoIdCursoAndMateriaIdMateriaAndDiaIsNotNullAndHoraInicioIsNotNullAndHoraFinIsNotNull(Curso cursoIdCurso, Materia materiaIdMateria);
     boolean existsByCursoIdCursoAndHoraInicioAndDia(Curso cursoIdCurso, LocalTime horaInicio, String dia);
     boolean existsByCursoIdCursoAndHoraFinAndDia(Curso cursoIdCurso, LocalTime horaFin, String dia);
