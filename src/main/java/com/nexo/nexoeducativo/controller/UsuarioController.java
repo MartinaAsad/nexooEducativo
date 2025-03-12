@@ -1012,7 +1012,8 @@ public class UsuarioController {
            return new ResponseEntity<>(HttpStatus.OK);   
     }   
      
-         @PreAuthorize("hasAuthority('administrativo')") //asignado como ejemplo, despues cambiar a administrativo
+         @PreAuthorize("hasAuthority('administrativo')"
+    + "or hasAuthority('preceptor') ") //asignado como ejemplo, despues cambiar a administrativo
     @GetMapping(value="/infoMateriasActualizarCurso/{idCurso}")
      ResponseEntity<?> prueba2030 (@PathVariable(value = "idCurso") int idCurso){
           List<EditarMateriaCursoView> materias=mcService.infoCompletaMaterias(idCurso);

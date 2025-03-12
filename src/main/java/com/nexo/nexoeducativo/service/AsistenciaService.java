@@ -120,6 +120,7 @@ public class AsistenciaService {
        @Transactional
     public void altaAsistenciaProfe(AsistenciaDTO asistencia){ //ENDPOINTS NECESARIOS: verProfeAdministrativo y tomarAsistenciaProfesor
         /*se obtiene la fecha actual */
+       // LOGGER.info("ESTO LLEGA DESDE EL FRONT: "+asistencia.getAlumnosCurso().toString());
          String fechaNueva=hoy.format(formato);
          LocalDateTime actual=LocalDateTime.parse(fechaNueva, formato);
          String formatoFechaMostrar=mostrarHora(actual);
