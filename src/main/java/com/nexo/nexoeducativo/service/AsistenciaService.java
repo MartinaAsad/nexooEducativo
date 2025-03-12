@@ -280,71 +280,97 @@ public class AsistenciaService {
     }
     
     
-   @Transactional
+    @Transactional
 public void modificarAsistenciaProfe(Date fecha, List<AlumnoAsistenciaDTO> lista) {
-    List<Integer> obtenerIdAsistencias = obtenerIdAsistencias(fecha);
-    Double cantAsistencia = 0D;
-    Integer cantInasistencia = 0;
-    Double asistCompleta = 0D;
-    Double mediaFalta = 0D;
-
-    for (Integer asist : obtenerIdAsistencias) {
-        for (AlumnoAsistenciaDTO profe : lista) {
-            Optional<Asistencia> siExiste = asistRepository.findById(asist);
-            // Buscar el presentismo correspondiente al alumno
-            Usuario u = new Usuario();
-            u.setIdUsuario(profe.getIdUsuario());
-            Optional<PresentismoUsuario> presentismo = presenUsuRepository.findByUsuarioIdUsuario(u);
-
-            if (siExiste.isPresent() && presentismo.isPresent()) {
-                Asistencia actual = siExiste.get();
-                PresentismoUsuario pu = presentismo.get();
+    LOGGER.info("Iniciando modificación de asistencia para fecha: " + fecha);
+    LOGGER.info("Lista de profesores a modificar: " + lista.size());
+    
+    for (AlumnoAsistenciaDTO profe : lista) {
+        LOGGER.info("Procesando usuario ID: " + profe.getIdUsuario());
+        Optional<Usuario> profesor=usuarioRepository.findById(profe.getIdUsuario());
+        Usuario profesito=profesor.get();
+        
+        // Buscar directamente la relación usuario-asistencia con una consulta JPQL
+        List<UsuarioAsistencia> usuarioAsistencias = uaRepository.findByUsuarioIdUsuarioAndAsistenciaFecha(profesito, fecha);
+        
+        LOGGER.info("Encontradas " + usuarioAsistencias.size() + " relaciones para el usuario " + profe.getIdUsuario());
+        
+        if (!usuarioAsistencias.isEmpty()) {
+            UsuarioAsistencia ua = usuarioAsistencias.get(0);
+            Asistencia actual = ua.getAsistenciaIdAsistencia();
+            
+            LOGGER.info("Asistencia encontrada: ID=" + actual.getIdAsistencia() + ", asistio=" + actual.getAsistio());
+            
+            // Valores anteriores
+            int asistenciaAnterior = actual.getAsistio();
+            short mediaFaltaAnterior = (actual.getMediaFalta() != null) ? actual.getMediaFalta() : 0;
+            short retiroAntesAnterior = (actual.getRetiroAntes() != null) ? actual.getRetiroAntes() : 0;
+            
+            // Nuevos valores
+            short nuevoAsistio = (short)profe.getAsistio();
+            short nuevoMediaFalta = (short)profe.getMediaFalta();
+            short nuevoRetiroAntes = (short)profe.getRetiroAntes();
+            
+            LOGGER.info("Valores antiguos: asistio=" + asistenciaAnterior + 
+                         ", mediaFalta=" + mediaFaltaAnterior + 
+                         ", retiroAntes=" + retiroAntesAnterior);
+            LOGGER.info("Valores nuevos: asistio=" + nuevoAsistio + 
+                         ", mediaFalta=" + nuevoMediaFalta + 
+                         ", retiroAntes=" + nuevoRetiroAntes);
+            
+            // Actualizar valores
+            actual.setAsistio(nuevoAsistio);
+            actual.setMediaFalta(nuevoMediaFalta);
+            actual.setRetiroAntes(nuevoRetiroAntes);
+            
+            // Buscar presentismo
+            List<PresentismoUsuario> presentismos = presenUsuRepository.findAllByUsuarioIdUsuario(profesito);
+            LOGGER.info("Encontrados " + presentismos.size() + " presentismos para usuario " + profe.getIdUsuario());
+            
+            if (!presentismos.isEmpty()) {
+                PresentismoUsuario pu = presentismos.get(0);
                 Presentismo p = pu.getPresentismoIdPresentismo();
-
-                // Calcular asistencia
-                asistCompleta = (profe.getAsistio() == 1 && profe.getMediaFalta() == 0 && profe.getRetiroAntes() == 0) ? 1D : 0D;
-                mediaFalta = (profe.getAsistio() == 0 && (profe.getMediaFalta() == 1 || profe.getRetiroAntes() == 1)) ? 1D : 0D;
-                cantInasistencia = (asistCompleta == 0 && mediaFalta == 0) ? 1 : 0;
-
-                cantAsistencia = asistCompleta + (mediaFalta / 2);
-
-                // Actualizar la asistencia
-                p.setCantAsistencia(cantAsistencia);
-                p.setCantInasistencia(cantInasistencia);
-
-                // Obtener el valor anterior de 'asistio' para el cambio
-                int asistenciaAnterior = actual.getAsistio();  // Obtener el valor anterior de 'asistio'
-                actual.setAsistio(profe.getAsistio());  // Actualizar el valor de 'asistio'
-                actual.setMediaFalta(profe.getMediaFalta());  // Asegúrate de actualizar 'mediaFalta'
-                actual.setRetiroAntes(profe.getRetiroAntes());  // Asegúrate de actualizar 'retiroAntes'
-
-                // Si la asistencia cambia de 1 a 0 o de 0 a 1, actualizar el contador de asistencias en 'Presentismo'
-                if (asistenciaAnterior != profe.getAsistio()) {
-                    // Si la persona pasó de 'asistió' a 'no asistió', decrementamos el contador
-                    if (asistenciaAnterior == 1 && profe.getAsistio() == 0) {
+                
+                // Actualizar presentismo si cambió asistencia
+                if (asistenciaAnterior != nuevoAsistio) {
+                    LOGGER.info("Actualizando presentismo. Valor anterior: " + p.getCantAsistencia());
+                    
+                    // Si pasó de asistir a no asistir
+                    if (asistenciaAnterior == 1 && nuevoAsistio == 0) {
                         p.setCantAsistencia(p.getCantAsistencia() - 1);
-                    }
-                    // Si la persona pasó de 'no asistió' a 'asistió', incrementamos el contador
-                    else if (asistenciaAnterior == 0 && profe.getAsistio() == 1) {
+                        LOGGER.info("Decrementando asistencia");
+                    } 
+                    // Si pasó de no asistir a asistir
+                    else if (asistenciaAnterior == 0 && nuevoAsistio == 1) {
                         p.setCantAsistencia(p.getCantAsistencia() + 1);
+                        LOGGER.info("Incrementando asistencia");
                     }
-
-                    // Guardar los cambios en el presentismo
+                    
+                    // Guardar cambios en presentismo
                     presenRepository.save(p);
-                    presenRepository.flush(); // Asegura que los cambios se persistan inmediatamente
+                    LOGGER.info("Presentismo guardado. Nuevo valor: " + p.getCantAsistencia());
                 }
                 
-                // Guardar la asistencia actualizada
+                // Guardar cambios en asistencia
                 asistRepository.save(actual);
-                asistRepository.flush();
+                LOGGER.info("Asistencia guardada con ID: " + actual.getIdAsistencia());
+                
+                LOGGER.info("Proceso completado para usuario ID: " + profe.getIdUsuario());
+            } else {
+                LOGGER.warn("No se encontró presentismo para el usuario ID: " + profe.getIdUsuario());
             }
+        } else {
+            LOGGER.warn("No se encontró relación usuario-asistencia para ID: " + profe.getIdUsuario() + " en fecha: " + fecha);
         }
     }
+    
+    LOGGER.info("Finalizado proceso de modificación de asistencia");
 }
+    }
 
     
     
-}
+
     
     
 
