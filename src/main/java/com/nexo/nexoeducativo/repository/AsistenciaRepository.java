@@ -18,6 +18,7 @@ public interface AsistenciaRepository extends JpaRepository<Asistencia, Integer>
     List<AsistenciaView> fechasAsistencias (Curso cursoIdCurso);
     
    List<Asistencia> findAsistenciaByFecha (Date fecha);
+   //Optional< Asistencia> findAsistenciaByFecha (Date fecha );
    
     
 }
