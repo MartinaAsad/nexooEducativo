@@ -323,8 +323,8 @@ public class CursoService {
         actualizarCampos(e, c, escuela);
         
         //solo actualizar materias ssi vhay materias para actualizar, sino no
-        if(!(e.getMaterias().isEmpty())){
-            modificarMaterias(e.getMaterias(), c);
-        }
+        if(e.getMaterias() != null && !e.getMaterias().isEmpty()){
+    modificarMaterias(e.getMaterias(), c);
+}
     }
 }
