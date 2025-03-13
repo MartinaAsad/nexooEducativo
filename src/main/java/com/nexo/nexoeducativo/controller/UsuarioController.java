@@ -1256,6 +1256,13 @@ SI SOLO QUIERO MODIFICAR EL CURSO, PONER ESTO EN POSTMAN:
          cursoService.borrarCurso(idCurso);
           return new ResponseEntity<>("el curso fue borrado correctamente", HttpStatus.OK);
      }
+     
+     @PreAuthorize("hasAuthority('profesor') ") 
+     @DeleteMapping("/borrarEvento/{idEvento}")
+     public ResponseEntity<?> borrarEvento(@PathVariable("idEvento") Integer idEvento){
+         eventoService.borrarEvento(idEvento);
+          return new ResponseEntity<>("el evento fue borrado correctamente", HttpStatus.OK);
+     }
 
 }
   

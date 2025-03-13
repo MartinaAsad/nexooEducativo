@@ -141,4 +141,13 @@ public class EventoService {
         return modificado;
     }
     
+    @Transactional
+    public void borrarEvento(Integer idEvento){
+        Evento e=eventoRepository.findById(idEvento).orElseThrow(
+                ()-> new EventoNotFoundException("No existe el evento"));
+        cueRepository.deleteByEventoIdEvento(e);
+        eventoRepository.deleteById(idEvento);
+        
+    }
+    
 }
