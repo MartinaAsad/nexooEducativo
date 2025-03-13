@@ -7,6 +7,7 @@ package com.nexo.nexoeducativo.repository;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.CursoUsuario;
 import com.nexo.nexoeducativo.models.entities.Usuario;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -40,6 +41,9 @@ public interface CursoUsuarioRepository extends JpaRepository<CursoUsuario, Inte
     void asignarPreceptorDirecto(Curso cursoIdCurso, Usuario usuarioIdUsuario);*/
     
     Optional<CursoUsuario> findByCursoIdCurso(Curso cursoIdCurso);
+    Integer deleteByCursoIdCurso(Curso cursoIdCurso );
     
+    @Query("SELECT cu FROM CursoUsuario cu WHERE cu.cursoIdCurso = :cursoIdCurso")
+    List<CursoUsuario> obtenerRegistros(Curso cursoIdCurso);
    
 }

@@ -50,7 +50,7 @@ public class Curso implements Serializable {
     @Basic(optional = false)
     @Column(name = "activo")
     private short activo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cursoIdCurso")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "cursoIdCurso", orphanRemoval = true)//PARA QUE AL ELIMINAR UN CURSO, NO SE BORREN LOS USUARIOS ASOCIADOS
     private List<CursoUsuario> cursoUsuarioList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "cursoIdCurso")
     private List<MateriaCurso> materiaCursoList;

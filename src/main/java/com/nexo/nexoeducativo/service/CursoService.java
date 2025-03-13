@@ -18,13 +18,17 @@ import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
 import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.CursoEscuela;
+import com.nexo.nexoeducativo.models.entities.CursoUsuario;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Materia;
 import com.nexo.nexoeducativo.models.entities.MateriaCurso;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
+import com.nexo.nexoeducativo.repository.CursoAsistenciaRepository;
 import com.nexo.nexoeducativo.repository.CursoEscuelaRepository;
+import com.nexo.nexoeducativo.repository.CursoMensajeRepository;
 import com.nexo.nexoeducativo.repository.CursoRepository;
+import com.nexo.nexoeducativo.repository.CursoUsuarioEventoRepository;
 import com.nexo.nexoeducativo.repository.CursoUsuarioRepository;
 import com.nexo.nexoeducativo.repository.EscuelaRepository;
 import com.nexo.nexoeducativo.repository.MateriaCursoRepository;
@@ -70,6 +74,15 @@ public class CursoService {
     
     @Autowired
     private MateriaEscuelaRepository meRepository;
+    
+    @Autowired
+    private CursoAsistenciaRepository caRepository;
+    
+    @Autowired
+    private CursoMensajeRepository cmRepository;
+    
+    @Autowired
+    private CursoUsuarioEventoRepository cueRepository;
     
         
     private static final Logger LOGGER = LoggerFactory.getLogger(CursoService.class);
@@ -326,5 +339,25 @@ public class CursoService {
         if(e.getMaterias() != null && !e.getMaterias().isEmpty()){
     modificarMaterias(e.getMaterias(), c);
 }
+    }
+    
+    @Transactional
+    public void borrarCurso(Integer idCurso){
+        Curso c=cursoRepository.findById(idCurso).orElseThrow(
+                ()-> new CursoNotFound("No existe el curso"));
+        
+         List<CursoUsuario> cu=cursoUsuarioRepository.obtenerRegistros(c);
+         if(!cu.isEmpty()){
+          for (CursoUsuario cursoUsuario : cu) {
+             cueRepository.deleteByCursoUsuarioIdCursoUsuario(cursoUsuario); 
+        }
+        //borrar tabla curso y sus referencias
+        caRepository.deleteByCursoIdCurso(c);
+        cursoEscuelaRepository.deleteByCursoIdCurso(c);
+        cmRepository.deleteByCursoIdCurso(c);
+        cursoUsuarioRepository.deleteByCursoIdCurso(c);      
+         }
+        
+        cursoRepository.deleteById(idCurso);
     }
 }
