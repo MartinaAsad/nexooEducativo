@@ -26,7 +26,7 @@ public class EventosView {
      private String descripcion;
      
      @NotNull(message="Ingresar una fecha")
-     @JsonFormat(pattern="dd-MM-yyyy HH:mm")
+     @JsonFormat(shape = JsonFormat.Shape.STRING,pattern="dd-MM-yyyy HH:mm", timezone = "America/Argentina/Buenos_Aires")
 
     private Date fecha;
      

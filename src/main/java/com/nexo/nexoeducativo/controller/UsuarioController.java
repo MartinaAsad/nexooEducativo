@@ -1065,6 +1065,19 @@ public class UsuarioController {
              return new ResponseEntity<>("No hay inasistencias registradas en el sistema",HttpStatus.OK); 
          } 
     }   
+     
+     @PreAuthorize("hasAuthority('alumno') ")
+    @GetMapping(value="/cantInasistenciasAlumno")
+     ResponseEntity<?> cantInasistenciasAlumno (Authentication auth){
+         String mailUsuario=auth.getPrincipal().toString();
+          Usuario alumno=uService.buscarUsuario(mailUsuario);
+         Integer cant=presentismoService.cantInasistencias(alumno.getIdUsuario());
+          if (cant == null || cant == 0) {
+        return ResponseEntity.ok("No hay inasistencias registradas en el sistema para el usuario: " + alumno.getIdUsuario());
+    } else {
+        return ResponseEntity.ok(cant);
+    }
+    }   
     
       @PreAuthorize("hasAuthority('administrativo') ")
     @PatchMapping(value="/modificarAlumno/{id}")
