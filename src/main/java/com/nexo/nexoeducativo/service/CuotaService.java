@@ -4,7 +4,6 @@ package com.nexo.nexoeducativo.service;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
-import com.nexo.nexoeducativo.models.dto.request.InfoAlumnoCuotaView;
 import com.nexo.nexoeducativo.models.entities.Cuota;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.EscuelaCuota;
@@ -13,7 +12,6 @@ import com.nexo.nexoeducativo.repository.CuotaRepository;
 import com.nexo.nexoeducativo.repository.EscuelaCuotaRepository;
 import com.nexo.nexoeducativo.repository.EscuelaRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,11 +80,11 @@ public class CuotaService {
         
         }
     
-    public List<InfoAlumnoCuotaView> obtenerInfoCuota(Integer idPadre){
+    public Double obtenerInfoCuota(Integer idPadre){
         Usuario padre=usuarioRepository.findById(idPadre).orElseThrow(()
                 -> new UsuarioNotFoundException("No existe ese padre"));
-     List<InfoAlumnoCuotaView> lista=usuarioRepository.obtenerCuotaHijos(padre);
-     return lista;
+     Double total=usuarioRepository.obtenerCuotaHijos(padre); //si es con mail@gmail.com debe retornar 20.000
+     return total;
     }
     
     }

@@ -3,7 +3,6 @@ package com.nexo.nexoeducativo.repository;
 
 import com.nexo.nexoeducativo.models.dto.request.CancelarMembresiaDTO;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
-import com.nexo.nexoeducativo.models.dto.request.InfoAlumnoCuotaView;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
@@ -150,13 +149,12 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
               + "WHERE cu.cursoIdCurso= :c and u.rolidrol=7")
     public List<Usuario> findByCurso(Curso c);
     
-    @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.InfoAlumnoCuotaView"
-            + " (u.idUsuario as idUsuario, u.nombre AS nombre, u.apellido AS apellido, c.importe AS importe, u.tipoJornada AS tipoJornada) " +
+    @Query("SELECT SUM(c.importe) " +
 "FROM Usuario u " +
 "LEFT JOIN Cuota c ON c.tipoJornada = u.tipoJornada " +
 "LEFT JOIN UsuarioUsuario uu ON uu.usuarioIdUsuario = u.idUsuario " +
 "WHERE uu.usuarioIdUsuario1 = :usuarioIdUsuario1")
-    public List<InfoAlumnoCuotaView> obtenerCuotaHijos(Usuario usuarioIdUsuario1);
+    public Double obtenerCuotaHijos(Usuario usuarioIdUsuario1);
     
       @Query("SELECT DISTINCT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail FROM Usuario u"
               + " JOIN EscuelaUsuario eu ON " +

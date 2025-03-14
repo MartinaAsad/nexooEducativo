@@ -90,6 +90,9 @@ public class MensajeService {
         }
         
          Mensaje infoPago =umRepository.obtenerMensajesEscuela(escuela, r.getIdRol(), "cbu");
+         if(infoPago==null){
+             throw new UsuarioNotFoundException("NO HAY NINGUN MENSAJE RELACIONADO A LA INFO DE PAGO");
+         }
         infoPago.setContenido(nuevoMensaje);
        mensajeRepository.updateContenido(infoPago.getIdMensaje(), nuevoMensaje);
       

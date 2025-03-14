@@ -25,7 +25,6 @@ import com.nexo.nexoeducativo.models.dto.request.EscuelaDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaModificacionDTO;
 import com.nexo.nexoeducativo.models.dto.request.EscuelaView;
 import com.nexo.nexoeducativo.models.dto.request.EventosView;
-import com.nexo.nexoeducativo.models.dto.request.InfoAlumnoCuotaView;
 import com.nexo.nexoeducativo.models.dto.request.InfoMateriaHijoView;
 import com.nexo.nexoeducativo.models.dto.request.InfoUsuarioSegunRolDTO;
 import com.nexo.nexoeducativo.models.dto.request.JefeColegioModificacionDTO;
@@ -1073,7 +1072,7 @@ public class UsuarioController {
           Usuario alumno=uService.buscarUsuario(mailUsuario);
          Integer cant=presentismoService.cantInasistencias(alumno.getIdUsuario());
           if (cant == null || cant == 0) {
-        return ResponseEntity.ok("No hay inasistencias registradas en el sistema para el usuario: " + alumno.getIdUsuario());
+        return ResponseEntity.ok("No hay inasistencias registradas en el sistema para el usuario: ");
     } else {
         return ResponseEntity.ok(cant);
     }
@@ -1129,12 +1128,9 @@ public class UsuarioController {
      ResponseEntity<?> obtenerInfoCuota (Authentication auth){
          String mailUsuario=auth.getPrincipal().toString();
          Usuario u=uService.buscarUsuario(mailUsuario);
-        List<InfoAlumnoCuotaView> lista=cuotaService.obtenerInfoCuota(u.getIdUsuario());
-		if(lista.isEmpty()) {
-			return new ResponseEntity<>("Usted no tiene hijos",HttpStatus.NO_CONTENT);
-		}
+        Double importe=cuotaService.obtenerInfoCuota(u.getIdUsuario());
 		
-		return new ResponseEntity<>(lista, HttpStatus.OK);  
+		return new ResponseEntity<>(importe, HttpStatus.OK);  
     }
      
       @PreAuthorize("hasAuthority('jefe colegio')" ) 

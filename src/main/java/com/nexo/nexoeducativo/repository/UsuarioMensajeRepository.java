@@ -21,7 +21,7 @@ public interface UsuarioMensajeRepository extends JpaRepository<UsuarioMensaje, 
        "JOIN um.usuarioIdUsuario u " +
        "JOIN u.escuelaUsuarioList eu " +
        "JOIN um.mensajeIdMensaje m " +
-       "WHERE eu.escuelaIdEscuela.idEscuela = :escuelaIdEscuela " +
+       "WHERE eu.escuelaIdEscuela = :escuelaIdEscuela " +
        "AND u.rolidrol.idRol = :idRol " +
        "AND LOWER(m.contenido) LIKE LOWER(:contenido)")
     Mensaje obtenerMensajesEscuela(Escuela escuelaIdEscuela, Integer idRol, String contenido);
