@@ -1150,6 +1150,8 @@ public class UsuarioController {
     @PostMapping(value="/generarComprobante")
      ResponseEntity<?> generarComprobante (Authentication auth, @Valid @RequestBody ComprobantePagoDto pago){
          String mailUsuario=auth.getPrincipal().toString();
+          Usuario u=uService.buscarUsuario(mailUsuario);
+         pago.setIdUsuario(u.getIdUsuario());
          Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
       
          cpService.cuotaPagada(pago, e.getIdEscuela());
