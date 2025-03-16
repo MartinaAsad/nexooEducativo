@@ -2,6 +2,7 @@ package com.nexo.nexoeducativo.controller;
 
 import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
 import com.nexo.nexoeducativo.models.dto.request.MensajeIndividualDTO;
+import com.nexo.nexoeducativo.models.dto.request.MensajeView;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Mensaje;
 import com.nexo.nexoeducativo.models.entities.Usuario;
@@ -23,15 +24,14 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
  * @author Martina
  */
+
 @RestController
-@RequestMapping("/api/mensaje") //reemplazarlo por api
 @CrossOrigin(origins="http://localhost:3000")
 public class MensajeController {
     @Autowired
@@ -55,6 +55,20 @@ public class MensajeController {
        }
        
        return new ResponseEntity<>("Mensaje no enviado", HttpStatus.BAD_REQUEST);
+        
+    }
+     
+      @PreAuthorize("hasAuthority('alumno') or hasAuthority('administrativo') or hasAuthority('preceptor') or hasAuthority('padre') or hasAuthority('profesor')")
+      @GetMapping("/obtenerMensajes")
+     ResponseEntity<?> obtenerMensaje(Authentication auth) {
+        String mail=auth.getPrincipal().toString();//obtengo el mail del usuario logueado, osea el que envia el 
+        
+       List<MensajeView> nuevo=mensajeService.obtenerMensajes(mail);
+       if(nuevo.isEmpty()){
+           return new ResponseEntity<>("No hay mensajes enviados ni recibidos", HttpStatus.NO_CONTENT);
+       }
+       
+       return new ResponseEntity<>(nuevo, HttpStatus.OK);
         
     }
     

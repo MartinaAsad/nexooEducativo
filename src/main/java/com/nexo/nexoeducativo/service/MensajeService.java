@@ -6,6 +6,7 @@ import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
 import com.nexo.nexoeducativo.models.dto.request.MensajeGrupalDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeIndividualDTO;
+import com.nexo.nexoeducativo.models.dto.request.MensajeView;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Mensaje;
@@ -140,6 +141,13 @@ public class MensajeService {
          Mensaje m=mensaje.get();
          return m;
          
+     }
+     
+     public List<MensajeView> obtenerMensajes(String mail){
+         Usuario u=usuarioRepository.findByMail(mail).orElseThrow(
+                 ()-> new UsuarioNotFoundException("No existe el usuario"));
+          List<MensajeView> obtenerMensajes=mensajeRepository.mensajes(u.getIdUsuario());
+          return obtenerMensajes;
      }
      
     public Mensaje altaMensajeIndividual(MensajeIndividualDTO mensaje, String comunicadorI) {

@@ -46,7 +46,9 @@ public class WebSecurityConfig {
                     .requestMatchers("/logout").authenticated()
                     .requestMatchers("/ms/**").authenticated()
                     .requestMatchers("/chatIndividual").authenticated()
-                    .requestMatchers("/chatGrupal").authenticated()
+                    .requestMatchers("/obtenerMensajes").authenticated()
+                    .requestMatchers("/nuevoMensaje").authenticated()
+                    //.requestMatchers()
   //             .requestMatchers("/api/usuario/**").authenticated() // Rutas protegidas
                    
                 .requestMatchers("/login").permitAll() // Permitir acceso a login sin autenticación
