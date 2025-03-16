@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -74,21 +75,11 @@ public class MensajeController {
     
      
      
-     @PatchMapping("/editarMensajePrivado/{idMensaje}")
-    public MensajeIndividualDTO editarMensajePrivado(MensajeIndividualDTO mensaje, @PathVariable("idMensaje") Integer idMensaje) {
-        Mensaje mensajeExistente = mensajeService.buscarMensaje(idMensaje);
-
-       /* if (mensajeExistente != null && mensaje.getComunicador().equals(mensaje.getComunicador())) {
-            // Actualizar el contenido y guardar en la BD
-            mensajeExistente.setContenido(mensaje.getContenido());
-            mensajeService.editarMensaje(mensajeExistente);
-
-            // Notificar al destinatario sobre la modificación
-            usuarioPrivado.convertAndSendToUser(mensaje.getDestinatario(), "/privado", mensaje);
-        }*/
-
-        return mensaje;
-    }
+    @PatchMapping(value = "/editarMensajePrivado/{idMensaje}", consumes = MediaType.TEXT_PLAIN_VALUE)
+ResponseEntity<?> editarMensajePrivado(@RequestBody String mensaje, @PathVariable("idMensaje") Integer idMensaje) {
+    mensajeService.editarMensaje(idMensaje, mensaje);
+    return new ResponseEntity<>("Mensaje editado correctamente", HttpStatus.OK); 
+}
 
        @PreAuthorize("hasAuthority('alumno') or hasAuthority('administrativo') or hasAuthority('preceptor') or hasAuthority('padre') or hasAuthority('profesor')")
     @GetMapping(value="/chatIndividual")

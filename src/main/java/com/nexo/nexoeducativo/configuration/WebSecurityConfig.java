@@ -48,6 +48,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/chatIndividual").authenticated()
                     .requestMatchers("/obtenerMensajes").authenticated()
                     .requestMatchers("/nuevoMensaje").authenticated()
+                     .requestMatchers("/editarMensajePrivado/{idMensaje}").authenticated()
                     //.requestMatchers()
   //             .requestMatchers("/api/usuario/**").authenticated() // Rutas protegidas
                    

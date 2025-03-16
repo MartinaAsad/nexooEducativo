@@ -184,8 +184,12 @@ public class MensajeService {
     }
     
     @Transactional
-    public Mensaje editarMensaje(Mensaje m){
-        return mensajeRepository.save(m);
+    public void editarMensaje(Integer idMensaje, String mensaje){
+        if(mensaje.length()>255 || mensaje.length()<10){
+            throw new FormatoIncorrectoException("El mensaje debe tener entre 10 y 255 caracteres");
+        }else{
+         mensajeRepository.updateContenido(idMensaje, mensaje);   
+        }
     }
         
     }
