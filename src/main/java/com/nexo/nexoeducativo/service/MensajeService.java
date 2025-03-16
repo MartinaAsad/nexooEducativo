@@ -142,12 +142,13 @@ public class MensajeService {
          
      }
      
-    public Mensaje altaMensajeIndividual(MensajeIndividualDTO mensaje) {
+    public Mensaje altaMensajeIndividual(MensajeIndividualDTO mensaje, String comunicadorI) {
         Mensaje m = new Mensaje();
-        m.setContenido(mensaje.getContenido());
-        if (mensaje.getArchivo().isEmpty() || mensaje.getArchivo().isBlank()) {
-            m.setArchivo(mensaje.getArchivo());
+        if(mensaje.getContenido()==null){
+            throw new UsuarioNotFoundException("El mensja ellego vacio "+mensaje.toString());
         }
+        m.setContenido(mensaje.getContenido());
+       
         String fechaNueva = hoy.format(formato);
         LocalDateTime actual = LocalDateTime.parse(fechaNueva, formato);
         Date fechaDate = Date.from(actual.atZone(ZoneId.systemDefault()).toInstant());
@@ -155,10 +156,10 @@ public class MensajeService {
 
         m = mensajeRepository.save(m);
 
-        Usuario comunicador = usuarioRepository.findByMail(mensaje.getComunicador()).orElseThrow(
+        Usuario comunicador = usuarioRepository.findByMail(comunicadorI).orElseThrow(
                 () -> new UsuarioNotFoundException("No existe el comunicador"));
 
-        Usuario destinatario = usuarioRepository.findByMail(mensaje.getDestinatario()).orElseThrow(
+        Usuario destinatario = usuarioRepository.findById(mensaje.getDestinatario()).orElseThrow(
                 () -> new UsuarioNotFoundException("No existe el destinatario"));
 
         UsuarioMensaje usuarioMensaje = new UsuarioMensaje();
