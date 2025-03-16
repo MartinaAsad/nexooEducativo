@@ -191,6 +191,11 @@ public class MensajeService {
          mensajeRepository.updateContenido(idMensaje, mensaje);   
         }
     }
+    
+    @Transactional
+    public void borrarMensaje(Integer idMensaje){
+        mensajeRepository.deleteById(idMensaje);
+    }
         
     }
 

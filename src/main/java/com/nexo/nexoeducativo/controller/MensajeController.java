@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -74,12 +75,19 @@ public class MensajeController {
     }
     
      
-     
+    @PreAuthorize("hasAuthority('alumno') or hasAuthority('administrativo') or hasAuthority('preceptor') or hasAuthority('padre') or hasAuthority('profesor')") 
     @PatchMapping(value = "/editarMensajePrivado/{idMensaje}", consumes = MediaType.TEXT_PLAIN_VALUE)
-ResponseEntity<?> editarMensajePrivado(@RequestBody String mensaje, @PathVariable("idMensaje") Integer idMensaje) {
-    mensajeService.editarMensaje(idMensaje, mensaje);
-    return new ResponseEntity<>("Mensaje editado correctamente", HttpStatus.OK); 
-}
+    ResponseEntity<?> editarMensajePrivado(@RequestBody String mensaje, @PathVariable("idMensaje") Integer idMensaje) {
+        mensajeService.editarMensaje(idMensaje, mensaje);
+        return new ResponseEntity<>("Mensaje editado correctamente", HttpStatus.OK);
+    }
+
+     @PreAuthorize("hasAuthority('alumno') or hasAuthority('administrativo') or hasAuthority('preceptor') or hasAuthority('padre') or hasAuthority('profesor')")
+    @DeleteMapping("/borrarMensaje/{idMensaje}")
+    ResponseEntity<?> borrarMensaje(@PathVariable("idMensaje") Integer idMensaje) {
+        mensajeService.borrarMensaje(idMensaje);
+        return new ResponseEntity<>("Mensaje borrado correctamente", HttpStatus.OK);
+    }
 
        @PreAuthorize("hasAuthority('alumno') or hasAuthority('administrativo') or hasAuthority('preceptor') or hasAuthority('padre') or hasAuthority('profesor')")
     @GetMapping(value="/chatIndividual")
