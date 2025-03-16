@@ -1145,16 +1145,14 @@ public class UsuarioController {
 		return new ResponseEntity<>(mensaje, HttpStatus.OK);  
     }
      
-         @PreAuthorize("hasAuthority('padre')"
-                 + "or hasAuthority('profesor') " ) 
+         @PreAuthorize("hasAuthority('padre')") 
     @PostMapping(value="/generarComprobante")
      ResponseEntity<?> generarComprobante (Authentication auth, @Valid @RequestBody ComprobantePagoDto pago){
          String mailUsuario=auth.getPrincipal().toString();
           Usuario u=uService.buscarUsuario(mailUsuario);
-         pago.setIdUsuario(u.getIdUsuario());
          Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
       
-         cpService.cuotaPagada(pago, e.getIdEscuela());
+         cpService.cuotaPagada(pago, e.getIdEscuela(),u.getIdUsuario());
        
 		
 		return new ResponseEntity<>("Comprobante de pago generado exitosamente", HttpStatus.OK);  

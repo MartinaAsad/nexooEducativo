@@ -7,6 +7,7 @@ import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
 import com.nexo.nexoeducativo.models.dto.request.CancelarMembresiaDTO;
 import com.nexo.nexoeducativo.models.dto.request.ComprobantePagoDto;
 import com.nexo.nexoeducativo.models.dto.request.RenovarMembresiaDTO;
+import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
 import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.ComprobantePago;
 import com.nexo.nexoeducativo.models.entities.Curso;
@@ -20,6 +21,7 @@ import com.nexo.nexoeducativo.repository.EscuelaComprobantePagoRepository;
 import com.nexo.nexoeducativo.repository.EscuelaRepository;
 import com.nexo.nexoeducativo.repository.UsuarioComprobantePagoRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
+import com.nexo.nexoeducativo.repository.UsuarioUsuarioRepository;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -55,8 +57,11 @@ public class ComprobantePagoService {
      
      @Autowired
      private CursoRepository cursoRepository;
+     
+     @Autowired
+     private UsuarioUsuarioRepository uuRepository;
     
-    public void cuotaPagada(ComprobantePagoDto pago, int idEscuela){
+    public void cuotaPagada(ComprobantePagoDto pago, int idEscuela, Integer idUsuario){
          String fechaNueva=hoy.format(formato);
         LocalDateTime actual=LocalDateTime.parse(fechaNueva, formato);
          String formatoFechaMostrar=mostrarHora(actual);
@@ -68,25 +73,36 @@ public class ComprobantePagoService {
         cpRepository.save(comprobante);
         
         //guardar info en las tablas intermedias
-        Usuario hijo=usuarioRepository.findById(pago.getIdUsuario())
+        Usuario padre=usuarioRepository.findById(idUsuario)
                 .orElseThrow(()-> new UsuarioNotFoundException("El alumno no existe"));
         
         Escuela escuela= escuelaRepository.findById(idEscuela)
                 .orElseThrow(()-> new EscuelaNotFoundException("No existe esa escuela"));
         
+        List<UsuarioView> hijos = uuRepository.obtenerHijos(padre);
+
+        if (hijos.isEmpty()) {
+            throw new UsuarioNotFoundException("El usuario no tiene hijos registrados");
+        }
+    
         EscuelaComprobantePago ecPago=new EscuelaComprobantePago();
         ecPago.setComprobantePagoIdComprobantePago(comprobante);
         ecPago.setEscuelaIdEscuela(escuela);
         ecpRepository.save(ecPago);
         
-        UsuarioComprobantePago ucPago=new UsuarioComprobantePago();
+       for (UsuarioView hijoView : hijos) {
+        Usuario hijo = usuarioRepository.findById(hijoView.getIdUsuario())
+                .orElseThrow(() -> new UsuarioNotFoundException("Hijo no encontrado"));
+
+        UsuarioComprobantePago ucPago = new UsuarioComprobantePago();
         ucPago.setComprobantePagoIdComprobantePago(comprobante);
         ucPago.setUsuarioIdUsuario(hijo);
         ucpRepository.save(ucPago);
-        
-        //actualizar info para que se vea reflejado el pago exitoso
-        hijo.setPagoCuota((short)1);
+
+        // Actualizar estado de pago de la cuota para el hijo
+        hijo.setPagoCuota((short) 1);
         usuarioRepository.save(hijo);
+    }
         
     }
     
