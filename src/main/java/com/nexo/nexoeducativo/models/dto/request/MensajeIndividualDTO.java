@@ -23,11 +23,11 @@ import org.hibernate.validator.constraints.Length;
 public class MensajeIndividualDTO implements Serializable{
     
     @NotBlank(message = "no puede enviar un mensaje vacio")
-    @Length(min=3, max=255)
+    @Length(min=2, max=255)
     private String contenido;
     
     @NotNull(message="campo destinatario vacio")
-    private Integer destinatario;
+    private String destinatario;
     
     
     

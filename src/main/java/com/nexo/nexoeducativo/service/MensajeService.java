@@ -167,7 +167,7 @@ public class MensajeService {
         Usuario comunicador = usuarioRepository.findByMail(comunicadorI).orElseThrow(
                 () -> new UsuarioNotFoundException("No existe el comunicador"));
 
-        Usuario destinatario = usuarioRepository.findById(mensaje.getDestinatario()).orElseThrow(
+        Usuario destinatario = usuarioRepository.findByMail(mensaje.getDestinatario()).orElseThrow(
                 () -> new UsuarioNotFoundException("No existe el destinatario"));
 
         UsuarioMensaje usuarioMensaje = new UsuarioMensaje();
