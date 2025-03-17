@@ -606,20 +606,9 @@ public class UsuarioService {
          for (DesplegableChatView usuario : info) {
             usuarios.add(usuario); // Asegura que no haya duplicados
         }
-        
-        
-        // Si el rol es alumno, obtener alumnos de los cursos a cargo
-        /*if (obtenido.getIdRol() == 5 && rol == 7 || obtenido.getIdRol() == 4 && rol == 7) { // Si el usuario es profesor y está buscando alumnos
-            for (verCursoView curso : verCursos) {
-                Curso c = new Curso();
-                c.setIdCurso(curso.getIdCurso());
-                List<DesplegableChatView> alumnos = usuariorepository.obtenerAlumnosProfe(e, c);
-                usuarios.addAll(alumnos); // Agregar los alumnos de cada curso
-            }
-        }*/
     }
     
-    return new ArrayList<> (usuarios);
+    return  usuarios.stream().distinct().collect(Collectors.toList());
 }
     
     //ESTE DESPLEGABLE ES PARA CHAT GRUPAL

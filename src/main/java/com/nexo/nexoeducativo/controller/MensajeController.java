@@ -95,9 +95,11 @@ public class MensajeController {
         String mailUsuario=auth.getPrincipal().toString();
         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
         Usuario u=usuarioService.buscarUsuario(mailUsuario);
-        LOGGER.info("probando logger"+u.toString());
         List<DesplegableChatView> infoUsuariosChat=usuarioService.infoUsuariosChat(e, u);
         //System.out.println("🔍 Lista de cursos recibida: " + verCursos);
+           for (DesplegableChatView desplegableChatView : infoUsuariosChat) {
+               System.out.println("lista: "+desplegableChatView.getId_usuario());
+           }
 
         //return new ResponseEntity<>("lolll"+infoUsuariosChat,HttpStatus.OK);   
          return ResponseEntity.ok(infoUsuariosChat);
