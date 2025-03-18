@@ -24,9 +24,9 @@ public interface MensajeRepository extends JpaRepository<Mensaje, Integer> {
     Optional<Mensaje> findByIdMensaje(Integer idMensaje);
     
     @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.MensajeView (m.idMensaje, m.contenido, m.fecha, "
-            + "um.usuarioIdUsuario.nombre,um.usuarioIdUsuario.apellido) FROM Mensaje m"
+            + "um.remitente.nombre,um.remitente.apellido) FROM Mensaje m"
             + " JOIN UsuarioMensaje um ON m.idMensaje=um.mensajeIdMensaje "
-            + " WHERE um.usuarioIdUsuario.idUsuario= :idUsuario AND LOWER(m.contenido) NOT LIKE '%cbu%' "
+            + " WHERE um.remitente.idUsuario= :idUsuario AND LOWER(m.contenido) NOT LIKE '%cbu%' "
             + "AND LOWER(m.contenido) NOT LIKE '%cvu%'")
     List<MensajeView> mensajes (@Param("idUsuario") Integer idUsuario);
 }

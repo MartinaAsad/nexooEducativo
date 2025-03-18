@@ -90,7 +90,7 @@ public class Usuario implements Serializable {
     @Column(name = "tipo_jornada")
     private String tipoJornada;
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuarioIdUsuario")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "remitente")
     private List<UsuarioMensaje> usuarioMensajeList;
     @ToString.Exclude 
     @JsonIgnore

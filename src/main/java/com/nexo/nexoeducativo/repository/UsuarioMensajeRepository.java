@@ -15,10 +15,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UsuarioMensajeRepository extends JpaRepository<UsuarioMensaje, Integer>{
-    Optional<UsuarioMensaje> findByUsuarioIdUsuario (Usuario usuarioIdUsuario);
+    Optional<UsuarioMensaje> findByRemitente (Usuario remitente);
     
     @Query("SELECT DISTINCT um.mensajeIdMensaje FROM UsuarioMensaje um " +
-       "JOIN um.usuarioIdUsuario u " +
+       "JOIN um.remitente u " +
        "JOIN u.escuelaUsuarioList eu " +
        "JOIN um.mensajeIdMensaje m " +
        "WHERE eu.escuelaIdEscuela = :escuelaIdEscuela " +

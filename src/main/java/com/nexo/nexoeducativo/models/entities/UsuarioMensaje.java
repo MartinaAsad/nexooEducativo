@@ -40,7 +40,11 @@ public class UsuarioMensaje implements Serializable {
     @JoinColumn(name = "mensaje_id_mensaje", referencedColumnName = "id_mensaje")
     @ManyToOne(optional = false)
     private Mensaje mensajeIdMensaje;
-    @JoinColumn(name = "usuario_id_usuario", referencedColumnName = "id_usuario")
+    @JoinColumn(name = "remitente", referencedColumnName = "id_usuario")
     @ManyToOne(optional = false)
-    private Usuario usuarioIdUsuario;
+    private Usuario remitente;
+    @JoinColumn(name = "destinatario", referencedColumnName = "id_usuario")
+    @ManyToOne(optional = false) 
+    private Usuario destinatario;  // Nuevo campo para el destinatario
+            
 }

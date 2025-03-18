@@ -3,8 +3,6 @@ package com.nexo.nexoeducativo.service;
 import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.RolNotFound;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
-import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
-import com.nexo.nexoeducativo.models.dto.request.MensajeGrupalDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeIndividualDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeView;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
@@ -48,7 +46,7 @@ public class MensajeService {
      DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
     
     
-    public void altaInfoPagoMensaje(String info, Escuela escuela){
+    public void altaInfoPagoMensaje(String info, Escuela escuela, Usuario remitente){
         Mensaje infoPago = new Mensaje();
                 
         int cantLetras=info.length();
@@ -63,10 +61,10 @@ public class MensajeService {
                 ()-> new RolNotFound("No existe ese rol en la abse de datos"));
         
         List<NombreCompletoDTO> padres=usuarioRepository.obtenerInfoUsuario(rol, escuela);
-        asignarMensajeAPadres(infoPago, padres);
+        asignarMensajeAPadres(infoPago, padres, remitente);
     }
     
-    public void asignarMensajeAPadres (Mensaje m, List<NombreCompletoDTO> padres){
+    public void asignarMensajeAPadres (Mensaje m, List<NombreCompletoDTO> padres, Usuario remitente){
         for(NombreCompletoDTO n:padres){
             //obtengo cada padre
             Usuario u=usuarioRepository.findById(n.getId_usuario()).orElseThrow(
@@ -74,7 +72,8 @@ public class MensajeService {
             
             UsuarioMensaje um=new UsuarioMensaje();
             um.setMensajeIdMensaje(m);
-            um.setUsuarioIdUsuario(u);
+            um.setRemitente(remitente);
+            um.setDestinatario(u);
             umRepository.save(um);
             
             
@@ -99,7 +98,7 @@ public class MensajeService {
       
         }
      
-     public Mensaje altaMensaje(MensajeGrupalDTO mensaje){
+     /*public Mensaje altaMensaje(MensajeGrupalDTO mensaje){
           Mensaje m = new Mensaje();
           m.setContenido(mensaje.getContenido());
         if (mensaje.getArchivo().isEmpty() || mensaje.getArchivo().isBlank()) {
@@ -134,7 +133,7 @@ public class MensajeService {
          }
         return m;
          
-     }
+     }*/
      
      public Mensaje buscarMensaje(Integer id){
          Optional<Mensaje> mensaje= mensajeRepository.findByIdMensaje(id);
@@ -172,13 +171,9 @@ public class MensajeService {
 
         UsuarioMensaje usuarioMensaje = new UsuarioMensaje();
         usuarioMensaje.setMensajeIdMensaje(m);
-        usuarioMensaje.setUsuarioIdUsuario(comunicador);
+        usuarioMensaje.setRemitente(comunicador);
+        usuarioMensaje.setDestinatario(destinatario);
         umRepository.save(usuarioMensaje);
-
-        UsuarioMensaje usuarioMensajeDestinatario = new UsuarioMensaje();
-        usuarioMensajeDestinatario.setMensajeIdMensaje(m);
-        usuarioMensajeDestinatario.setUsuarioIdUsuario(destinatario);
-        umRepository.save(usuarioMensajeDestinatario);
         return m;
 
     }

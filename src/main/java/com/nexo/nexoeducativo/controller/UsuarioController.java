@@ -1162,8 +1162,9 @@ public class UsuarioController {
     @PostMapping(value="/subirInfoPago")
      ResponseEntity<?> subirInfoPago(Authentication auth, @Valid @RequestBody String mensaje){
          String mailUsuario=auth.getPrincipal().toString();
+         Usuario u=uService.buscarUsuario(mailUsuario);
         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
-         mensajeService.altaInfoPagoMensaje(mensaje, e);
+         mensajeService.altaInfoPagoMensaje(mensaje, e, u);
            return new ResponseEntity<>("La informacion de pago ya puede verse",HttpStatus.CREATED);   
     }
      
