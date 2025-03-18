@@ -64,10 +64,10 @@ public class MensajeController {
       @GetMapping("/obtenerMensajes")
      ResponseEntity<?> obtenerMensaje(Authentication auth) {
         String mail=auth.getPrincipal().toString();//obtengo el mail del usuario logueado, osea el que envia el 
-        
+        Usuario u=usuarioService.buscarUsuario(mail);
        List<MensajeView> nuevo=mensajeService.obtenerMensajes(mail);
        if(nuevo.isEmpty()){
-           return new ResponseEntity<>("No hay mensajes enviados ni recibidos", HttpStatus.NO_CONTENT);
+           return new ResponseEntity<>("No hay mensajes enviados", HttpStatus.NO_CONTENT);
        }
        
        return new ResponseEntity<>(nuevo, HttpStatus.OK);
@@ -96,10 +96,6 @@ public class MensajeController {
         Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
         Usuario u=usuarioService.buscarUsuario(mailUsuario);
         List<DesplegableChatView> infoUsuariosChat=usuarioService.infoUsuariosChat(e, u);
-        //System.out.println("🔍 Lista de cursos recibida: " + verCursos);
-           for (DesplegableChatView desplegableChatView : infoUsuariosChat) {
-               System.out.println("lista: "+desplegableChatView.getId_usuario());
-           }
 
         //return new ResponseEntity<>("lolll"+infoUsuariosChat,HttpStatus.OK);   
          return ResponseEntity.ok(infoUsuariosChat);

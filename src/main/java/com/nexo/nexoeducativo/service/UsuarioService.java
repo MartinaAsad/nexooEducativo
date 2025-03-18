@@ -596,6 +596,7 @@ public class UsuarioService {
         iterado.setIdRol(rol);
         
         List<DesplegableChatView> info = usuariorepository.obtenerInfoDesplegables(iterado, e);
+        
         if(iterado.getIdRol()==7){
            alumnos2 = usuariorepository.obtenerAlumnosChat(e);
            for (DesplegableChatView alumno : alumnos2) {

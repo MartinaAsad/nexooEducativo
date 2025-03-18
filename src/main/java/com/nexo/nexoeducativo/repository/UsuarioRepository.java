@@ -156,13 +156,15 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
 "WHERE uu.usuarioIdUsuario1 = :usuarioIdUsuario1")
     public Double obtenerCuotaHijos(Usuario usuarioIdUsuario1);
     
-      @Query("SELECT DISTINCT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail FROM Usuario u"
+      @Query("SELECT DISTINCT new com.nexo.nexoeducativo.models.dto.request.DesplegableChatView( u.idUsuario AS id_usuario,"
+              + " u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail) FROM Usuario u"
               + " JOIN EscuelaUsuario eu ON " +
 "eu.usuarioIdUsuario=u.idUsuario " +
 "WHERE u.rolidrol= :rol and eu.escuelaIdEscuela= :escuela and u.activo= 1")
       List<DesplegableChatView> obtenerInfoDesplegables(Rol rol, Escuela escuela);
       
-       @Query("SELECT DISTINCT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail"
+       @Query("SELECT DISTINCT new com.nexo.nexoeducativo.models.dto.request.DesplegableChatView(u.idUsuario AS id_usuario, "
+               + "u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail)"
               + " FROM Usuario u INNER JOIN Rol r ON r.idRol=u.rolidrol"
               + " INNER JOIN CursoUsuario cu ON cu.usuarioIdUsuario=u.idUsuario "
               + "INNER JOIN CursoEscuela ce ON ce.cursoIdCurso=cu.cursoIdCurso "
@@ -170,21 +172,24 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
        + "GROUP BY u.idUsuario, u.nombre, u.apellido, u.mail")
       List<DesplegableChatView> obtenerAlumnosChat(Escuela escuelaIdEscuela);
       
-       @Query("SELECT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail"
+       @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.DesplegableChatView("
+               + "u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail)"
               + " FROM Usuario u INNER JOIN Rol r ON r.idRol=u.rolidrol"
               + " INNER JOIN CursoUsuario cu ON cu.usuarioIdUsuario=u.idUsuario "
               + "INNER JOIN CursoEscuela ce ON ce.cursoIdCurso=cu.cursoIdCurso "
               + "WHERE r.nombre='alumno' AND ce.escuelaIdEscuela= :escuelaIdEscuela AND u.activo=1")
       List<DesplegableChatView> obtenerAlumnosDesplegable(Escuela escuelaIdEscuela);
       
-      @Query("SELECT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail"
+      @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.DesplegableChatView(u.idUsuario AS id_usuario, u.nombre AS nombre,"
+              + " u.apellido AS apellido, u.mail AS mail)"
               + " FROM Usuario u INNER JOIN Rol r ON r.idRol=u.rolidrol"
               + " INNER JOIN CursoUsuario cu ON cu.usuarioIdUsuario=u.idUsuario "
               + "INNER JOIN CursoEscuela ce ON ce.cursoIdCurso=cu.cursoIdCurso "
               + "WHERE r.nombre='alumno' AND ce.escuelaIdEscuela= :escuelaIdEscuela AND u.activo=1 AND cu.cursoIdCurso= :c")
       List<DesplegableChatView> obtenerAlumnosProfe(Escuela escuelaIdEscuela, Curso c );
       
-     @Query("SELECT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail " +
+     @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.DesplegableChatView(u.idUsuario AS id_usuario, u.nombre AS nombre, "
+             + "u.apellido AS apellido, u.mail AS mail) " +
                   "FROM Usuario u " +
                   "JOIN UsuarioUsuario uu ON uu.usuarioIdUsuario = u.idUsuario " +
                   "JOIN CursoUsuario cu ON cu.usuarioIdUsuario = uu.usuarioIdUsuario1 " +
