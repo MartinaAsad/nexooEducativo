@@ -1,6 +1,7 @@
 package com.nexo.nexoeducativo.controller;
 
 import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
+import com.nexo.nexoeducativo.models.dto.request.MensajeDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeIndividualDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeView;
 import com.nexo.nexoeducativo.models.entities.Escuela;
@@ -71,6 +72,19 @@ public class MensajeController {
        }
        
        return new ResponseEntity<>(nuevo, HttpStatus.OK);
+        
+    }
+     
+         @PreAuthorize("hasAuthority('alumno') or hasAuthority('administrativo') or hasAuthority('preceptor') or hasAuthority('padre') or hasAuthority('profesor')")
+      @GetMapping("/obtenerMensajeDestinatario/{mailD}")
+     ResponseEntity<?> obtenerMensajesDestinatario(Authentication auth, String destinatario) {
+        String mailR=auth.getPrincipal().toString();
+        System.out.println("el remitente (osea el que inicia sesion) "+mailR);
+        Usuario remitente=usuarioService.buscarUsuario(mailR);
+        Usuario destinatarioU=usuarioService.buscarUsuario(destinatario);
+        System.out.println("el destinatario (osea el que envio previamente el mensaje) "+destinatario);
+       List<MensajeDTO> mensajeMostrar=mensajeService.obtenerMensajesDesdeDestinatario(remitente, destinatarioU);
+       return new ResponseEntity<>(mensajeMostrar, HttpStatus.OK);
         
     }
     

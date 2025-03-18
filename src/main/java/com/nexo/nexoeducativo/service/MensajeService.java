@@ -3,6 +3,7 @@ package com.nexo.nexoeducativo.service;
 import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.RolNotFound;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
+import com.nexo.nexoeducativo.models.dto.request.MensajeDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeIndividualDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeView;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
@@ -147,6 +148,11 @@ public class MensajeService {
                  ()-> new UsuarioNotFoundException("No existe el usuario"));
           List<MensajeView> obtenerMensajes=mensajeRepository.mensajes(u.getIdUsuario());
           return obtenerMensajes;
+     }
+     
+     public List<MensajeDTO> obtenerMensajesDesdeDestinatario(Usuario remitente, Usuario destinatario){
+         List<MensajeDTO> mensajes= mensajeRepository.obtenerMensajesPorDestinatario(destinatario.getMail(), remitente.getMail());
+         return mensajes;
      }
      
     public Mensaje altaMensajeIndividual(MensajeIndividualDTO mensaje, String comunicadorI) {

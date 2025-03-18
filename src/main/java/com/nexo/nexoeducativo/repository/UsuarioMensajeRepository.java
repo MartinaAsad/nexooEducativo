@@ -26,4 +26,6 @@ public interface UsuarioMensajeRepository extends JpaRepository<UsuarioMensaje, 
        "AND LOWER(m.contenido) LIKE LOWER(:contenido)")
     Mensaje obtenerMensajesEscuela(Escuela escuelaIdEscuela, Integer idRol, String contenido);
     
+    
+    
 }

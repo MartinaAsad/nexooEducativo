@@ -1,5 +1,6 @@
 package com.nexo.nexoeducativo.repository;
 
+import com.nexo.nexoeducativo.models.dto.request.MensajeDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeView;
 import com.nexo.nexoeducativo.models.entities.Mensaje;
 import java.util.List;
@@ -29,4 +30,10 @@ public interface MensajeRepository extends JpaRepository<Mensaje, Integer> {
             + " WHERE um.remitente.idUsuario= :idUsuario AND LOWER(m.contenido) NOT LIKE '%cbu%' "
             + "AND LOWER(m.contenido) NOT LIKE '%cvu%'")
     List<MensajeView> mensajes (@Param("idUsuario") Integer idUsuario);
+    
+    @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.MensajeDTO(m.idMensaje, m.contenido, um.remitente.mail) " +
+       "FROM Mensaje m " +
+       "JOIN UsuarioMensaje um ON um.mensajeIdMensaje = m.idMensaje " +
+       "WHERE um.destinatario.mail = :destinatarioMail AND um.remitente.mail = :remitenteMail")
+    List<MensajeDTO> obtenerMensajesPorDestinatario(@Param("destinatarioMail") String destinatarioMail, @Param("remitenteMail") String remitenteMail);
 }
