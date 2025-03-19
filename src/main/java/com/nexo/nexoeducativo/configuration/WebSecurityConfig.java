@@ -50,7 +50,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/nuevoMensaje").authenticated()
                      .requestMatchers("/editarMensajePrivado/{idMensaje}").authenticated()
                     .requestMatchers("/borrarMensaje/{idMensaje}").authenticated()
-                    .requestMatchers("/obtenerMensajeDestinatario/{mailD}").authenticated()
+                    .requestMatchers("/obtenerMensajesEntreUsuarios/{mailD}").authenticated()
                     //.requestMatchers()
   //             .requestMatchers("/api/usuario/**").authenticated() // Rutas protegidas
                    

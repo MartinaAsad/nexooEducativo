@@ -17,4 +17,5 @@ public class MensajeDTO {
    private Integer idMensaje;
     private String contenido;
     private String mail;
+    private String mail2;
 }

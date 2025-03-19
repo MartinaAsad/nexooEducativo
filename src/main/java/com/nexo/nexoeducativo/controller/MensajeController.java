@@ -75,25 +75,27 @@ public class MensajeController {
         
     }
      
-         @PreAuthorize("hasAuthority('alumno') or hasAuthority('administrativo') or hasAuthority('preceptor') or hasAuthority('padre') or hasAuthority('profesor')")
-      @GetMapping("/obtenerMensajeDestinatario/{mailD}")
-     ResponseEntity<?> obtenerMensajesDestinatario(Authentication auth,@PathVariable("mailD") String mailD) {
-        String mailR=auth.getPrincipal().toString();
-        System.out.println("el remitente (osea el que inicia sesion) "+mailR);
-        Usuario remitente=usuarioService.buscarUsuario(mailR);
-        Usuario destinatarioU=usuarioService.buscarUsuario(mailD);
-        System.out.println("el destinatario (osea el que envio previamente el mensaje) "+mailD);
-       List<MensajeDTO> mensajeMostrar=mensajeService.obtenerMensajesDesdeDestinatario(remitente, destinatarioU);
-       return new ResponseEntity<>(mensajeMostrar, HttpStatus.OK);
-        
-    }
+    @PreAuthorize("hasAuthority('alumno') or hasAuthority('administrativo') or hasAuthority('preceptor') or hasAuthority('padre') or hasAuthority('profesor')")
+@GetMapping("/obtenerMensajesEntreUsuarios/{mailD}")
+public ResponseEntity<?> obtenerMensajesEntreUsuarios(Authentication auth, @PathVariable("mailD") String mailD) {
+    String mailR = auth.getName(); // Correo del remitente (usuario autenticado)
+    Usuario remitente=usuarioService.buscarUsuario(mailR);
+    Usuario destinatario=usuarioService.buscarUsuario(mailD);
+    List<MensajeDTO> mensajes = mensajeService.obtenerMensajesDesdeDestinatario(remitente,destinatario );
+    return mensajes.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(mensajes);
+}
     
      
     @PreAuthorize("hasAuthority('alumno') or hasAuthority('administrativo') or hasAuthority('preceptor') or hasAuthority('padre') or hasAuthority('profesor')") 
     @PatchMapping(value = "/editarMensajePrivado/{idMensaje}", consumes = MediaType.TEXT_PLAIN_VALUE)
-    ResponseEntity<?> editarMensajePrivado(@RequestBody String mensaje, @PathVariable("idMensaje") Integer idMensaje) {
-        mensajeService.editarMensaje(idMensaje, mensaje);
-        return new ResponseEntity<>("Mensaje editado correctamente", HttpStatus.OK);
+    ResponseEntity<?> editarMensajePrivado(@RequestBody String mensaje, @PathVariable("idMensaje") Integer idMensaje, Authentication auth) {
+        String mailR = auth.getName(); // Correo del remitente (usuario autenticado)
+        boolean rta=mensajeService.editarMensaje(idMensaje, mensaje, mailR);
+        if(rta){
+         return new ResponseEntity<>("Mensaje editado correctamente", HttpStatus.OK);   
+        }else{
+            return new ResponseEntity<>("Usted no tiene permisos para editar este mensaje", HttpStatus.FORBIDDEN);
+        }
     }
 
      @PreAuthorize("hasAuthority('alumno') or hasAuthority('administrativo') or hasAuthority('preceptor') or hasAuthority('padre') or hasAuthority('profesor')")

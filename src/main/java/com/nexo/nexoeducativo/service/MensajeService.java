@@ -151,7 +151,7 @@ public class MensajeService {
      }
      
      public List<MensajeDTO> obtenerMensajesDesdeDestinatario(Usuario remitente, Usuario destinatario){
-         List<MensajeDTO> mensajes= mensajeRepository.obtenerMensajesPorDestinatario(destinatario.getMail(), remitente);
+         List<MensajeDTO> mensajes= mensajeRepository.obtenerMensajesEntreUsuarios(destinatario.getMail(), remitente.getMail());
          return mensajes;
      }
      
@@ -185,12 +185,26 @@ public class MensajeService {
     }
     
     @Transactional
-    public void editarMensaje(Integer idMensaje, String mensaje){
+    public boolean editarMensaje(Integer idMensaje, String mensaje, String mailRemitente){
+        boolean sePudo=false;
         if(mensaje.length()>255 || mensaje.length()<2){
             throw new FormatoIncorrectoException("El mensaje debe tener entre 2 y 255 caracteres");
         }else{
-         mensajeRepository.updateContenido(idMensaje, mensaje);   
+            Mensaje m=mensajeRepository.findById(idMensaje).orElseThrow(
+                    ()-> new UsuarioNotFoundException("No existe el mensaje"));
+            Optional<UsuarioMensaje> um=umRepository.findByMensajeIdMensaje(m);
+     
+            if(um.isPresent()){
+                UsuarioMensaje buscarRemitente=um.get();
+                //ver si el mail del remitente coincide con el usuario autenticado
+            //si coincide, se puede editar el mensaje sino, no
+                if(buscarRemitente.getRemitente().getMail().equals(mailRemitente)){
+                    mensajeRepository.updateContenido(idMensaje, mensaje);
+                    sePudo=true;
+                }
+            }
         }
+        return sePudo;
     }
     
     @Transactional
