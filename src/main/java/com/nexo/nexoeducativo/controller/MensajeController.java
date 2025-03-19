@@ -77,12 +77,12 @@ public class MensajeController {
      
          @PreAuthorize("hasAuthority('alumno') or hasAuthority('administrativo') or hasAuthority('preceptor') or hasAuthority('padre') or hasAuthority('profesor')")
       @GetMapping("/obtenerMensajeDestinatario/{mailD}")
-     ResponseEntity<?> obtenerMensajesDestinatario(Authentication auth, String destinatario) {
+     ResponseEntity<?> obtenerMensajesDestinatario(Authentication auth,@PathVariable("mailD") String mailD) {
         String mailR=auth.getPrincipal().toString();
         System.out.println("el remitente (osea el que inicia sesion) "+mailR);
         Usuario remitente=usuarioService.buscarUsuario(mailR);
-        Usuario destinatarioU=usuarioService.buscarUsuario(destinatario);
-        System.out.println("el destinatario (osea el que envio previamente el mensaje) "+destinatario);
+        Usuario destinatarioU=usuarioService.buscarUsuario(mailD);
+        System.out.println("el destinatario (osea el que envio previamente el mensaje) "+mailD);
        List<MensajeDTO> mensajeMostrar=mensajeService.obtenerMensajesDesdeDestinatario(remitente, destinatarioU);
        return new ResponseEntity<>(mensajeMostrar, HttpStatus.OK);
         

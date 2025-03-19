@@ -151,7 +151,7 @@ public class MensajeService {
      }
      
      public List<MensajeDTO> obtenerMensajesDesdeDestinatario(Usuario remitente, Usuario destinatario){
-         List<MensajeDTO> mensajes= mensajeRepository.obtenerMensajesPorDestinatario(destinatario.getMail(), remitente.getMail());
+         List<MensajeDTO> mensajes= mensajeRepository.obtenerMensajesPorDestinatario(destinatario.getMail(), remitente);
          return mensajes;
      }
      

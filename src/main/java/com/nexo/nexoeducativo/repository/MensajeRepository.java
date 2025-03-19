@@ -3,6 +3,7 @@ package com.nexo.nexoeducativo.repository;
 import com.nexo.nexoeducativo.models.dto.request.MensajeDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeView;
 import com.nexo.nexoeducativo.models.entities.Mensaje;
+import com.nexo.nexoeducativo.models.entities.Usuario;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -34,6 +35,6 @@ public interface MensajeRepository extends JpaRepository<Mensaje, Integer> {
     @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.MensajeDTO(m.idMensaje, m.contenido, um.remitente.mail) " +
        "FROM Mensaje m " +
        "JOIN UsuarioMensaje um ON um.mensajeIdMensaje = m.idMensaje " +
-       "WHERE um.destinatario.mail = :destinatarioMail AND um.remitente.mail = :remitenteMail")
-    List<MensajeDTO> obtenerMensajesPorDestinatario(@Param("destinatarioMail") String destinatarioMail, @Param("remitenteMail") String remitenteMail);
+       "WHERE um.destinatario.mail = :destinatarioMail AND um.remitente = :remitente")
+    List<MensajeDTO> obtenerMensajesPorDestinatario(@Param("destinatarioMail") String destinatarioMail, @Param("remitente") Usuario remitente);
 }
