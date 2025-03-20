@@ -8,6 +8,7 @@ import com.nexo.nexoeducativo.models.dto.request.NovedadesDTO;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Mensaje;
 import com.nexo.nexoeducativo.models.entities.Usuario;
+import com.nexo.nexoeducativo.service.CursoUsuarioService;
 import com.nexo.nexoeducativo.service.EscuelaService;
 import com.nexo.nexoeducativo.service.MensajeService;
 import com.nexo.nexoeducativo.service.UsuarioService;
@@ -46,6 +47,9 @@ public class MensajeController {
     
      @Autowired
     private UsuarioService usuarioService;
+     
+     @Autowired
+     private CursoUsuarioService cuService;
 
      private static final Logger LOGGER = LoggerFactory.getLogger(MensajeController.class);
     
@@ -139,6 +143,21 @@ public ResponseEntity<?> obtenerMensajesEntreUsuarios(Authentication auth, @Path
        }
        
        return new ResponseEntity<>("Mensaje no enviado", HttpStatus.BAD_REQUEST);
+        
+    }
+     
+      @PreAuthorize("hasAuthority('alumno')")
+      @GetMapping("/verNovedades")
+     ResponseEntity<?> verNovedades(Authentication auth) {
+          String mail=auth.getPrincipal().toString();//obtengo el mail del usuario logueado, osea el que envia el 
+        Usuario u=usuarioService.buscarUsuario(mail);
+        Integer curso=cuService.buscarCurso(u);
+      List<NovedadesDTO> verNovedades = mensajeService.verNovedades(curso);
+       if(verNovedades.isEmpty()){
+           return new ResponseEntity<>("NO HAY NOVEDADES", HttpStatus.NO_CONTENT);
+       }
+       
+       return new ResponseEntity<>(verNovedades, HttpStatus.OK);
         
     }
      

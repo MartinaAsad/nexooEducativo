@@ -2,6 +2,7 @@ package com.nexo.nexoeducativo.repository;
 
 import com.nexo.nexoeducativo.models.dto.request.MensajeDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeView;
+import com.nexo.nexoeducativo.models.dto.request.NovedadesDTO;
 import com.nexo.nexoeducativo.models.entities.Mensaje;
 import java.util.List;
 import java.util.Optional;
@@ -46,5 +47,11 @@ List<MensajeDTO> obtenerMensajesEntreUsuarios(@Param("destinatarioMail") String 
 "ORDER BY m.fecha DESC " +
 "LIMIT 1")
     String infoPago (Integer idUsuario);
+    
+    @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.NovedadesDTO (m.contenido) FROM Mensaje m " +
+" JOIN CursoMensaje cm ON " +
+"cm.mensajeIdMensaje=m.idMensaje " +
+"WHERE cm.cursoIdCurso.idCurso= :idCurso")
+    List<NovedadesDTO> verNovedades (Integer idCurso);
 
 }

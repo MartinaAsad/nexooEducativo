@@ -253,6 +253,9 @@ public class MensajeService {
 
     }
     
+    public List<NovedadesDTO> verNovedades (Integer idCurso){
+        return mensajeRepository.verNovedades(idCurso);
+    }
     
         
     }

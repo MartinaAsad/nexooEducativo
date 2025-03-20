@@ -102,5 +102,10 @@ public void actualizarPreceptor(AsignarPreceptorDTO ap) {
     LOGGER.info("Asignación exitosa: Preceptor con ID " + usuario.getIdUsuario() + " asignado al curso " + curso.getIdCurso());
 }
 
+    public Integer buscarCurso(Usuario u) {
+        Integer curso = cuRepository.obtenerCurso(u);
+        return curso;
+    }
+
     
 }
