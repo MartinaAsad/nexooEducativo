@@ -1,5 +1,6 @@
 package com.nexo.nexoeducativo.service;
 
+import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.RolNotFound;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
@@ -7,11 +8,16 @@ import com.nexo.nexoeducativo.models.dto.request.MensajeDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeIndividualDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeView;
 import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
+import com.nexo.nexoeducativo.models.dto.request.NovedadesDTO;
+import com.nexo.nexoeducativo.models.entities.Curso;
+import com.nexo.nexoeducativo.models.entities.CursoMensaje;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Mensaje;
 import com.nexo.nexoeducativo.models.entities.Rol;
 import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.models.entities.UsuarioMensaje;
+import com.nexo.nexoeducativo.repository.CursoMensajeRepository;
+import com.nexo.nexoeducativo.repository.CursoRepository;
 import com.nexo.nexoeducativo.repository.MensajeRepository;
 import com.nexo.nexoeducativo.repository.RolRepository;
 import com.nexo.nexoeducativo.repository.UsuarioMensajeRepository;
@@ -40,6 +46,12 @@ public class MensajeService {
     
     @Autowired
     private RolRepository rolRepository;
+    
+    @Autowired
+    private CursoRepository cursoRepository;
+    
+    @Autowired
+    private CursoMensajeRepository cmRepository;
     
     @Autowired
     private UsuarioMensajeRepository umRepository;
@@ -215,6 +227,33 @@ public class MensajeService {
     public String infoPago(Integer padre){
         return mensajeRepository.infoPago(padre);
     }
+    
+    public Mensaje altaNovedades(NovedadesDTO mensaje, Integer idCurso) {
+        Mensaje m = new Mensaje();
+        if(mensaje.getContenido()==null){
+            throw new UsuarioNotFoundException("El mensja ellego vacio "+mensaje.toString());
+        }
+        m.setContenido(mensaje.getContenido());
+       
+        String fechaNueva = hoy.format(formato);
+        LocalDateTime actual = LocalDateTime.parse(fechaNueva, formato);
+        Date fechaDate = Date.from(actual.atZone(ZoneId.systemDefault()).toInstant());
+        m.setFecha(fechaDate);
+
+        m = mensajeRepository.save(m);
+
+        Curso c=cursoRepository.findById(idCurso).orElseThrow(
+                ()-> new CursoNotFound("No existe el curso"));
+
+        CursoMensaje um=new CursoMensaje();
+        um.setCursoIdCurso(c);
+        um.setMensajeIdMensaje(m);
+        cmRepository.save(um);
+        return m;
+
+    }
+    
+    
         
     }
 

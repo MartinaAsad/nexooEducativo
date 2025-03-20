@@ -4,6 +4,7 @@ import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
 import com.nexo.nexoeducativo.models.dto.request.MensajeDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeIndividualDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeView;
+import com.nexo.nexoeducativo.models.dto.request.NovedadesDTO;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.Mensaje;
 import com.nexo.nexoeducativo.models.entities.Usuario;
@@ -128,6 +129,19 @@ public ResponseEntity<?> obtenerMensajesEntreUsuarios(Authentication auth, @Path
         //return new ResponseEntity<>("lolll"+infoUsuariosChat,HttpStatus.OK);   
          return ResponseEntity.ok(texto);
     }
+    
+     @PreAuthorize("hasAuthority('profesor')")
+      @PostMapping("/novedades/{idCurso}")
+     ResponseEntity<?> novedades( @Valid @RequestBody NovedadesDTO mensaje, @PathVariable("idCurso") Integer idCurso) {
+       Mensaje nuevo=mensajeService.altaNovedades(mensaje, idCurso);
+       if(nuevo!=null){
+           return ResponseEntity.ok("Mensaje enviado");
+       }
+       
+       return new ResponseEntity<>("Mensaje no enviado", HttpStatus.BAD_REQUEST);
+        
+    }
+     
 
 		
 		
