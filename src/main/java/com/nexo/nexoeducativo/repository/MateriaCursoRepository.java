@@ -69,4 +69,11 @@ List<MateriaCurso> findByCursoIdCursoAndProfesor (Curso cursoIdCurso, Usuario pr
        "INNER JOIN Curso c ON c.idCurso = cu.cursoIdCurso WHERE cu.profesor = :profesor")
 List<verCursoView> obtenerCursosProfe(Usuario profesor);
 
+    @Query("SELECT COUNT(DISTINCT mc.cursoIdCurso) FROM MateriaCurso mc WHERE mc.profesor = :profesor AND mc.horaInicio IS NOT NULL")
+    Integer cantCursosProfesor(Usuario profesor);
+    
+    @Query("SELECT ROUND(SUM(TIME_TO_SEC(TIMEDIFF(horaFin, horaInicio)) / 3600), 2) AS horas "
+            + "FROM MateriaCurso WHERE horaInicio IS NOT NULL AND horaFin IS NOT NULL AND profesor = :profesor")
+    Double cantMinutosProfesor(Usuario profesor);
+
 }

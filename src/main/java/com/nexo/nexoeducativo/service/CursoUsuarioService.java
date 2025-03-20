@@ -37,6 +37,9 @@ public class CursoUsuarioService {
     @Autowired
     private CursoRepository cursoRepository;
     
+    @Autowired
+    private EscuelaService escuelaService;
+    
       private static final Logger LOGGER = LoggerFactory.getLogger(CursoUsuarioService.class);
     public void asignarPreceptor(AsignarPreceptorDTO ap){
         LOGGER.info("VALORES QUE LLEGAN ACA: "+ap.toString());

@@ -40,6 +40,8 @@ public interface EscuelaRepository extends JpaRepository<Escuela, Integer> {
                                  @Param("numero") int numero);
     
     //boolean isActivo(Integer idEscuela);
+    
+    Escuela findPlanIdPlanByIdEscuela (Integer idEscuela);
   
     
 }

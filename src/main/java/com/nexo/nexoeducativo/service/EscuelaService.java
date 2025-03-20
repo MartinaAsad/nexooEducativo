@@ -182,5 +182,9 @@ public class EscuelaService {
         //LOGGER.info("id escuela del usuario logueado: "+e.getIdEscuela());
         return e;
     }
+    
+    public Escuela obtenerPlanEscuela (Integer idEscuela){
+        return escuelaRepository.findPlanIdPlanByIdEscuela(idEscuela);
+    }
 
 }

@@ -39,6 +39,7 @@ import com.nexo.nexoeducativo.models.dto.request.PlanView;
 import com.nexo.nexoeducativo.models.dto.request.RenovarMembresiaDTO;
 import com.nexo.nexoeducativo.models.dto.request.RolDTO;
 import com.nexo.nexoeducativo.models.dto.request.SeleccionarMaterialView;
+import com.nexo.nexoeducativo.models.dto.request.SeleccionarProfesorView;
 import com.nexo.nexoeducativo.models.dto.request.TareaDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
@@ -344,7 +345,7 @@ public class UsuarioController {
      ResponseEntity<?> prueba80(Authentication auth){
      String mail=auth.getPrincipal().toString();//obtengo el mail del usuario logueado
        Usuario obtenerUsuario=uService.buscarUsuario(mail);
-       return new ResponseEntity<>(obtenerUsuario.getIdUsuario(), HttpStatus.OK); 
+       return new ResponseEntity<>(obtenerUsuario.getMail(), HttpStatus.OK); 
          
      }
      
@@ -415,6 +416,17 @@ public class UsuarioController {
         }
 
         return new ResponseEntity<>(planes, HttpStatus.OK);
+
+    }
+    
+    @PreAuthorize("hasAuthority('preceptor') "
+     + "or hasAuthority('jefe colegio') ")
+     @GetMapping(value = "/getPlanEscuela")
+    ResponseEntity<?> getPlanEscuela(Authentication auth) {
+       String mailUsuario=auth.getPrincipal().toString();
+         Integer idEscuela=escuelaService.obtenerIdEscuela(mailUsuario).getIdEscuela();
+         Integer idPlan=escuelaService.obtenerPlanEscuela(idEscuela).getPlanIdPlan().getIdPlan();
+        return new ResponseEntity<>(idPlan, HttpStatus.OK);
 
     }
     
@@ -1273,6 +1285,15 @@ SI SOLO QUIERO MODIFICAR EL CURSO, PONER ESTO EN POSTMAN:
          eventoService.borrarEvento(idEvento);
           return new ResponseEntity<>("el evento fue borrado correctamente", HttpStatus.OK);
      }
+     
+     //endpoints necesarios para metodo seleccionar profesor
+      @PreAuthorize("hasAuthority('jefe colegio')")
+              @GetMapping(value="/verInfoProfe/{idUsuario}")
+     ResponseEntity<?> desplegableChatGrupal(@PathVariable("idUsuario") Integer idUsuario){
+         SeleccionarProfesorView cantidad=mcService.infoProfesor(idUsuario);
+         return new ResponseEntity<>(cantidad, HttpStatus.OK);
+         
+    }
 
 }
   
