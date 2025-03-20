@@ -211,6 +211,10 @@ public class MensajeService {
     public void borrarMensaje(Integer idMensaje){
         mensajeRepository.deleteById(idMensaje);
     }
+    
+    public String infoPago(Integer padre){
+        return mensajeRepository.infoPago(padre);
+    }
         
     }
 

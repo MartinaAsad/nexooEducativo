@@ -38,4 +38,13 @@ public interface MensajeRepository extends JpaRepository<Mensaje, Integer> {
        "OR (um.destinatario.mail = :remitenteMail AND um.remitente.mail = :destinatarioMail)")
 List<MensajeDTO> obtenerMensajesEntreUsuarios(@Param("destinatarioMail") String destinatarioMail, @Param("remitenteMail") String remitenteMail);
 
+    @Query("SELECT m.contenido " +
+"FROM Mensaje m " +
+" JOIN UsuarioMensaje um ON um.mensajeIdMensaje = m.idMensaje " +
+"WHERE um.destinatario.idUsuario = :idUsuario " +
+"AND LOWER(m.contenido) LIKE '%cbu%' " +
+"ORDER BY m.fecha DESC " +
+"LIMIT 1")
+    String infoPago (Integer idUsuario);
+
 }

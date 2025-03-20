@@ -51,6 +51,7 @@ public class WebSecurityConfig {
                      .requestMatchers("/editarMensajePrivado/{idMensaje}").authenticated()
                     .requestMatchers("/borrarMensaje/{idMensaje}").authenticated()
                     .requestMatchers("/obtenerMensajesEntreUsuarios/{mailD}").authenticated()
+                    .requestMatchers("/verInfoPago").authenticated()
                     //.requestMatchers()
   //             .requestMatchers("/api/usuario/**").authenticated() // Rutas protegidas
                    

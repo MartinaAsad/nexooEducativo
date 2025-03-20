@@ -116,6 +116,18 @@ public ResponseEntity<?> obtenerMensajesEntreUsuarios(Authentication auth, @Path
         //return new ResponseEntity<>("lolll"+infoUsuariosChat,HttpStatus.OK);   
          return ResponseEntity.ok(infoUsuariosChat);
     }
+    
+    @PreAuthorize("hasAuthority('padre')")
+    @GetMapping(value="/verInfoPago")
+    ResponseEntity<?> verInfoPago(Authentication auth ){
+        String mailUsuario=auth.getPrincipal().toString();
+        //Escuela e=escuelaService.obtenerIdEscuela(mailUsuario);
+        Usuario u=usuarioService.buscarUsuario(mailUsuario);
+        String texto=mensajeService.infoPago(u.getIdUsuario());
+
+        //return new ResponseEntity<>("lolll"+infoUsuariosChat,HttpStatus.OK);   
+         return ResponseEntity.ok(texto);
+    }
 
 		
 		
