@@ -54,6 +54,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/verInfoPago").authenticated()
                     .requestMatchers("/novedades/{idCurso}").authenticated()
                     .requestMatchers("/verNovedades").authenticated()
+                     .requestMatchers("/formContacto").permitAll()
                     //.requestMatchers()
   //             .requestMatchers("/api/usuario/**").authenticated() // Rutas protegidas
                    
@@ -100,7 +101,11 @@ public class WebSecurityConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         //.allowedOrigins(corsOrigins)
-                        .allowedOrigins("http://localhost:3000")
+                        .allowedOrigins(
+                                "http://localhost:3000",
+                                "http://localhost:8081", // Puerto estándar de React Native
+                                "http://192.168.0.160:8081" // Tu IP local para dispositivos
+                        )
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*")
                         .allowCredentials(true);

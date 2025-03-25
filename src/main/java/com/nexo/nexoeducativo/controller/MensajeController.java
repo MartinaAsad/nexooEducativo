@@ -1,6 +1,7 @@
 package com.nexo.nexoeducativo.controller;
 
 import com.nexo.nexoeducativo.models.dto.request.DesplegableChatView;
+import com.nexo.nexoeducativo.models.dto.request.FormContactoDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeIndividualDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeView;
@@ -161,6 +162,15 @@ public ResponseEntity<?> obtenerMensajesEntreUsuarios(Authentication auth, @Path
         
     }
      
+     @PostMapping("/formContacto")
+     ResponseEntity<?> formContacto(@RequestBody FormContactoDTO auth) {
+          Mensaje m=mensajeService.contactarDesdeForm(auth);
+       if(m!=null){
+            return new ResponseEntity<>("Consulta enviada exitosamente", HttpStatus.OK);
+       }
+       return new ResponseEntity<>("No pudo enviarse la consulta", HttpStatus.BAD_REQUEST);
+        
+    }
 
 		
 		

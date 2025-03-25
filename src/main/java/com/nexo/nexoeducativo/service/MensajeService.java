@@ -4,6 +4,7 @@ import com.nexo.nexoeducativo.exception.CursoNotFound;
 import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.RolNotFound;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
+import com.nexo.nexoeducativo.models.dto.request.FormContactoDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeIndividualDTO;
 import com.nexo.nexoeducativo.models.dto.request.MensajeView;
@@ -194,6 +195,13 @@ public class MensajeService {
         umRepository.save(usuarioMensaje);
         return m;
 
+    }
+    
+    public Mensaje contactarDesdeForm(FormContactoDTO contenido){
+        Mensaje m=new Mensaje();
+        m.setFecha(contenido.getFecha());
+        m.setContenido(contenido.getContenido());
+        return mensajeRepository.save(m);
     }
     
     @Transactional
