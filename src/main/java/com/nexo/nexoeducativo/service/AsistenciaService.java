@@ -246,9 +246,14 @@ public class AsistenciaService {
                                     //buscar el presentismo correspondiente al alumno
                    Usuario u=new Usuario();
                    u.setIdUsuario(alumno.getIdUsuario()); 
-                Optional<PresentismoUsuario> presentismo = presenUsuRepository.findByUsuarioIdUsuario(u);
+                List<PresentismoUsuario> presentismo = presenUsuRepository.findDistinctByUsuarioIdUsuario(u);
+                
+                //recorrer la lista que me trae supuestamente:
+                for (PresentismoUsuario pu : presentismo) {
+                    System.out.println("LO QUE HYA DE INFO: "+pu.getPresentismoIdPresentismo().getIdPresentismo());
+                }
                  
-                if(presentismo.isPresent()){
+                /*if(presentismo.isPresent()){
                     PresentismoUsuario pu=presentismo.get();
                     Presentismo p=pu.getPresentismoIdPresentismo();
                     Asistencia actual=siExiste.get();
@@ -265,7 +270,7 @@ public class AsistenciaService {
             
             presenRepository.save(p);
             asistRepository.save(actual);
-                }
+                }*/
                 
                 
                         
