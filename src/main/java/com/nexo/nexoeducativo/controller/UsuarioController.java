@@ -556,11 +556,11 @@ public class UsuarioController {
     }
     /*endpoint necesario para editar una asistencia*/
     @PreAuthorize("hasAuthority('preceptor')")
-    @GetMapping(value="/obtenerAsistencias/{cursoIdCurso}") //RELLENAR DESPLEGABLE
+    @GetMapping(value="/obtenerAsistencia/{cursoIdCurso}") //RELLENAR DESPLEGABLE
     ResponseEntity<?> obtenerAsisteencias(@PathVariable("cursoIdCurso") int cursoIdCurso){
         Curso curso=new Curso();
         curso.setIdCurso(cursoIdCurso);
-       List<AsistenciaView> a=asistenciaS.obtenerFechasAsistencias(curso);
+       AsistenciaView a=asistenciaS.obtenerFechasAsistencias(curso);
          return new ResponseEntity<>(a, HttpStatus.OK);
     }
     
@@ -611,7 +611,7 @@ public class UsuarioController {
 }*/
     }
      @PreAuthorize("hasAuthority('preceptor')")
-    @GetMapping(value="/obtenerAsistenciasProfe") 
+    @GetMapping(value="/obtenerAsistenciaProfe") 
     ResponseEntity<?> obtenerAsistenciasProfe(Authentication auth){
         String mail=auth.getPrincipal().toString();
          Escuela escuelaIdEscuela=escuelaService.obtenerIdEscuela(mail); 

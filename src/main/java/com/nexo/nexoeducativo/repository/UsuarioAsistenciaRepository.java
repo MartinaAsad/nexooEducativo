@@ -25,7 +25,7 @@ public interface UsuarioAsistenciaRepository extends JpaRepository<UsuarioAsiste
 "u.idUsuario=a.usuarioIdUsuario " +
 "JOIN EscuelaUsuario eu ON"+
  " eu.usuarioIdUsuario=u.idUsuario "+
-"WHERE u.rolidrol.idRol= :idRol AND eu.escuelaIdEscuela.idEscuela= :idEscuela")
+"WHERE u.rolidrol.idRol= :idRol AND eu.escuelaIdEscuela.idEscuela= :idEscuela ORDER BY a.asistenciaIdAsistencia.fecha DESC LIMIT 1")
     List<AsistenciaView> obtenerAsistenciasProfe(Integer idRol, Integer idEscuela);
     
     Optional<UsuarioAsistencia> findByUsuarioIdUsuarioAndAsistenciaIdAsistencia(Usuario usuarioIdUsuario, Asistencia asistenciaIdAsistencia);

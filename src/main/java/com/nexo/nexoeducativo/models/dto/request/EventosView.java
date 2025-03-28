@@ -21,7 +21,7 @@ public class EventosView {
     
     private Integer idEvento;
      @NotBlank(message="descripcion no puede estar vacio")
-    @Pattern(regexp = "^[a-zA-Z-0-9\s]+$", message = "formato de descripcion es invalido")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\\s.-]+$", message = "formato de descripcion es invalido")
     @Length(min=4, max=80, message="la descripcion debe tener entre 4 y 80 caracteres")
      private String descripcion;
      

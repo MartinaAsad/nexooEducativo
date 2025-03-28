@@ -11,11 +11,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AsistenciaRepository extends JpaRepository<Asistencia, Integer>{
-    @Query("SELECT DISTINCT new com.nexo.nexoeducativo.models.dto.request.AsistenciaView ( a.fecha AS fecha, a.idAsistencia AS idAsistencia) FROM Asistencia a " +
-" JOIN CursoAsistencia ca ON " +
-"ca.asistenciaIdAsistencia=a.idAsistencia " +
-"WHERE ca.cursoIdCurso= :cursoIdCurso")
-    List<AsistenciaView> fechasAsistencias (Curso cursoIdCurso);
+    @Query("SELECT new com.nexo.nexoeducativo.models.dto.request.AsistenciaView(a.fecha AS fecha, a.idAsistencia AS idAsistencia) " +
+       "FROM Asistencia a " +
+       "JOIN CursoAsistencia ca ON ca.asistenciaIdAsistencia = a.idAsistencia " +
+       "WHERE ca.cursoIdCurso = :cursoIdCurso " +
+       "ORDER BY a.fecha DESC LIMIT 1")
+   AsistenciaView fechaAsistencia (Curso cursoIdCurso);
     
    List<Asistencia> findAsistenciaByFecha (Date fecha);
    //Optional< Asistencia> findAsistenciaByFecha (Date fecha );
