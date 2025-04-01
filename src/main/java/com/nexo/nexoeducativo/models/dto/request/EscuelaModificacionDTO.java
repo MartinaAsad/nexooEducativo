@@ -40,7 +40,7 @@ public class EscuelaModificacionDTO implements Serializable{
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @Min(value = 0, message = "El valor debe ser 0 o 1")
     @Max(value = 1, message = "El valor debe ser 0 o 1") 
-    private short activo;
+    private Short activo;
     
     @JsonInclude(JsonInclude.Include.NON_NULL)
      @Min(value = 1, message = "El valor debe ser 1 o 2")
@@ -55,7 +55,7 @@ public class EscuelaModificacionDTO implements Serializable{
     public EscuelaModificacionDTO(
               @JsonProperty("nombre")String nombre,
               @JsonProperty("direccion")String direccion,
-              @JsonProperty("activo") short activo, 
+              @JsonProperty("activo") Short activo, 
               @JsonProperty("idPlan")Integer idPlan,
               @JsonProperty("jefeColegio")Integer jefeColegio) {
         

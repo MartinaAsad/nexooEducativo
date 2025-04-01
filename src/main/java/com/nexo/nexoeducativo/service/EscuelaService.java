@@ -104,7 +104,6 @@ public class EscuelaService {
              //LOGGER.info("LA DIRECCION TRAIDA DEL DTO ES: "+dto.getDireccion());
              //LOGGER.info("LA DIRECCION TRAIDA DEL DTO ES: "+dto.getDireccion());
          }else if(dto.getDireccion()==null){
-             
          }
          else{
              //LOGGER.info("LA DIRECCION TRAIDA DEL DTO (else) ES: "+dto.getDireccion());
@@ -148,7 +147,7 @@ public class EscuelaService {
              
          }
          
-         if (escuelaRepository.findActivoByIdEscuela(idEscuela).getActivo()!=dto.getActivo()) {
+         if (dto.getActivo()!=null) {
              e.setActivo(dto.getActivo());
          }
          
