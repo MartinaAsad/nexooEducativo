@@ -107,7 +107,7 @@ Optional<Usuario> findByDni (int dni);
       List<verCursoView> obtenerCursos(@Param("escuelaIdEscuela") Escuela escuelaIdEscuela);
       
          @Query("SELECT eu.escuelaIdEscuela FROM Usuario u INNER JOIN EscuelaUsuario eu ON u.idUsuario=eu.usuarioIdUsuario "
-              + "WHERE u.mail= :mail")
+              + "WHERE u.rolidrol=3 and u.mail= :mail")
       Escuela obtenerIdEscuelaAdministrativo(@Param("mail") String mail);
       
       
