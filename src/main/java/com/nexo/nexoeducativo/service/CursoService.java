@@ -170,9 +170,11 @@ public class CursoService {
     
      public List<verCursoView> verCursosAdministrativo(String mail){
        Escuela escuelaIdEscuela=usuarioRepository.obtenerIdEscuelaAdministrativo(mail);//buscar el id de la escuela del usuario logueado
+       //LOGGER.info("la escuela encontrada para el usuario logueado es: "+escuelaIdEscuela.getIdEscuela());
       List<verCursoView> resultados = usuarioRepository.obtenerCursosAdministrativo(escuelaIdEscuela);
 
         return resultados;
+        //return escuelaIdEscuela;
     }
      
         public List<verCursoView> verCursosPreceptor(String mail){

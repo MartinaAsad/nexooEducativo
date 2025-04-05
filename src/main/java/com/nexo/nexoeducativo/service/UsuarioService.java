@@ -301,7 +301,6 @@ public class UsuarioService {
      } 
       
       public void actualizarCampos( JefeColegioModificacionDTO dto, Usuario u){
-           LOGGER.info("dto que llega: "+dto.toString());
          if (dto.getNombre() != null) {
              u.setNombre(dto.getNombre());
          }
@@ -334,15 +333,9 @@ public class UsuarioService {
          if (dto.getTelefono() != null) {
              u.setTelefono(dto.getTelefono());
          }
-         if (dto.getActivo()==0 || dto.getActivo()==1) {
+         if (dto.getActivo()!=null) {
              u.setActivo(dto.getActivo());
-              LOGGER.info("valor ingresado: "+dto.getActivo());
-         }else{
-             LOGGER.info("valor ingresado: "+dto.getActivo());
          }
-         
-         //LOGGER.info("el nuevo objeto contiene: "+u.toString());
-         
          
      }
       

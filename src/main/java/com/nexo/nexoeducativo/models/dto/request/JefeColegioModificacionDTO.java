@@ -65,7 +65,7 @@ public class JefeColegioModificacionDTO implements Serializable{
              @JsonProperty("mail") String mail,
              @JsonProperty("clave") String clave, 
              @JsonProperty("telefono") Integer telefono, 
-             @JsonProperty("activo") short activo) {
+             @JsonProperty("activo") Short activo) {
          
         this.nombre = nombre;
         this.apellido = apellido;
