@@ -345,7 +345,8 @@ public class UsuarioController {
      ResponseEntity<?> prueba80(Authentication auth){
      String mail=auth.getPrincipal().toString();//obtengo el mail del usuario logueado
        Usuario obtenerUsuario=uService.buscarUsuario(mail);
-       return new ResponseEntity<>(obtenerUsuario.getIdUsuario(), HttpStatus.OK); 
+       //Usuario u=uService.buscarUsuario(mailUsuario);
+       return new ResponseEntity<>(obtenerUsuario.getMail(), HttpStatus.OK); 
          
      }
      
