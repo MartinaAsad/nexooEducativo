@@ -43,6 +43,7 @@ import com.nexo.nexoeducativo.models.dto.request.SeleccionarProfesorView;
 import com.nexo.nexoeducativo.models.dto.request.TareaDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioDTO;
 import com.nexo.nexoeducativo.models.dto.request.UsuarioView;
+import com.nexo.nexoeducativo.models.dto.request.VerCursosPreceptorView;
 import com.nexo.nexoeducativo.models.dto.request.verCursoView;
 import com.nexo.nexoeducativo.models.entities.Curso;
 import com.nexo.nexoeducativo.models.entities.Escuela;
@@ -54,6 +55,7 @@ import com.nexo.nexoeducativo.models.entities.Usuario;
 import com.nexo.nexoeducativo.service.AsistenciaService;
 import com.nexo.nexoeducativo.service.ComprobantePagoService;
 import com.nexo.nexoeducativo.service.CuotaService;
+import com.nexo.nexoeducativo.service.CursoEscuelaService;
 import com.nexo.nexoeducativo.service.CursoService;
 import com.nexo.nexoeducativo.service.CursoUsuarioService;
 import com.nexo.nexoeducativo.service.EscuelaService;
@@ -152,6 +154,8 @@ public class UsuarioController {
     @Autowired
     private MateriaCursoService mcService;
     
+    @Autowired
+    private CursoEscuelaService ceService;
      private static final Logger LOGGER = LoggerFactory.getLogger(UsuarioController.class);
     
     @PreAuthorize(" hasAuthority('super admin') ")
@@ -624,6 +628,19 @@ public class UsuarioController {
          }
     }
     
+       @PreAuthorize("hasAuthority('administrativo')")
+    @GetMapping(value="/cursosSinPreceptor") 
+    ResponseEntity<?> cursosSinPreceptor(Authentication auth){
+        String mail=auth.getPrincipal().toString();
+         Escuela escuelaIdEscuela=escuelaService.obtenerIdEscuela(mail); 
+         List<VerCursosPreceptorView> aisstencias=ceService.cursosSinPrecpetor(escuelaIdEscuela.getIdEscuela());
+         if(aisstencias.isEmpty()){
+              return new ResponseEntity<>("Todos los cursos tienen preceptor", HttpStatus.NO_CONTENT);
+         }else{
+          return new ResponseEntity<>(aisstencias, HttpStatus.OK);   
+         }
+    }
+    
      @PreAuthorize("hasAuthority('preceptor')")
     @PatchMapping(value="/editarAsistenciaProfe") 
     ResponseEntity<?> editarAsistenciaP(@RequestParam String fecha, @Valid @RequestBody List<AlumnoAsistenciaDTO> asistencia ){
@@ -1012,6 +1029,7 @@ public class UsuarioController {
     @PostMapping(value="/asignarPreceptor")
      ResponseEntity<?> prueba23 ( @Valid @RequestBody AsignarPreceptorDTO em){
           cursoUsuarioService.asignarPreceptor(em);
+          System.out.println("lo que llega al backend: "+em.toString());
           
            return new ResponseEntity<>(HttpStatus.OK);   
     }   

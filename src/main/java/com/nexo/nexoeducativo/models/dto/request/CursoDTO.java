@@ -2,13 +2,11 @@ package com.nexo.nexoeducativo.models.dto.request;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import java.io.Serializable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 /**
  *
@@ -17,6 +15,7 @@ import org.hibernate.validator.constraints.Length;
 //@Data
 @Getter
 @Setter
+@NoArgsConstructor
 //probar el dto
 public class CursoDTO implements Serializable {
      @NotNull(message="campo numero de curso no puede estar vacio")

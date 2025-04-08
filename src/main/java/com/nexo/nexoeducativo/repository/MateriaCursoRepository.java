@@ -76,4 +76,6 @@ List<verCursoView> obtenerCursosProfe(Usuario profesor);
             + "FROM MateriaCurso WHERE horaInicio IS NOT NULL AND horaFin IS NOT NULL AND profesor = :profesor")
     Double cantMinutosProfesor(Usuario profesor);
 
+    Integer deleteByCursoIdCurso(Curso cursoIdCurso );
+
 }

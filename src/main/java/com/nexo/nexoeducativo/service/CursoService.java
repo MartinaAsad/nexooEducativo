@@ -263,10 +263,16 @@ public class CursoService {
             //validar si ya existe una materia en ese mismo horario o que no se suponga. Ejemplo: biologia 1 12:00 - 13:00 2b lunes y jueves
             //NO ES VALIDO: biologia 1 12:30 a 13:30 2b lunes y jueves
             if (materiaCursoRepository.verSiYaExisteEsaMateria(curso, info.getDia(), info.getHoraInicio(), info.getHoraFin())) {
+                cursoEscuelaRepository.deleteByCursoIdCurso(curso);
+                    materiaCursoRepository.deleteByCursoIdCurso(curso); 
+                cursoRepository.deleteById(curso.getIdCurso());//para que no se guarden registros erroneos
                 throw new MateriaExistingException("Ya existe esa materia entre esos horarios en ese curso");
             } else {
                 //LOGGER.info("primera validacion resultado: "+verSiYaExisteEsaMateria(m.getIdCurso(), m.getDia(), m.getHoraInicio(), m.getHoraFin()));
                 if (info.getHoraFin().isBefore(info.getHoraInicio())) {
+                    cursoEscuelaRepository.deleteByCursoIdCurso(curso);
+                    materiaCursoRepository.deleteByCursoIdCurso(curso);
+                     cursoRepository.deleteById(curso.getIdCurso());//para que no se guarden registros erroneos
                     throw new HoraInvalidatedexception("La hora de finalizacion es inferior a la hora de inicio");
 
                 } else {
@@ -286,6 +292,8 @@ public class CursoService {
     }
     public void modificarMaterias(List<EditarCursoMateriaDTO> lista, Curso c){
         for(EditarCursoMateriaDTO iterador:lista){
+           System.out.println("la info a editar xd"+iterador.toString());
+           LOGGER.info("la info a editar xd "+iterador.toString());
              Materia m=materiaRepository.findById(iterador.getIdMateria()).orElseThrow(
                     ()-> new MateriaNotFoundException("Esa materia no existe"));
             MateriaCurso mCurso = materiaCursoRepository.

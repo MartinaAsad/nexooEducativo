@@ -42,16 +42,15 @@ public class CursoUsuarioService {
     
       private static final Logger LOGGER = LoggerFactory.getLogger(CursoUsuarioService.class);
     public void asignarPreceptor(AsignarPreceptorDTO ap){
-        LOGGER.info("VALORES QUE LLEGAN ACA: "+ap.toString());
+        //LOGGER.info("VALORES QUE LLEGAN ACA: "+ap.toString());
         Rol rolPreceptor= rolRepository.findById(4)
                  .orElseThrow(() -> new RolNotFound("El rol de Preceptor no existe"));
         
-        Curso c=new Curso();
-        c.setIdCurso(ap.getCurso());
+        Curso c=cursoRepository.findById(ap.getCurso())
+                 .orElseThrow(() -> new CursoNotFound("El curso no existe"));
            
-        Usuario u=new Usuario();
-        u.setDni(ap.getPreceptor());
-        u.setRolidrol(rolPreceptor);
+        Usuario u=usuarioRepository.findByDni(ap.getPreceptor())
+                 .orElseThrow(() -> new UsuarioNotFoundException("El preceptor no existe"));
         
         Optional<CursoUsuario> verSiYaFueAsignado=cuRepository.siYaFueAsignado(c.getIdCurso());    //aca hay un problema
         
