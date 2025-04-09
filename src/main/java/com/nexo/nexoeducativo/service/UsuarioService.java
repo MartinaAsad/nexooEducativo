@@ -142,15 +142,19 @@ public class UsuarioService {
     }
      
      public void crearAlumno(AlumnoDTO a, Escuela e){
+         System.out.println("el alumno ingresado: "+a.toString());
        Rol rolAlumno = rolRepository.findById(7)
         .orElseThrow(() -> new RolNotFound("El rol de Alumno no existe"));
 
         Curso curso = cursoRepository.findById(a.getIdCurso())
             .orElseThrow(() -> new CursoNotFound("El curso no existe"));
 
-        if (usuariorepository.existsByDni(a.getDni())&&
-        !usuariorepository.existsByMail(a.getMail())) {
-            throw new UsuarioExistingException("El alumno ya existe");
+        if (usuariorepository.existsByDni(a.getDni())) {
+            throw new UsuarioExistingException("El alumno con ese dni ya existe");
+        }
+        
+        if(usuariorepository.existsByMail(a.getMail())){
+            throw new UsuarioExistingException("El alumno con ese mail ya existe");
         }
         Usuario alumno = new Usuario();
         alumno.setNombre(a.getNombre());
@@ -357,6 +361,7 @@ public class UsuarioService {
          
          if (dto.getDni() != null) {
              int casteo=Integer.parseInt(dto.getDni());
+             System.out.println("El dni ingresado es: "+casteo);
              if(!usuariorepository.existsByDni(casteo)){
                  u.setDni(casteo); //PARA EVITAR QUE EL DNI ACTUALIZADO COINCIDA CON UNO PREVIAMENTE EXISTENTE
              }else{
