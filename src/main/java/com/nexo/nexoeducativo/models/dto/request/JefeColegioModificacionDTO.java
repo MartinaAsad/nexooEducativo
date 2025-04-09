@@ -21,12 +21,12 @@ import org.hibernate.validator.constraints.Length;
 @ToString
 public class JefeColegioModificacionDTO implements Serializable{
     @JsonInclude(JsonInclude.Include.NON_NULL) //acepta valores nulos este campo
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "campo invalido")//solo acepta letras
+    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "campo invalido")//solo acepta letras
     @Length(min=3, max=30) //min: cantidad minima, max: cantidad maxima (de caracteres), LENGTH ES PARA STRING NOMAS
     private String nombre;
     
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "formato de apellido es invalido")
+    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "formato de apellido es invalido")
     @Length(min=4, max=30)
     private String apellido;
     

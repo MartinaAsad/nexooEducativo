@@ -29,13 +29,13 @@ public class UsuarioDTO implements Serializable{
     //poner aca atributos comunes entre todos los tipos de usuario
     //utilizar la herencia para implementar en los otros roles
     
-    @Pattern(regexp = "^[a-zA-Z]+( [a-zA-Z]+)*$", message = "campo invalido")//solo acepta letras
+    @Pattern(regexp = "^[a-zA-Z\\s]+( [a-zA-Z\\s]+)*$", message = "campo invalido")//solo acepta letras
     @NotBlank(message="campo nombre invalido")//notblank para string
     @Length(min=3, max=30) //min: cantidad minima, max: cantidad maxima (de caracteres), LENGTH ES PARA STRING NOMAS
     private String nombre;
     
     @NotBlank(message="apellido no puede estar vacio")
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "formato de apellido es invalido")
+    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "formato de apellido es invalido")
     @Length(min=4, max=30)
     private String apellido;
     
