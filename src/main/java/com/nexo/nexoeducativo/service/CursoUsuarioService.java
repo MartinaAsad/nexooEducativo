@@ -42,7 +42,6 @@ public class CursoUsuarioService {
     
       private static final Logger LOGGER = LoggerFactory.getLogger(CursoUsuarioService.class);
     public void asignarPreceptor(AsignarPreceptorDTO ap){
-        //LOGGER.info("VALORES QUE LLEGAN ACA: "+ap.toString());
         Rol rolPreceptor= rolRepository.findById(4)
                  .orElseThrow(() -> new RolNotFound("El rol de Preceptor no existe"));
         
@@ -50,7 +49,7 @@ public class CursoUsuarioService {
                  .orElseThrow(() -> new CursoNotFound("El curso no existe"));
            
         Usuario u=usuarioRepository.findByDni(ap.getPreceptor())
-                 .orElseThrow(() -> new UsuarioNotFoundException("El preceptor no existe"));
+                 .orElseThrow(() -> new UsuarioNotFoundException("El preceptor no existe "+ap.getPreceptor()));
         
         Optional<CursoUsuario> verSiYaFueAsignado=cuRepository.siYaFueAsignado(c.getIdCurso());    //aca hay un problema
         
@@ -74,31 +73,39 @@ public class CursoUsuarioService {
 @Transactional
 public void actualizarPreceptor(AsignarPreceptorDTO ap) {
     // Paso 1: Obtener el curso
+    System.out.println("VALORES QUE LLEGAN ACA ACTUALIZAR PRECEPTOR: "+ap.toString());
     Curso curso = cursoRepository.findById(ap.getCurso())
             .orElseThrow(() -> new CursoNotFound("No existe el curso seleccionado"));
-
-    // Paso 2: Obtener el usuario (preceptor)
-    Usuario usuario = usuarioRepository.findById(ap.getPreceptor())
-            .orElseThrow(() -> new UsuarioNotFoundException("No existe el usuario"));
+    
+    Usuario preceptor=usuarioRepository.findById(ap.getPreceptor())
+            .orElseThrow(()-> new UsuarioNotFoundException("No existe ese preceptor"));
 
     // Paso 3: Verificar si ya existe una asignación para este curso
-    Optional<CursoUsuario> asignacionExistente = cuRepository.findByCursoIdCurso(curso);
+    Optional<CursoUsuario> asignacionExistente = cuRepository.findByCursoIdCursoAndUsuarioIdUsuario(curso, preceptor);
+    Optional<CursoUsuario> asignacionExistentePrecpetor = cuRepository.findByUsuarioIdUsuario(preceptor);
 
-    if (asignacionExistente.isPresent()) {
-        // Si ya existe una asignación, la eliminamos
-        cuRepository.delete(asignacionExistente.get());
-        cuRepository.flush(); // Forzar la eliminación antes de continuar
+    if (!asignacionExistentePrecpetor.isEmpty()) {
+        // Si el precpetor fue asignado previamente a un curso, borrar ese registro
+       cuRepository.delete(asignacionExistentePrecpetor.get());
+       //luego, asignarlo al nuevo curso
+        asignarCurso(preceptor, curso);
+    }else{
+        //si el preceptor a editar nunca estuvo en un curso, asignarlo desde cero
+        asignarCurso(preceptor, curso);
+        
+        
     }
 
-    // Paso 4: Crear una nueva instancia de CursoUsuario
-    CursoUsuario cursoUsuario = new CursoUsuario();
-    cursoUsuario.setCursoIdCurso(curso); // Asignar el curso
-    cursoUsuario.setUsuarioIdUsuario(usuario); // Asignar el usuario
+    LOGGER.info("Asignación exitosa: Preceptor con ID " + preceptor.getIdUsuario() + " asignado al curso " + curso.getIdCurso());
+}
 
-    // Paso 5: Guardar la nueva asignación
-    cuRepository.save(cursoUsuario);
 
-    LOGGER.info("Asignación exitosa: Preceptor con ID " + usuario.getIdUsuario() + " asignado al curso " + curso.getIdCurso());
+@Transactional
+public void asignarCurso (Usuario preceptor, Curso curso){
+     CursoUsuario cursoUsuario = new CursoUsuario();
+        cursoUsuario.setCursoIdCurso(curso); // Asignar el curso
+        cursoUsuario.setUsuarioIdUsuario(preceptor); // Asignar el usuario
+        cuRepository.save(cursoUsuario);
 }
 
     public Integer buscarCurso(Usuario u) {

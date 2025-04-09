@@ -35,6 +35,7 @@ public interface CursoUsuarioRepository extends JpaRepository<CursoUsuario, Inte
     CursoUsuario findNumeroAndDivisionByIdCurso (@Param("idCurso") Integer idCurso);
     
     Optional<CursoUsuario> findByUsuarioIdUsuario (Usuario usuarioIdUsuario);
+    Optional<CursoUsuario> findByCursoIdCursoAndUsuarioIdUsuario (Curso cursoIdCurso, Usuario usuarioIdUsuario);
     
    /* @Modifying
     @Query("UPDATE CursoUsuario cu SET cu.cursoIdCurso= :cursoIdCurso WHERE cu.usuarioIdUsuario= :usuarioIdUsuario")

@@ -1037,7 +1037,9 @@ public class UsuarioController {
        @PreAuthorize("hasAuthority('administrativo')") //asignado como ejemplo, despues cambiar a administrativo
     @PostMapping(value="/actualizarPreceptor")
      ResponseEntity<?> prueba203 ( @Valid @RequestBody AsignarPreceptorDTO em){
-          cursoUsuarioService.asignarPreceptor(em);
+          //String mailUsuario=auth.getPrincipal().toString();
+         //Usuario p=uService.buscarUsuario(mailUsuario);
+          cursoUsuarioService.actualizarPreceptor(em);
           
            return new ResponseEntity<>(HttpStatus.OK);   
     }   

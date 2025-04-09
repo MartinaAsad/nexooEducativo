@@ -10,7 +10,8 @@ import lombok.Data;
 @Data
 public class AsignarPreceptorDTO {
     
-    @NotNull
+     //@Min(value = 100000, message = "El DNI debe tener al menos 6 numeros")
+    //@Max(value = 99999999, message = "El DNI debe tener como maximo 8 numeros")
     private int preceptor;
     
     @NotNull
