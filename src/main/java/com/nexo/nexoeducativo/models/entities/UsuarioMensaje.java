@@ -18,6 +18,7 @@ import jakarta.persistence.Table;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  *
@@ -29,6 +30,7 @@ import lombok.NoArgsConstructor;
     @NamedQuery(name = "UsuarioMensaje.findAll", query = "SELECT u FROM UsuarioMensaje u")})
 @Data
 @NoArgsConstructor
+@ToString
 public class UsuarioMensaje implements Serializable {
 
     private static final long serialVersionUID = 1L;

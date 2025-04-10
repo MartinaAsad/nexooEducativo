@@ -50,5 +50,8 @@ public interface CursoUsuarioRepository extends JpaRepository<CursoUsuario, Inte
     @Query("SELECT DISTINCT cu.cursoIdCurso.idCurso FROM CursoUsuario cu WHERE cu.usuarioIdUsuario= :usuarioIdUsuario")
     Integer obtenerCurso (Usuario usuarioIdUsuario);
     
+    //@Query(value = "SELECT * FROM curso_usuario WHERE curso_id_curso = :curso_id_curso LIMIT 1", nativeQuery = true)
+    Optional<CursoUsuario> findTop1ByUsuarioIdUsuario(Usuario usuarioIdUsuario);
+    
    
 }

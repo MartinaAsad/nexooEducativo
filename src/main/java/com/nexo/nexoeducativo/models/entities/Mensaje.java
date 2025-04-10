@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  *
@@ -33,6 +34,7 @@ import lombok.NoArgsConstructor;
     @NamedQuery(name = "Mensaje.findAll", query = "SELECT m FROM Mensaje m")})
 @Data
 @NoArgsConstructor
+@ToString
 public class Mensaje implements Serializable {
 
     private static final long serialVersionUID = 1L;

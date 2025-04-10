@@ -436,28 +436,32 @@ public class UsuarioService {
      //LOGGER.info("EL OBJETO ACTUALIZADO QUE SE VA A GUARDAR: "+actualizado.toString());
      // Si el alumno tiene un nuevo curso, actualizar la relación CursoUsuario
     if (j.getIdCurso() != null) {
+          System.out.println("LO QUE LLEGA HASTA AQUI: "+j.getIdCurso());
         Curso curso = cursoRepository.findById(j.getIdCurso())
                 .orElseThrow(() -> new RuntimeException("El curso no existe")); // Puedes lanzar una excepción específica
 
-        CursoUsuario cursoUsuario = cursoUsuarioRepository.findByUsuarioIdUsuario(usuarioIngresado)
+        CursoUsuario cursoUsuario = cursoUsuarioRepository.findTop1ByUsuarioIdUsuario(usuarioIngresado)
                 .orElse(new CursoUsuario()); // Si no existe, crear uno nuevo
 
-        cursoUsuario.setUsuarioIdUsuario(usuarioIngresado);
+       // cursoUsuario.setUsuarioIdUsuario(usuarioIngresado);
         cursoUsuario.setCursoIdCurso(curso);
+        System.out.println("info hast aqui: "+cursoUsuario.toString());
 
         cursoUsuarioRepository.save(cursoUsuario);
     }
 
     // Si el alumno tiene un nuevo padre, actualizar la relación UsuarioUsuario
      if (j.getIdPadre() != null) {
+         System.out.println("id del padre seleccionado xd: "+j.getIdPadre());
         if (j.getIdPadre() > 0) { // Validar que no sea 0
             Usuario padre = usuariorepository.findById(j.getIdPadre())
                     .orElseThrow(() -> new UsuarioNotAuthorizedException("El usuario ingresado como padre no es un padre"));
 
             UsuarioUsuario usuarioUsuario = uuRepository.findByUsuarioIdUsuario(usuarioIngresado)
                     .orElse(new UsuarioUsuario());
+            //System.out.println("relacion encontrada : "+usuarioUsuario.toString());
 
-            usuarioUsuario.setUsuarioIdUsuario(usuarioIngresado);
+            //usuarioUsuario.setUsuarioIdUsuario(usuarioIngresado);
             usuarioUsuario.setUsuarioIdUsuario1(padre);
             uuRepository.save(usuarioUsuario);
         } else {
