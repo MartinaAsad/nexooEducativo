@@ -156,6 +156,13 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
 "WHERE uu.usuarioIdUsuario1 = :usuarioIdUsuario1")
     public Double obtenerCuotaHijos(Usuario usuarioIdUsuario1);
     
+     @Query("SELECT DISTINCT u.idUsuario AS id_usuario, u.nombre AS nombre, u.apellido AS apellido"
+              + " FROM Usuario u INNER JOIN Rol r ON r.idRol=u.rolidrol"
+              + " INNER JOIN CursoUsuario cu ON cu.usuarioIdUsuario=u.idUsuario "
+              + "INNER JOIN CursoEscuela ce ON ce.cursoIdCurso=cu.cursoIdCurso "
+              + "WHERE r.nombre='alumno' AND ce.escuelaIdEscuela= :escuelaIdEscuela AND u.tipoJornada = :tipoJornada")
+     List<NombreCompletoDTO> actualizarSiPago(Escuela escuelaIdEscuela, String tipoJornada);
+    
      @Query("SELECT u.pagoCuota " +
 "FROM Usuario u " +
 "LEFT JOIN Cuota c ON c.tipoJornada = u.tipoJornada " +

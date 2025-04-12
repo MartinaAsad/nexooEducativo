@@ -4,6 +4,7 @@ package com.nexo.nexoeducativo.service;
 import com.nexo.nexoeducativo.exception.EscuelaNotFoundException;
 import com.nexo.nexoeducativo.exception.FormatoIncorrectoException;
 import com.nexo.nexoeducativo.exception.UsuarioNotFoundException;
+import com.nexo.nexoeducativo.models.dto.request.NombreCompletoDTO;
 import com.nexo.nexoeducativo.models.entities.Cuota;
 import com.nexo.nexoeducativo.models.entities.Escuela;
 import com.nexo.nexoeducativo.models.entities.EscuelaCuota;
@@ -12,6 +13,7 @@ import com.nexo.nexoeducativo.repository.CuotaRepository;
 import com.nexo.nexoeducativo.repository.EscuelaCuotaRepository;
 import com.nexo.nexoeducativo.repository.EscuelaRepository;
 import com.nexo.nexoeducativo.repository.UsuarioRepository;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +79,15 @@ public class CuotaService {
         c.setImporte(monto);
         c.setTipoJornada(jornada);
         escuelaCuotaRepository.updateEscuelaByIdCuotaAndIdEscuela(c.getIdCuota(), e.getIdEscuela(), jornada);
+        
+        //hacer que los padres que hayan pagado la cuota del mes anterior, al actualizar el valor,, ya esta la cuota impaga
+        List<NombreCompletoDTO> alumnos=usuarioRepository.actualizarSiPago(e, jornada);
+        for (NombreCompletoDTO alumno : alumnos) {
+            Usuario u=usuarioRepository.findById(alumno.getId_usuario()).orElseThrow(()-> new UsuarioNotFoundException("No existe ese alumno"));
+            //System.out.println("USUARIOS ENCONTRADOS: "+u.toString());
+            u.setPagoCuota((short)0);
+            usuarioRepository.save(u);
+        }
         
         }
     
