@@ -156,6 +156,13 @@ List<verCursoView> obtenerCursosPreceptor(@Param("usuario") Integer usuario);
 "WHERE uu.usuarioIdUsuario1 = :usuarioIdUsuario1")
     public Double obtenerCuotaHijos(Usuario usuarioIdUsuario1);
     
+     @Query("SELECT u.pagoCuota " +
+"FROM Usuario u " +
+"LEFT JOIN Cuota c ON c.tipoJornada = u.tipoJornada " +
+"LEFT JOIN UsuarioUsuario uu ON uu.usuarioIdUsuario = u.idUsuario " +
+"WHERE uu.usuarioIdUsuario1 = :usuarioIdUsuario1")
+    public List<Short> pagoCuota(Usuario usuarioIdUsuario1);
+    
       @Query("SELECT DISTINCT new com.nexo.nexoeducativo.models.dto.request.DesplegableChatView( u.idUsuario AS id_usuario,"
               + " u.nombre AS nombre, u.apellido AS apellido, u.mail AS mail) FROM Usuario u"
               + " JOIN EscuelaUsuario eu ON " +

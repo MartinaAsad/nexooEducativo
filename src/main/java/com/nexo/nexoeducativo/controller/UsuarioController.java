@@ -1166,6 +1166,16 @@ public class UsuarioController {
 		return new ResponseEntity<>(importe, HttpStatus.OK);  
     }
      
+       @PreAuthorize("hasAuthority('padre')" ) 
+    @GetMapping(value="/siPago")
+     ResponseEntity<?> siPago (Authentication auth){
+         String mailUsuario=auth.getPrincipal().toString();
+         Usuario u=uService.buscarUsuario(mailUsuario);
+        List<Short> importe=uService.verSiPago(u);
+		
+		return new ResponseEntity<>(importe, HttpStatus.OK);  
+    }
+     
       @PreAuthorize("hasAuthority('jefe colegio')" ) 
     @PostMapping(value="/renovarMembresia")
      ResponseEntity<?> renovarMembresia (Authentication auth, @Valid @RequestBody RenovarMembresiaDTO dto){

@@ -296,6 +296,10 @@ public class UsuarioService {
      //LOGGER.info("EL DTO A VALIDAR TIENE LAS SIGUIENTES PROPIEDADES: "+j.toString());
      }
      
+     public List<Short> verSiPago(Usuario u){
+         return usuariorepository.pagoCuota(u);
+     }
+     
       public void validarElAlumnoDto (AlumnoModificacionDTO j){
     Set<ConstraintViolation<AlumnoModificacionDTO>> violaciones = validator.validate(j);
     if (!violaciones.isEmpty()) {
