@@ -1,0 +1,18 @@
+{
+    "build": {
+      "builder": "NIXPACKS",
+      "buildCommand": "mvn clean package -DskipTests"
+    },
+    "deploy": {
+      "startCommand": "java -jar target/nexoeducativo-0.0.1-SNAPSHOT.jar",
+      "healthcheckPath": "/",
+      "healthcheckTimeout": 100,
+      "restartPolicyType": "ON_FAILURE",
+      "restartPolicyMaxRetries": 10
+    },
+    "nixpacks": {
+      "jdk": {
+        "version": "20"
+      }
+    }
+  }
