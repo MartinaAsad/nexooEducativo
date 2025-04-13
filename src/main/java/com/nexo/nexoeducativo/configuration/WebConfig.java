@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer{
      @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", // React Web
+                .allowedOrigins("https://nexoeducativo.up.railway.app", // React Web
                         "http://localhost:8081", // React Native (puerto estándar)
                         "http://192.168.0.160:8081" 
                 )

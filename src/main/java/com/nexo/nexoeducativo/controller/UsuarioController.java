@@ -103,7 +103,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/usuario") //reemplazarlo por api
-@CrossOrigin(origins="http://localhost:3000")
+@CrossOrigin(origins="https://nexoeducativo.up.railway.app")
 public class UsuarioController {
     //los controladores se comunican con el frontend
      @Autowired

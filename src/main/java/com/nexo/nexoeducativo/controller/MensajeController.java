@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@CrossOrigin(origins="http://localhost:3000")
+@CrossOrigin(origins="https://nexoeducativo.up.railway.app")
 public class MensajeController {
     @Autowired
     private MensajeService mensajeService;
