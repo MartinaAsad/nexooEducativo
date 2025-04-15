@@ -354,6 +354,22 @@ public class UsuarioController {
          
      }
      
+     @PreAuthorize("hasAuthority('super admin') "
+            + "or hasAuthority('jefe colegio') "
+            + "or hasAuthority('administrativo') "
+            + "or hasAuthority('preceptor')" 
+            + "or hasAuthority('padre')"
+            + "or hasAuthority('profesor')" 
+            + "or hasAuthority('alumno')" )
+     @GetMapping(value="/usuarioLogueado2")
+     ResponseEntity<?> prueba8022(Authentication auth){
+     String mail=auth.getPrincipal().toString();//obtengo el mail del usuario logueado
+       Usuario obtenerUsuario=uService.buscarUsuario(mail);
+       //Usuario u=uService.buscarUsuario(mailUsuario);
+       return new ResponseEntity<>(obtenerUsuario.getIdUsuario(), HttpStatus.OK); 
+         
+     }
+     
      
      @PreAuthorize("hasAuthority('jefe colegio') "
       + "or hasAuthority('administrativo') ")
