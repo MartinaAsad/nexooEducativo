@@ -11,14 +11,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer{
      @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
+       /* registry.addMapping("/**")
                 .allowedOrigins("https://nexoeducativo.up.railway.app", // React Web
                         "http://localhost:8081", // React Native (puerto estándar)
                         "http://192.168.0.160:8081" 
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                 .allowedHeaders("*")
-                .allowCredentials(true);//antes estaba en true
+                .allowCredentials(true);//antes estaba en true*/
     }
     
     @Override
