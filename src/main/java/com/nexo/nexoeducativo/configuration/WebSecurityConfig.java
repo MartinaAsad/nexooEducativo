@@ -42,7 +42,7 @@ public class WebSecurityConfig {
         http
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/**").authenticated()
-                 .requestMatchers("/auth/info").authenticated()
+                 .requestMatchers("/auth/**").authenticated()
                     .requestMatchers("/logout").authenticated()
                     .requestMatchers("/ms/**").authenticated()
                     .requestMatchers("/chatIndividual").authenticated()
@@ -82,8 +82,8 @@ public class WebSecurityConfig {
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessHandler(this.logoutHundler))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
-            //.httpBasic(withDefaults()) // Habilitar autenticación HTTP básica
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+            .httpBasic(withDefaults()) // Habilitar autenticación HTTP básica
             .csrf(csrf -> csrf.disable()); // Deshabilitar CSRF
 
         return http.build();
@@ -102,7 +102,7 @@ public class WebSecurityConfig {
                 registry.addMapping("/**")
                         //.allowedOrigins(corsOrigins)
                         .allowedOrigins(
-                                "https://nexoeducativo.up.railway.app", //deploy en railway del frontend
+                                "https://nexoeducativo.up.railway.app", //deploy en railway del
                                 "http://localhost:8081", // Puerto estándar de React Native
                                 "http://192.168.0.160:8081" // Tu IP local para dispositivos
                         )
