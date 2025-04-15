@@ -53,7 +53,7 @@ Optional<Usuario> findByDni (int dni);
     //@Query(value = "SELECT * FROM Usuario u WHERE u.mail=:mail", nativeQuery = true)
     //Usuario findByMail(String mail);
 
-    @Query(value = "SELECT u.nombre, u.apellido FROM Usuario u WHERE id_usuario = :idUsuario", nativeQuery = true)
+    @Query(value = "SELECT u.nombre, u.apellido FROM usuario u WHERE id_usuario = :idUsuario", nativeQuery = true)
     List<NombreCompletoDTO> getFullName(@Param("idUsuario") int idUsuario);
 
     @Query(value = "SELECT u.id_usuario, u.nombre, u.apellido FROM usuario u LEFT JOIN escuela_usuario eu ON eu.usuario_id_usuario=u.id_usuario WHERE u.Rol_id_rol=2 and eu.escuela_id_escuela IS NULL", nativeQuery = true)
@@ -77,7 +77,7 @@ Optional<Usuario> findByDni (int dni);
       List<InfoUsuarioSegunRolDTO>getJefeColegio(@PathVariable(value = "nombre") String nombre);
        
       //para obtener nombre y apellido del usuario logueado
-          @Query(value = "SELECT u.nombre, u.apellido FROM Usuario u WHERE mail = :mail", nativeQuery = true)
+          @Query(value = "SELECT u.nombre, u.apellido FROM usuario u WHERE mail = :mail", nativeQuery = true)
           NombreCompletoDTO getFullName(String mail);
           
       Usuario findNombreAndApellidoByIdUsuario(Integer idUsuario);

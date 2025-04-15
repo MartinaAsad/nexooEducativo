@@ -27,7 +27,7 @@ import lombok.ToString;
  * @author Martina
  */
 @Entity
-@Table(name = "usuario")
+@Table(name = "usuario", catalog = "railway")
 @NamedQueries({
     @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u")})
 @Data
