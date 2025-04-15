@@ -102,7 +102,7 @@ public class WebSecurityConfig {
                 registry.addMapping("/**")
                         //.allowedOrigins(corsOrigins)
                         .allowedOrigins(
-                                "http://localhost:3000",
+                                "https://nexoeducativo.up.railway.app", //deploy en railway del frontend
                                 "http://localhost:8081", // Puerto estándar de React Native
                                 "http://192.168.0.160:8081" // Tu IP local para dispositivos
                         )
