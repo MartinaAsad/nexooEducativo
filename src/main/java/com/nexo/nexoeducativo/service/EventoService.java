@@ -65,7 +65,7 @@ public class EventoService {
         }
         evento.setFecha(e.getFecha());
         eventoRepository.save(evento);
-        
+               LOGGER.info("LO QUE LLEGA: "+e.getDescripcion()+" "+e.getFecha());
         //guardar la tabla asociada
         CursoUsuarioEvento ceu=new CursoUsuarioEvento();
         altaCursoUsuario(idCurso, ceu);
